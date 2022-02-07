@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:htask/models/tasks.dart';
 import 'package:htask/screens/order_details/order_details.dart';
 import 'package:htask/shared/constants.dart';
 
 import 'package:htask/styles/colors.dart';
 
 class StatusItem extends StatelessWidget {
-  const StatusItem({Key? key, required this.statusImagePath}) : super(key: key);
+  const StatusItem(
+      {Key? key, required this.statusImagePath, required this.taskStatus})
+      : super(key: key);
   final String statusImagePath;
+  final Task taskStatus;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => navigateTo(context, const OrderDetails()),
+      onTap: () => navigateTo(
+          context,
+          OrderDetails(
+            taskStatus: taskStatus,
+          )),
       child: Container(
         decoration: BoxDecoration(
             color: AppColors.primaryColor.withOpacity(0.25),

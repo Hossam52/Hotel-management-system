@@ -6,11 +6,13 @@ class DefaultButton extends StatelessWidget {
       {Key? key,
       required this.text,
       required this.onPressed,
-      this.backgroundColor = AppColors.buttonColor})
+      this.backgroundColor = AppColors.buttonColor,
+      this.radius = 18})
       : super(key: key);
   final String text;
   final VoidCallback onPressed;
   final Color backgroundColor;
+  final double radius;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,13 @@ class DefaultButton extends StatelessWidget {
         style: ButtonStyle(
           padding: MaterialStateProperty.all(const EdgeInsets.all(18.0)),
           backgroundColor: MaterialStateProperty.all(backgroundColor),
-          shape: MaterialStateProperty.all(const StadiumBorder()),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(radius),
+              ),
+            ),
+          ),
         ));
   }
 }

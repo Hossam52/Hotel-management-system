@@ -6,8 +6,8 @@ import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/home_header.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-class MainHomeLayout extends StatelessWidget {
-  const MainHomeLayout({Key? key}) : super(key: key);
+class SuperVisorHomeLayout extends StatelessWidget {
+  const SuperVisorHomeLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +15,7 @@ class MainHomeLayout extends StatelessWidget {
       context,
       screens: const [
         HomeScreen(),
+        StaffScreen(),
         MoreScreen(),
       ],
       confineInSafeArea: true,
@@ -23,10 +24,10 @@ class MainHomeLayout extends StatelessWidget {
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
         ),
-        // colorBehindNavBar: AppColors.
       ),
       items: [
         _builNavItem('assets/images/home.png', 'Home'),
+        _builNavItem('assets/images/staff.png', 'Staff'),
         _builNavItem('assets/images/more.png', 'More'),
       ],
       navBarStyle: NavBarStyle.style7,

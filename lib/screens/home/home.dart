@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:htask/models/service_model.dart';
 import 'package:htask/models/tab_bar_model.dart';
-import 'package:htask/screens/home/widgets/service_item.dart';
 import 'package:htask/styles/colors.dart';
-import 'package:htask/styles/text_styles.dart';
+import 'package:htask/widgets/home_header.dart';
+import 'package:htask/widgets/services_toaday.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -19,12 +18,12 @@ class HomeScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const _HomeHeader(),
+              const HomeHeader(),
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(padding),
                 child: SizedBox(
-                    height: height * 0.13, child: const _HomeServiceToday()),
+                    height: height * 0.13, child: const ServiceToday()),
               ),
               const Padding(
                 padding: EdgeInsets.all(padding),
@@ -34,73 +33,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _HomeHeader extends StatelessWidget {
-  const _HomeHeader({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-        color: AppColors.blue1,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-      ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            backgroundImage: AssetImage('assets/images/pseronal_image.png'),
-            radius: 40,
-          ),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Text(
-                'Hello, Ahmed',
-                style: AppTextStyles.textStyle1,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Have a greate working day',
-                style: AppTextStyles.textStyle2,
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class _HomeServiceToday extends StatelessWidget {
-  const _HomeServiceToday({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Your service today are: '),
-        Expanded(
-          child: ListView.separated(
-              separatorBuilder: (context, index) => const SizedBox(
-                    width: 15,
-                  ),
-              scrollDirection: Axis.horizontal,
-              itemCount: servicesToday.length,
-              itemBuilder: (_, index) {
-                return ServiceItem(serviceModel: servicesToday[index]);
-              }),
-        )
-      ],
     );
   }
 }
