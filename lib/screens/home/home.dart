@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:htask/models/tab_bar_model.dart';
+import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/home_header.dart';
 import 'package:htask/widgets/services_toaday.dart';
@@ -14,22 +16,26 @@ class HomeScreen extends StatelessWidget {
     const double padding = 14;
     return Scaffold(
       backgroundColor: AppColors.lightPrimary,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const HomeHeader(),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.all(padding),
-                child: SizedBox(
-                    height: height * 0.13, child: const ServiceToday()),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(padding),
-                child: _HomeTabsStatuses(),
-              ),
-            ],
+      body: BlocProvider<HomeCubit>(
+        create: (context) => HomeCubit()..getAllOrders(context),
+        lazy: false,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const HomeHeader(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.all(padding),
+                  child: SizedBox(
+                      height: height * 0.13, child: const ServiceToday()),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(padding),
+                  child: _HomeTabsStatuses(),
+                ),
+              ],
+            ),
           ),
         ),
       ),

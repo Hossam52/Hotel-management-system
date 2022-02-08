@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:htask/layout/cubit/app_cubit.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/styles/text_styles.dart';
+import 'package:htask/widgets/default_cached_image.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
@@ -9,6 +11,7 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final profile = AppCubit.instance(context).getProfile;
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
@@ -17,22 +20,23 @@ class HomeHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const CircleAvatar(
-            backgroundImage: AssetImage('assets/images/pseronal_image.png'),
+          CircleAvatar(
+            // backgroundImage: ,
+            child: DefaultCachedImage(imagePath: profile.image),
             radius: 40,
           ),
           const SizedBox(width: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
+            children: [
               Text(
-                'Hello, Ahmed',
+                'Hello, ${profile.name}',
                 style: AppTextStyles.textStyle1,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text(
+              const Text(
                 'Have a greate working day',
                 style: AppTextStyles.textStyle2,
               ),
