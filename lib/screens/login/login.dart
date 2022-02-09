@@ -1,3 +1,4 @@
+import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is SuccessLoginState) {
-              navigateToReplacement(context, const SuperVisorHomeLayout());
+              navigateToReplacement(context, _homeLayout(state.authType));
               return;
               // Fluttertoast.showToast(
               //     msg: 'Successifully logged in',
@@ -79,14 +80,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               validator: authCubit.validatePassword,
                             ),
                             const SizedBox(height: 20),
+                            const _RadioButtonAccountType(),
+                            const SizedBox(height: 20),
                             DefaultButton(
                                 text: 'Login',
                                 loading: loading,
                                 onPressed: () async {
                                   if (authCubit.formKey.currentState!
                                       .validate()) {
-                                    await AuthCubit.instance(context).login(
-                                        context, LoginAuthType.supervisor);
+                                    await AuthCubit.instance(context)
+                                        .login(context);
                                   }
                                 })
                           ],
@@ -103,8 +106,65 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget _homeLayout(LoginAuthType loginAuthType) {
+    if (loginAuthType == LoginAuthType.supervisor) {
+      return const SuperVisorHomeLayout();
+    } else if (loginAuthType == LoginAuthType.employee) {
+      return const MainHomeLayout();
+    } else {
+      throw Exception('Unknown type');
+    }
+  }
+
   Image _logo() => Image.asset(
         'assets/images/logo.png',
         scale: 1.4,
       );
+}
+
+class _RadioButtonAccountType extends StatelessWidget {
+  const _RadioButtonAccountType({Key? key}) : super(key: key);
+  final String supervisor = 'Supervisor';
+  final String employee = 'Employee';
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {},
+      buildWhen: (previous, current) =>
+          current is ChangeSelectedAccountTypeState,
+      builder: (context, state) {
+        return CustomRadioButton(
+          elevation: 0,
+          unSelectedColor: Theme.of(context).canvasColor,
+          enableShape: true,
+          autoWidth: true,
+          buttonLables: [
+            supervisor,
+            employee,
+          ],
+          buttonValues: [
+            supervisor,
+            employee,
+          ],
+          buttonTextStyle: const ButtonTextStyle(
+              selectedColor: Colors.white,
+              unSelectedColor: Colors.black,
+              textStyle: TextStyle(fontSize: 16)),
+          radioButtonValue: (value) {
+            String val = value as String;
+            if (val == employee) {
+              AuthCubit.instance(context)
+                  .changeSelectedAccountType(LoginAuthType.employee);
+            } else if (val == supervisor) {
+              AuthCubit.instance(context)
+                  .changeSelectedAccountType(LoginAuthType.supervisor);
+            } else {
+              throw Exception('Unknown type');
+            }
+          },
+          selectedColor: AppColors.darkPrimaryColor,
+        );
+      },
+    );
+  }
 }

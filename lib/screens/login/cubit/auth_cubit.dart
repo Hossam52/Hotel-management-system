@@ -22,6 +22,8 @@ class AuthCubit extends Cubit<AuthState> {
 
   bool visiblePassword = false;
   late String token;
+
+  LoginAuthType? selectedAccountType;
   void changeVisiblePassword() {
     visiblePassword = !visiblePassword;
     emit(ChangeVisiblePasswordState());
@@ -56,32 +58,41 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> login(BuildContext context, LoginAuthType auth) async {
+  Future<void> login(BuildContext context) async {
     try {
       emit(LoadingLoginState());
-      final personalProfile = await _callLoginApi(auth);
+      if (selectedAccountType == null) {
+        throw Exception('Account type not selected');
+      }
+      final personalProfile = await _callLoginApi();
       log(personalProfile.toString());
-      AppCubit.instance(context).setPersonalData(personalProfile, token);
-      emit(SuccessLoginState());
+      AppCubit.instance(context)
+          .setPersonalData(personalProfile, token, selectedAccountType!);
+      emit(SuccessLoginState(selectedAccountType!));
     } catch (e) {
       emit(ErrorLoginState(errorMessage: e.toString()));
     }
   }
 
-  Future<PersonLoginModel> _callLoginApi(LoginAuthType type) async {
+  Future<PersonLoginModel> _callLoginApi() async {
     final loginRequestModel = EmployeeRequestModel(
         email: loginEmailController.text,
         password: loginPasswordController.text);
-    if (type == LoginAuthType.employee) {
+    if (selectedAccountType == LoginAuthType.employee) {
       final model = await EmployeeServices.login(loginRequestModel);
       token = model.token;
       return model.employee;
-    } else if (type == LoginAuthType.supervisor) {
+    } else if (selectedAccountType == LoginAuthType.supervisor) {
       final model = await SupervisorSurvices.login(loginRequestModel);
       token = model.token;
       return model.supervisor;
     } else {
       throw Exception('Un known type');
     }
+  }
+
+  void changeSelectedAccountType(LoginAuthType auth) {
+    selectedAccountType = auth;
+    emit(ChangeSelectedAccountTypeState());
   }
 }

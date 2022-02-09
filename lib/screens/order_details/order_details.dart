@@ -1,52 +1,118 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/models/orders/order_details_model.dart';
+import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/tasks.dart';
+import 'package:htask/screens/home/cubit/home_cubit.dart';
+import 'package:htask/screens/login/cubit/auth_cubit.dart';
+import 'package:htask/screens/order_details/cubit/order_details_cubit.dart';
+import 'package:htask/screens/order_details/cubit/order_details_states.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/styles/text_styles.dart';
 import 'package:htask/widgets/defulat_button.dart';
 
 class OrderDetails extends StatelessWidget {
-  const OrderDetails({Key? key, required this.taskStatus}) : super(key: key);
+  const OrderDetails(
+      {Key? key,
+      required this.taskStatus,
+      required this.order,
+      required this.homeCubit,
+      this.actionWidget})
+      : super(key: key);
   final Task taskStatus;
+  final OrderModel order;
+  final HomeCubit homeCubit;
+  final Widget? actionWidget;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightPrimary,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        toolbarTextStyle: const TextStyle(color: Colors.black),
-        iconTheme: IconTheme.of(context).copyWith(color: Colors.black),
-        leading: !Navigator.canPop(context) ? null : _backButton(),
-        title: const Text(
-          'Order details',
-          style: TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
-        ),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Time(taskStatus: taskStatus),
-              const _PersonalDataStatistics(
-                assignedTo: 'Mohamed medhat',
-              ),
-              const SizedBox(height: 30),
-              const _OrderDetailsItems(),
-              const SizedBox(height: 30),
-              const _Price(price: 120),
-              const SizedBox(height: 30),
-              _ChangeAssignmentButton(
-                taskStatus: taskStatus,
-              )
-            ],
+        backgroundColor: AppColors.lightPrimary,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          toolbarTextStyle: const TextStyle(color: Colors.black),
+          iconTheme: IconTheme.of(context).copyWith(color: Colors.black),
+          leading: !Navigator.canPop(context) ? null : _backButton(),
+          title: const Text(
+            'Order details',
+            style: TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
           ),
         ),
-      ),
-    );
+        body: MultiBlocProvider(
+          providers: [
+            // BlocProvider(
+            //   create: (context) =>
+            //       OrderDetailsCubit.getCurrentUserCubit(context),
+            // ),
+            BlocProvider(
+              create: (context) => SupervisorOrderDetailsCubit(),
+              lazy: false,
+            ),
+            BlocProvider(
+              create: (context) => EmployeeOrderDetailsCubit(),
+              lazy: false,
+            ),
+          ],
+          child: BlocListener<SupervisorOrderDetailsCubit, OrderDetailsState>(
+            listener: (context, state) async {
+              if (state is SuccessChangeStatusToProcessState) {
+                log(state.message);
+                await homeCubit.getAllOrders(context);
+              } else if (state is LoadingChangeStatusToProcessState) {
+                log('Loading');
+              } else if (state is ErrorChangeStatusToProcessState) {
+                log('Errro ////${state.error}');
+              }
+            },
+            child: BlocConsumer<EmployeeOrderDetailsCubit, OrderDetailsState>(
+              listener: (context, state) async {
+                if (state is SuccessChangeStatusToProcessState) {
+                  log(state.message);
+                  await homeCubit.getAllOrders(context);
+                } else if (state is LoadingChangeStatusToProcessState) {
+                  log('Loading');
+                } else if (state is ErrorChangeStatusToProcessState) {
+                  log('Errro ////${state.error}');
+                }
+              },
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _Time(taskStatus: taskStatus),
+                        _PersonalDataStatistics(
+                          name: order.employeeName,
+                          roomNum: order.roomNum,
+                          assignedTo: getAssignedToIfSupervisor(context),
+                        ),
+                        const SizedBox(height: 30),
+                        _OrderDetailsItems(orderDetails: order.orderdetails),
+                        const SizedBox(height: 30),
+                        const _Price(price: 120),
+                        const SizedBox(height: 30),
+                        // actionWidget ?? Container()
+                        _OrderDetailsActionButton(
+                            taskStatus: taskStatus,
+                            orderId: order.id,
+                            onPressed: () => homeCubit.onStatusTapped(
+                                context, taskStatus, order.id),
+                            homeCubit: homeCubit)
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ));
   }
 
   Widget _backButton() {
@@ -64,6 +130,15 @@ class OrderDetails extends StatelessWidget {
         ),
       );
     });
+  }
+
+  String? getAssignedToIfSupervisor(BuildContext context) {
+    final authType = AppCubit.instance(context).currentUserType!;
+    if (authType == LoginAuthType.supervisor) {
+      return order.supervisorName;
+    } else {
+      return null;
+    }
   }
 }
 
@@ -118,9 +193,9 @@ class _Time extends StatelessWidget {
   }
 
   String _timeTitle() {
-    if (taskStatus is BeginTask) {
+    if (taskStatus is ActiveTask) {
       return 'Estimated time';
-    } else if (taskStatus is EndTask) {
+    } else if (taskStatus is PendingTask) {
       return 'Remaining estimated';
     }
     return '';
@@ -128,8 +203,12 @@ class _Time extends StatelessWidget {
 }
 
 class _PersonalDataStatistics extends StatelessWidget {
-  const _PersonalDataStatistics({Key? key, this.assignedTo}) : super(key: key);
+  const _PersonalDataStatistics(
+      {Key? key, this.assignedTo, required this.name, required this.roomNum})
+      : super(key: key);
   final String? assignedTo;
+  final String name;
+  final String roomNum;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -144,7 +223,7 @@ class _PersonalDataStatistics extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _roomNumber(11),
+                _roomNumber(roomNum),
                 _floor(2),
               ],
             ),
@@ -164,25 +243,25 @@ class _PersonalDataStatistics extends StatelessWidget {
       Image.asset('assets/images/user.png'),
       const SizedBox(width: 10),
       RichText(
-        text: const TextSpan(
+        text: TextSpan(
             text: 'Mr ',
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
             children: [
-              TextSpan(text: 'Ahmed mohamed', style: TextStyle(fontSize: 19)),
+              TextSpan(text: name, style: const TextStyle(fontSize: 19)),
             ]),
       )
     ]);
   }
 
-  Widget _roomNumber(int number) {
+  Widget _roomNumber(String number) {
     const TextStyle roomNumberTextStyle =
         TextStyle(color: AppColors.darkPrimaryColor, fontSize: 16);
     return Column(
       children: [
         Text(
-          number.toString(),
+          number,
           style: roomNumberTextStyle.copyWith(
-              fontSize: 100, fontWeight: FontWeight.bold),
+              fontSize: 90, fontWeight: FontWeight.bold),
         ),
         const Text('Room Number', style: roomNumberTextStyle),
       ],
@@ -216,7 +295,10 @@ class _PersonalDataStatistics extends StatelessWidget {
 }
 
 class _OrderDetailsItems extends StatelessWidget {
-  const _OrderDetailsItems({Key? key}) : super(key: key);
+  const _OrderDetailsItems({Key? key, required this.orderDetails})
+      : super(key: key);
+  final List<OrderDetailModel> orderDetails;
+
   final List<String> items = const [
     'Washing clothes',
     '3 pieces',
@@ -230,23 +312,31 @@ class _OrderDetailsItems extends StatelessWidget {
       children: [
         Text('Order Details',
             style: textStyle.copyWith(fontWeight: FontWeight.bold)),
-        ListView(
+        ListView.builder(
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: items
-              .map(
-                (e) => Row(
-                  children: [
-                    const SizedBox(width: 20),
-                    Text(
-                      e,
-                      style: textStyle,
-                    ),
-                  ],
-                ),
-              )
-              .toList(),
-        )
+          itemCount: orderDetails.length,
+          itemBuilder: (_, index) =>
+              _OrderDetailItem(details: orderDetails[index]),
+        ),
+      ],
+    );
+  }
+}
+
+class _OrderDetailItem extends StatelessWidget {
+  const _OrderDetailItem({Key? key, required this.details}) : super(key: key);
+  final OrderDetailModel details;
+  @override
+  Widget build(BuildContext context) {
+    const textStyle = TextStyle(fontSize: 16);
+
+    return Row(
+      children: [
+        const SizedBox(width: 20),
+        Text(
+          details.service,
+          style: textStyle,
+        ),
       ],
     );
   }
@@ -295,7 +385,8 @@ class _ChangeAssignmentButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50.0),
       child: DefaultButton(
-        text: _getText(),
+        text: taskStatus.getText(),
+        // _getText(),
         radius: 6,
         onPressed: () {},
       ),
@@ -303,12 +394,41 @@ class _ChangeAssignmentButton extends StatelessWidget {
   }
 
   String _getText() {
-    if (taskStatus is BeginTask) {
+    if (taskStatus is ActiveTask) {
       return 'Start task';
-    } else if (taskStatus is EndTask) {
+    } else if (taskStatus is PendingTask) {
       return 'End task';
     } else {
       return '';
     }
+  }
+}
+
+class _OrderDetailsActionButton extends StatelessWidget {
+  const _OrderDetailsActionButton(
+      {Key? key,
+      required this.taskStatus,
+      required this.orderId,
+      required this.homeCubit,
+      required this.onPressed})
+      : super(key: key);
+  final Task taskStatus;
+  final int orderId;
+  final HomeCubit homeCubit;
+  final VoidCallback onPressed;
+  @override
+  Widget build(BuildContext context) {
+    log(taskStatus.toString());
+    if (taskStatus is FinishedTask) return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 50.0),
+      child: DefaultButton(
+        text: taskStatus.getText(),
+        radius: 6,
+        onPressed: () {
+          homeCubit.onStatusTapped(context, taskStatus, orderId);
+        },
+      ),
+    );
   }
 }

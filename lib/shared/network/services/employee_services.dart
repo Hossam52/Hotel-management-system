@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:htask/models/Employee/employee_login_model.dart';
+import 'package:htask/models/orders/change_order_status.dart';
 import 'package:htask/models/person_login_model.dart';
 import 'package:htask/models/logout_model.dart';
 import 'package:htask/models/orders/all_orders_statueses_model.dart';
@@ -32,19 +33,23 @@ class EmployeeServices {
     return allOrders;
   }
 
-  static Future<AllOrderStatusesModel> changeStatusToProcess(
+  static Future<ChangeOrderStatusModel> changeStatusToProcess(
       String token, int orderId) async {
     final res = await DioHelper.postData(
-        url: EmployeeApis.changeStatusToProcess, token: token, data: {});
-    AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
-    return allOrders;
+        url: EmployeeApis.changeStatusToProcess,
+        token: token,
+        data: {'order_id': orderId});
+    ChangeOrderStatusModel status = ChangeOrderStatusModel.fromMap(res.data);
+    return status;
   }
 
-  static Future<AllOrderStatusesModel> changeStatusToEnd(
+  static Future<ChangeOrderStatusModel> changeStatusToEnd(
       String token, int orderId) async {
     final res = await DioHelper.postData(
-        url: EmployeeApis.changeStatusToProcess, token: token, data: {});
-    AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
-    return allOrders;
+        url: EmployeeApis.changeStatusToEnd,
+        token: token,
+        data: {'order_id': orderId});
+    ChangeOrderStatusModel status = ChangeOrderStatusModel.fromMap(res.data);
+    return status;
   }
 }

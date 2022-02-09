@@ -8,12 +8,14 @@ class AppCubit extends Cubit<AppState> {
   AppCubit() : super(InitalAppState());
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
-  LoginAuthType? currentUserType = LoginAuthType.supervisor;
+  LoginAuthType? currentUserType;
   PersonLoginModel? _personalData;
   late String token;
   PersonLoginModel get getProfile => _personalData!;
-  void setPersonalData(PersonLoginModel data, String token) {
+  void setPersonalData(
+      PersonLoginModel data, String token, LoginAuthType loginAuthType) {
     _personalData = data;
+    currentUserType = loginAuthType;
     this.token = token;
   }
 

@@ -13,21 +13,3 @@ class TabBarItem {
       required this.imagePath,
       required this.widget});
 }
-
-final List<TabBarItem> tabBars = [
-  TabBarItem(
-      isSelected: true,
-      text: 'Active',
-      imagePath: 'assets/images/active.png',
-      widget: const ActiveWidget()),
-  TabBarItem(
-      isSelected: false,
-      text: 'Pending',
-      imagePath: 'assets/images/pending.png',
-      widget: const PendingWidget()),
-  TabBarItem(
-      isSelected: false,
-      text: 'Finished',
-      imagePath: 'assets/images/finished.png',
-      widget: const FinishedWidget()),
-];

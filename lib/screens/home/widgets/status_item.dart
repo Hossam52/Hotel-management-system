@@ -1,24 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/tasks.dart';
+import 'package:htask/screens/home/cubit/home_cubit.dart';
+import 'package:htask/screens/home/widgets/order_details_action_button.dart';
 import 'package:htask/screens/order_details/order_details.dart';
 import 'package:htask/shared/constants.dart';
 
 import 'package:htask/styles/colors.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class StatusItem extends StatelessWidget {
   const StatusItem(
-      {Key? key, required this.statusImagePath, required this.taskStatus})
+      {Key? key,
+      required this.statusImagePath,
+      required this.taskStatus,
+      required this.orderModel})
       : super(key: key);
   final String statusImagePath;
   final Task taskStatus;
+  final OrderModel orderModel;
   @override
   Widget build(BuildContext context) {
+    final homeCubit = HomeCubit.instance(context);
     return GestureDetector(
-      onTap: () => navigateTo(
-          context,
-          OrderDetails(
+      onTap: () => pushNewScreen(context,
+          screen: OrderDetails(
+            actionWidget: OrderDetailsActionButton(
+              taskStatus: taskStatus,
+              orderId: orderModel.id,
+              homeCubit: homeCubit,
+            ),
+            homeCubit: homeCubit,
+            order: orderModel,
             taskStatus: taskStatus,
-          )),
+          ),
+          withNavBar: false),
       child: Container(
         decoration: BoxDecoration(
             color: AppColors.primaryColor.withOpacity(0.25),
@@ -29,8 +45,9 @@ class StatusItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _rowRecord(
-                item1:
-                    _RowItemModel(text: '1', imagePath: 'assets/images/id.png'),
+                item1: _RowItemModel(
+                    text: orderModel.id.toString(),
+                    imagePath: 'assets/images/id.png'),
                 item2: _RowItemModel(
                     text: '12 min left', imagePath: statusImagePath),
               ),
@@ -41,9 +58,11 @@ class StatusItem extends StatelessWidget {
               ),
               _rowRecord(
                 item1: _RowItemModel(
-                    text: '12', imagePath: 'assets/images/door.png'),
+                    text: orderModel.roomNum,
+                    imagePath: 'assets/images/door.png'),
                 item2: _RowItemModel(
-                    text: 'Ahmed Mohamed', imagePath: 'assets/images/user.png'),
+                    text: orderModel.employeeName,
+                    imagePath: 'assets/images/user.png'),
               ),
             ],
           ),

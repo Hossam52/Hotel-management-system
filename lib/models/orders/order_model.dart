@@ -5,23 +5,27 @@ import 'package:flutter/foundation.dart';
 import 'package:htask/models/orders/order_details_model.dart';
 
 class OrderModel {
-  int id;
-  String guestName;
-  String supervisorName;
-  String status;
-  String roomNumber;
-  String payment;
-  String date;
-  String endTime;
-  String actualEndTime;
-  List<OrderDetailModel> orderdetails;
+  final int id;
+  final String guestName;
+  final String employeeName;
+  final String supervisorName;
+  final String status;
+  final String roomNum;
+  final String payment;
+  final String floor;
+  final String date;
+  final String endTime;
+  final String actualEndTime;
+  final List<OrderDetailModel> orderdetails;
   OrderModel({
     required this.id,
     required this.guestName,
+    required this.employeeName,
     required this.supervisorName,
     required this.status,
-    required this.roomNumber,
+    required this.roomNum,
     required this.payment,
+    required this.floor,
     required this.date,
     required this.endTime,
     required this.actualEndTime,
@@ -31,10 +35,12 @@ class OrderModel {
   OrderModel copyWith({
     int? id,
     String? guestName,
+    String? employeeName,
     String? supervisorName,
     String? status,
-    String? roomNumber,
+    String? roomNum,
     String? payment,
+    String? floor,
     String? date,
     String? endTime,
     String? actualEndTime,
@@ -43,14 +49,16 @@ class OrderModel {
     return OrderModel(
       id: id ?? this.id,
       guestName: guestName ?? this.guestName,
+      employeeName: employeeName ?? this.employeeName,
       supervisorName: supervisorName ?? this.supervisorName,
       status: status ?? this.status,
-      roomNumber: roomNumber ?? this.roomNumber,
+      roomNum: roomNum ?? this.roomNum,
       payment: payment ?? this.payment,
       date: date ?? this.date,
       endTime: endTime ?? this.endTime,
       actualEndTime: actualEndTime ?? this.actualEndTime,
       orderdetails: orderdetails ?? this.orderdetails,
+      floor: floor ?? this.floor,
     );
   }
 
@@ -58,13 +66,15 @@ class OrderModel {
     return {
       'id': id,
       'guest_name': guestName,
+      'employee_name': employeeName,
       'supervisor_name': supervisorName,
       'status': status,
-      'room_number': roomNumber,
+      'room_num': roomNum,
       'payment': payment,
+      'floor': floor,
       'date': date,
-      'endTime': endTime,
-      'actualEndTime': actualEndTime,
+      'ent_time': endTime,
+      'actual_end_time': actualEndTime,
       'orderdetails': orderdetails.map((x) => x.toMap()).toList(),
     };
   }
@@ -72,14 +82,16 @@ class OrderModel {
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
       id: map['id']?.toInt() ?? 0,
-      guestName: map['guestName'] ?? '',
-      supervisorName: map['supervisorName'] ?? '',
+      guestName: map['guest_name'] ?? '',
+      employeeName: map['employee_name'] ?? '',
+      supervisorName: map['supervisor_name'] ?? '',
       status: map['status'] ?? '',
-      roomNumber: map['roomNumber'] ?? '',
+      roomNum: map['room_num'] ?? '',
       payment: map['payment'] ?? '',
+      floor: map['floor'] ?? '',
       date: map['date'] ?? '',
-      endTime: map['endTime'] ?? '',
-      actualEndTime: map['actualEndTime'] ?? '',
+      endTime: map['ent_time'] ?? '',
+      actualEndTime: map['actual_end_time'] ?? '',
       orderdetails: List<OrderDetailModel>.from(
           map['orderdetails']?.map((x) => OrderDetailModel.fromMap(x))),
     );
@@ -92,7 +104,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, guestName: $guestName, supervisorName: $supervisorName, status: $status, roomNumber: $roomNumber, payment: $payment, date: $date, endTime: $endTime, actualEndTime: $actualEndTime, orderdetails: $orderdetails)';
+    return 'OrderModel(id: $id, guestName: $guestName, employeeName: $employeeName, supervisorName: $supervisorName, status: $status, roomNum: $roomNum, payment: $payment,floor: $floor date: $date, endTime: $endTime, actualEndTime: $actualEndTime, orderdetails: $orderdetails)';
   }
 
   @override
@@ -102,10 +114,12 @@ class OrderModel {
     return other is OrderModel &&
         other.id == id &&
         other.guestName == guestName &&
+        other.employeeName == employeeName &&
         other.supervisorName == supervisorName &&
         other.status == status &&
-        other.roomNumber == roomNumber &&
+        other.roomNum == roomNum &&
         other.payment == payment &&
+        other.floor == floor &&
         other.date == date &&
         other.endTime == endTime &&
         other.actualEndTime == actualEndTime &&
@@ -116,11 +130,13 @@ class OrderModel {
   int get hashCode {
     return id.hashCode ^
         guestName.hashCode ^
+        employeeName.hashCode ^
         supervisorName.hashCode ^
         status.hashCode ^
-        roomNumber.hashCode ^
+        roomNum.hashCode ^
         payment.hashCode ^
         date.hashCode ^
+        floor.hashCode ^
         endTime.hashCode ^
         actualEndTime.hashCode ^
         orderdetails.hashCode;
