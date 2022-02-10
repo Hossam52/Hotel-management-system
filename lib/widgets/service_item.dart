@@ -1,25 +1,42 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:htask/models/categories/category_model.dart';
 import 'package:htask/models/service_model.dart';
 import 'package:htask/styles/colors.dart';
+import 'package:htask/widgets/default_cached_image.dart';
 
 class ServiceItem extends StatelessWidget {
-  const ServiceItem({Key? key, required this.serviceModel}) : super(key: key);
-  final ServiceModel serviceModel;
+  const ServiceItem({Key? key, required this.category, required this.selected})
+      : super(key: key);
+  final CategoryModel category;
+  final bool selected;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: serviceModel.isSelected
+    return Container(
+      decoration: BoxDecoration(
+          color: selected
               ? AppColors.selectedColor
               : AppColors.selectedColor.withOpacity(0.6),
-          // backgroundImage: AssetImage(serviceModel.imagePath),
-          child: Image.asset(serviceModel.imagePath),
-          radius: 20,
-        ),
-        const SizedBox(width: 10),
-        Text(serviceModel.name),
-      ],
+          borderRadius: BorderRadius.circular(30)),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: selected
+                ? AppColors.selectedColor
+                : AppColors.selectedColor.withOpacity(0.6),
+            // backgroundImage: AssetImage(serviceModel.imagePath),
+            child:
+                ClipOval(child: DefaultCachedImage(imagePath: category.image)),
+            radius: 20,
+          ),
+          const SizedBox(width: 10),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(category.name),
+          ),
+        ],
+      ),
     );
   }
 }

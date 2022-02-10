@@ -5,7 +5,6 @@ import 'package:htask/models/tab_bar_model.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/styles/colors.dart';
-import 'package:htask/widgets/default_circular_progress.dart';
 import 'package:htask/widgets/home_header.dart';
 import 'package:htask/widgets/services_toaday.dart';
 
@@ -19,12 +18,12 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.lightPrimary,
       body: BlocProvider<HomeCubit>(
-        create: (context) => HomeCubit()..getAllOrders(context),
+        create: (context) => HomeCubit()..getAllCategories(context),
         lazy: false,
         child: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {},
           builder: (context, state) {
-            if (state is LoadingAllOrdersHomeState) {
+            if (state is LoadingAllCategoriesHomeState) {
               return const Center(
                   child: CircularProgressIndicator(
                 color: AppColors.darkPrimaryColor,
@@ -60,11 +59,15 @@ class _HomeTabsStatuses extends StatelessWidget {
   const _HomeTabsStatuses({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final cubit = HomeCubit.instance(context);
-    final tabBars = cubit.tabBars;
-    final activeOrders = cubit.getActiveOrders();
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
+        if (state is LoadingAllOrdersHomeState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        final cubit = HomeCubit.instance(context);
+        final tabBars = cubit.tabBars;
         return Column(
           children: [
             Container(
@@ -92,57 +95,10 @@ class _HomeTabsStatuses extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: tabBars[cubit.selectedTabIndex].widget,
                 )),
-            // ListView.builder(
-            //     primary: true,
-            //     shrinkWrap: true,
-            //     itemCount: activeOrders.length,
-            //     itemBuilder: (_, index) {
-            //       return tabBars[index].widget;
-            //     }),
-            // TabBar(
-            //   isScrollable: true,
-            //   padding: const EdgeInsets.all(0),
-            //   tabs: tabBars.map((tap) => _buildTapContent(tap)).toList(),
-            //   indicator: const UnderlineTabIndicator(borderSide: BorderSide.none),
-            //   onTap: cubit.changeTabIndex,
-            // ),
             const SizedBox(height: 30),
           ],
         );
       },
-    );
-
-    return DefaultTabController(
-      length: tabBars.length,
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-                color: AppColors.selectedColor.withOpacity(0.38),
-                borderRadius: BorderRadius.circular(30)),
-            padding: const EdgeInsets.all(8),
-            child: TabBar(
-              isScrollable: true,
-              padding: const EdgeInsets.all(0),
-              tabs: tabBars.map((tap) => _buildTapContent(tap)).toList(),
-              indicator:
-                  const UnderlineTabIndicator(borderSide: BorderSide.none),
-              onTap: cubit.changeTabIndex,
-            ),
-          ),
-          const SizedBox(height: 30),
-          SizedBox(
-              height: 1000,
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.all(8),
-                  child: TabBarView(
-                      physics: NeverScrollableScrollPhysics(),
-                      children: tabBars.map((e) => e.widget).toList())))
-        ],
-      ),
     );
   }
 

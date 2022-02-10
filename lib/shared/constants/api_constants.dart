@@ -10,6 +10,7 @@ abstract class SupervisorApis {
   static const String changeStatusToProcess = '$url/changeStatusToProcess';
   static const String changeStatusToEnd = '$url/changeStatusToEnd';
   static const String getOrders = '$url/getOrders';
+  static const String getAuthCategory = '$url/getAuthCategory';
 }
 
 /////////////// Employee
