@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:htask/shared/constants/api_constants.dart';
 
 import 'package:htask/shared/constants/constants.dart';
+import 'package:htask/shared/constants/methods.dart';
 
 class DioHelper {
   static late Dio dio;
@@ -34,11 +35,13 @@ class DioHelper {
       'lang': lang,
     };
 
-    return await dio.get(
+    final res = await dio.get(
       url,
       queryParameters: query,
       options: options,
     );
+    checkResponse(res);
+    return res;
   }
 
   static Future<Response> postData({
@@ -55,12 +58,14 @@ class DioHelper {
       'lang': lang,
     };
 
-    return await dio.post(
+    final res = await dio.post(
       url,
       queryParameters: query,
       data: data,
       options: options,
     );
+    checkResponse(res);
+    return res;
   }
 
   static Future<Response> postFormData({
@@ -76,12 +81,14 @@ class DioHelper {
       'lang': lang,
     };
 
-    return await dio.post(
+    final res = await dio.post(
       url,
       queryParameters: query,
       data: formData,
       options: options,
     );
+    checkResponse(res);
+    return res;
   }
 
   /// Put Data Function
@@ -97,11 +104,14 @@ class DioHelper {
       'Authorization': token != null ? 'Bearer $token' : '',
       'Apipassword': '1795S',
     };
-    return dio.put(
+    final res = await dio.put(
       url,
       data: (data)!,
       queryParameters: query,
     );
+    checkResponse(res);
+
+    return res;
   }
 
   /// Delete data function
@@ -119,10 +129,12 @@ class DioHelper {
       'Apipassword': '1795S',
     };
 
-    return dio.delete(
+    final res = await dio.delete(
       url,
       data: data,
       queryParameters: query,
     );
+    checkResponse(res);
+    return res;
   }
 }

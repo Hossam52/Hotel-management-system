@@ -8,6 +8,7 @@ import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/login/cubit/auth_states.dart';
 import 'package:htask/screens/login/login_background.dart';
 import 'package:htask/shared/constants.dart';
+import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/default_text_field.dart';
 import 'package:htask/widgets/defulat_button.dart';
@@ -34,17 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is SuccessLoginState) {
+              showSuccessToast('Login successifully');
               navigateToReplacement(context, _homeLayout(state.authType));
-              return;
-              // Fluttertoast.showToast(
-              //     msg: 'Successifully logged in',
-              //     backgroundColor: AppColors.doneColor,
-              //     gravity: ToastGravity.BOTTOM);
             } else if (state is ErrorLoginState) {
-              // Fluttertoast.showToast(
-              //     msg: state.errorMessage,
-              //     backgroundColor: Colors.red,
-              //     gravity: ToastGravity.SNACKBAR);
+              showErrorToast(state.errorMessage);
             }
           },
           builder: (context, state) {
@@ -75,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             DefaultTextField(
                               hintText: 'Password',
-                              isPassword: true,
+                              passwordWidget: _passwordWidget(authCubit),
+                              isPassword: authCubit.visiblePassword,
                               controller: authCubit.loginPasswordController,
                               validator: authCubit.validatePassword,
                             ),
@@ -102,6 +97,15 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _passwordWidget(AuthCubit authCubit) {
+    return GestureDetector(
+      onTap: () => authCubit.changeVisiblePassword(),
+      child: Icon(
+        authCubit.getPasswordIcon(),
       ),
     );
   }

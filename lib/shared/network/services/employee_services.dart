@@ -27,8 +27,8 @@ class EmployeeServices {
   }
 
   static Future<AllOrderStatusesModel> getOrders(String token) async {
-    final res =
-        await DioHelper.getData(url: EmployeeApis.getOrders, token: token);
+    final res = await DioHelper.postData(
+        url: EmployeeApis.getOrders, token: token, data: {});
     AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
     return allOrders;
   }

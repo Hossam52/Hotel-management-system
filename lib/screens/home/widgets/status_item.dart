@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/tasks.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
-import 'package:htask/screens/home/widgets/order_details_action_button.dart';
 import 'package:htask/screens/order_details/order_details.dart';
 import 'package:htask/shared/constants.dart';
 
 import 'package:htask/styles/colors.dart';
+import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class StatusItem extends StatelessWidget {
@@ -21,15 +21,19 @@ class StatusItem extends StatelessWidget {
   final OrderModel orderModel;
   @override
   Widget build(BuildContext context) {
+    final dateFormatter = DateFormat('yyyy-MM-dd hh:mm');
     final homeCubit = HomeCubit.instance(context);
+    final date = DateTime.parse(orderModel.date);
+    final actualEndTimeDate = orderModel.actualEndTime != null
+        ? DateTime.parse(orderModel.actualEndTime!)
+        : null;
+    final formattedDate = actualEndTimeDate != null
+        ? dateFormatter.format(actualEndTimeDate)
+        : dateFormatter.format(date);
+
     return GestureDetector(
       onTap: () => pushNewScreen(context,
           screen: OrderDetails(
-            actionWidget: OrderDetailsActionButton(
-              taskStatus: taskStatus,
-              orderId: orderModel.id,
-              homeCubit: homeCubit,
-            ),
             homeCubit: homeCubit,
             order: orderModel,
             taskStatus: taskStatus,
@@ -49,12 +53,14 @@ class StatusItem extends StatelessWidget {
                     text: orderModel.id.toString(),
                     imagePath: 'assets/images/id.png'),
                 item2: _RowItemModel(
-                    text: '12 min left', imagePath: statusImagePath),
+                    text: formattedDate, imagePath: statusImagePath),
               ),
               _rowRecord(
-                item1: _RowItemModel(text: '3 Washing orders'),
+                item1:
+                    _RowItemModel(text: orderModel.orderdetails.first.service),
                 item2: _RowItemModel(
-                    text: '210 L.E', imagePath: 'assets/images/cash.png'),
+                    text: '${orderModel.totalPrice} L.E',
+                    imagePath: 'assets/images/cash.png'),
               ),
               _rowRecord(
                 item1: _RowItemModel(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
@@ -11,26 +12,33 @@ class OrderModel {
   final String supervisorName;
   final String status;
   final String roomNum;
+  final String roomId;
   final String payment;
-  final String floor;
+  final String? floor;
   final String date;
   final String endTime;
-  final String actualEndTime;
+  final String? actualEndTime;
   final List<OrderDetailModel> orderdetails;
-  OrderModel({
-    required this.id,
-    required this.guestName,
-    required this.employeeName,
-    required this.supervisorName,
-    required this.status,
-    required this.roomNum,
-    required this.payment,
-    required this.floor,
-    required this.date,
-    required this.endTime,
-    required this.actualEndTime,
-    required this.orderdetails,
-  });
+  double totalPrice;
+  OrderModel(
+      {required this.id,
+      required this.guestName,
+      required this.employeeName,
+      required this.supervisorName,
+      required this.status,
+      required this.roomNum,
+      required this.payment,
+      required this.floor,
+      required this.date,
+      required this.endTime,
+      required this.actualEndTime,
+      required this.orderdetails,
+      required this.roomId,
+      this.totalPrice = 0}) {
+    for (var element in orderdetails) {
+      totalPrice += double.tryParse(element.price) ?? 0;
+    }
+  }
 
   OrderModel copyWith({
     int? id,
@@ -39,6 +47,7 @@ class OrderModel {
     String? supervisorName,
     String? status,
     String? roomNum,
+    String? roomId,
     String? payment,
     String? floor,
     String? date,
@@ -47,19 +56,19 @@ class OrderModel {
     List<OrderDetailModel>? orderdetails,
   }) {
     return OrderModel(
-      id: id ?? this.id,
-      guestName: guestName ?? this.guestName,
-      employeeName: employeeName ?? this.employeeName,
-      supervisorName: supervisorName ?? this.supervisorName,
-      status: status ?? this.status,
-      roomNum: roomNum ?? this.roomNum,
-      payment: payment ?? this.payment,
-      date: date ?? this.date,
-      endTime: endTime ?? this.endTime,
-      actualEndTime: actualEndTime ?? this.actualEndTime,
-      orderdetails: orderdetails ?? this.orderdetails,
-      floor: floor ?? this.floor,
-    );
+        id: id ?? this.id,
+        guestName: guestName ?? this.guestName,
+        employeeName: employeeName ?? this.employeeName,
+        supervisorName: supervisorName ?? this.supervisorName,
+        status: status ?? this.status,
+        roomNum: roomNum ?? this.roomNum,
+        payment: payment ?? this.payment,
+        date: date ?? this.date,
+        endTime: endTime ?? this.endTime,
+        actualEndTime: actualEndTime ?? this.actualEndTime,
+        orderdetails: orderdetails ?? this.orderdetails,
+        floor: floor ?? this.floor,
+        roomId: roomId ?? this.roomId);
   }
 
   Map<String, dynamic> toMap() {
@@ -70,6 +79,7 @@ class OrderModel {
       'supervisor_name': supervisorName,
       'status': status,
       'room_num': roomNum,
+      'room_id': roomId,
       'payment': payment,
       'floor': floor,
       'date': date,
@@ -87,11 +97,12 @@ class OrderModel {
       supervisorName: map['supervisor_name'] ?? '',
       status: map['status'] ?? '',
       roomNum: map['room_num'] ?? '',
+      roomId: map['room_id'] ?? '',
       payment: map['payment'] ?? '',
-      floor: map['floor'] ?? '',
+      floor: map['floor'],
       date: map['date'] ?? '',
       endTime: map['ent_time'] ?? '',
-      actualEndTime: map['actual_end_time'] ?? '',
+      actualEndTime: map['actual_end_time'],
       orderdetails: List<OrderDetailModel>.from(
           map['orderdetails']?.map((x) => OrderDetailModel.fromMap(x))),
     );

@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/models/orders/order_model.dart';
+import 'package:htask/models/supervisor/all_employees_to_assign.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/order_details/cubit/order_details_states.dart';
+import 'package:htask/screens/staff/assign_staff_employee_to_order.dart';
 import 'package:htask/shared/constants/api_constants.dart';
 import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
@@ -32,11 +37,12 @@ class SupervisorOrderDetailsCubit extends OrderDetailsCubit {
       final res =
           await SupervisorSurvices.changeStatusToProcess(token, orderId);
       if (!res.status) {
-        throw Exception(res.message);
+        emit(ErrorOrderState(res.message));
+        return;
       }
       emit(SuccessChangeStatusToProcessState(message: res.message));
-    } on Exception catch (e) {
-      emit(ErrorChangeStatusToProcessState(e.toString()));
+    } catch (e) {
+      emit(ErrorOrderState(e.toString()));
     }
   }
 
@@ -45,12 +51,32 @@ class SupervisorOrderDetailsCubit extends OrderDetailsCubit {
       emit(LoadingChangeStatusToProcessState());
       final res = await SupervisorSurvices.changeStatusToEnd(token, orderId);
       if (!res.status) {
-        throw Exception(res.message);
+        emit(ErrorOrderState(res.message));
+        return;
       }
       emit(SuccessChangeStatusToProcessState(message: res.message));
-    } on Exception catch (e) {
-      emit(ErrorChangeStatusToProcessState(e.toString()));
+    } catch (e) {
+      emit(ErrorOrderState(e.toString()));
     }
+  }
+
+  Future<void> changeAssignedEmployee(
+      BuildContext context, OrderModel order) async {
+    final token = AppCubit.instance(context).token;
+    int seID = order.orderdetails.first.id;
+    final employeeNum = await Navigator.of(context).push<int?>(
+      MaterialPageRoute(
+        builder: (_) => AssignStaffEmployeeToOrder(
+          // roomId: order.roomId,
+          // seID: seID,
+          roomId: '1',
+          seID: 5,
+        ),
+      ),
+    );
+    log('After assign employee $employeeNum');
+    final res = await SupervisorSurvices.assignEmployeeToOrder(token,
+        GetAvaEmployeesRequest(roomID: order.roomNum, seID: seID.toString()));
   }
 }
 
@@ -62,11 +88,12 @@ class EmployeeOrderDetailsCubit extends OrderDetailsCubit {
       emit(LoadingChangeStatusToProcessState());
       final res = await EmployeeServices.changeStatusToProcess(token, orderId);
       if (!res.status) {
-        throw Exception(res.message);
+        emit(ErrorOrderState(res.message));
+        return;
       }
       emit(SuccessChangeStatusToProcessState(message: res.message));
-    } on Exception catch (e) {
-      emit(ErrorChangeStatusToProcessState(e.toString()));
+    } catch (e) {
+      emit(ErrorOrderState(e.toString()));
     }
   }
 
@@ -75,11 +102,12 @@ class EmployeeOrderDetailsCubit extends OrderDetailsCubit {
       emit(LoadingChangeStatusToProcessState());
       final res = await EmployeeServices.changeStatusToEnd(token, orderId);
       if (!res.status) {
-        throw Exception(res.message);
+        emit(ErrorOrderState(res.message));
+        return;
       }
       emit(SuccessChangeStatusToProcessState(message: res.message));
-    } on Exception catch (e) {
-      emit(ErrorChangeStatusToProcessState(e.toString()));
+    } catch (e) {
+      emit(ErrorOrderState(e.toString()));
     }
   }
 }

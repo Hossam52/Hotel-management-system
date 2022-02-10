@@ -12,8 +12,14 @@ class SuccessChangeStatusToProcessState extends OrderDetailsState {
   });
 }
 
-class ErrorChangeStatusToProcessState extends OrderDetailsState {
+// class ErrorChangeStatusToProcessState extends OrderDetailsState {
+//   final String error;
+
+//   ErrorChangeStatusToProcessState(this.error);
+// }
+
+class ErrorOrderState extends OrderDetailsState {
   final String error;
 
-  ErrorChangeStatusToProcessState(this.error);
+  ErrorOrderState(this.error);
 }

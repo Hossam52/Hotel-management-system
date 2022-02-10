@@ -15,6 +15,9 @@ import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/widgets/statuses_widgets.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/order_details/cubit/order_details_cubit.dart';
+import 'package:htask/screens/staff/assign_staff_employee_to_order.dart';
+import 'package:htask/screens/staff/staff.dart';
+import 'package:htask/shared/constants.dart';
 import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
 
@@ -72,7 +75,7 @@ class HomeCubit extends Cubit<HomeState> {
           requestModel:
               CategoryRequestModel(date: date, categoryId: categoryId));
       emit(SuccessAllOrdersHomeState());
-    } on Exception catch (e) {
+    } catch (e) {
       emit(ErrorAllOrdersHomeState(e.toString()));
     }
   }
@@ -94,12 +97,12 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> getAllCategories(BuildContext context) async {
     final token = AppCubit.instance(context).token;
     final authType = AppCubit.instance(context).currentUserType!;
+    await getAllOrders(context);
     try {
       emit(LoadingAllCategoriesHomeState());
       allCategories = await _callApiToGetCategories(authType, token);
-      await getAllOrders(context);
       emit(SuccessAllCategoriesHomeState());
-    } on Exception catch (e) {
+    } catch (e) {
       emit(ErrorAllCategoriesHomeState(e.toString()));
     }
   }
@@ -116,16 +119,20 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
 /////////////////End APIS
-  void onStatusTapped(BuildContext context, Task task, int orderId) async {
+  void onStatusTapped(BuildContext context, Task task, OrderModel order) async {
+    int orderId = order.id;
     final authType = AppCubit.instance(context).currentUserType!;
     final token = AppCubit.instance(context).token;
     if (authType == LoginAuthType.supervisor) {
       if (task is ActiveSupervisorTask) {
         //TO-DO call start task for supervisor
-
+        log('Active supervisor task');
+        await SupervisorOrderDetailsCubit.instance(context)
+            .changeStatusToProcess(token, orderId);
       } else if (task is PendingSupervisorTask) {
         //TO-DO call change assessment for supervisor
-
+        await SupervisorOrderDetailsCubit.instance(context)
+            .changeStatusToEnd(token, orderId);
       } else {}
     } else if (authType == LoginAuthType.employee) {
       if (task is ActiveEmployeeTask) {

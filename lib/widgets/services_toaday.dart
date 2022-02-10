@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/layout/cubit/app_cubit.dart';
 import 'package:htask/models/categories/category_model.dart';
 import 'package:htask/models/service_model.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
+import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/service_item.dart';
 
@@ -22,6 +24,10 @@ class ServiceToday extends StatelessWidget {
           flex: 4,
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
+              if (state is LoadingAllCategoriesHomeState ||
+                  state is LoadingAllOrdersHomeState) {
+                return const Center(child: CircularProgressIndicator());
+              }
               final categories =
                   HomeCubit.instance(context).allCategories.categories;
               final selectedIndex =

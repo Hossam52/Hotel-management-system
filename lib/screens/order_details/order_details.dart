@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
 import 'package:htask/models/orders/order_details_model.dart';
 import 'package:htask/models/orders/order_model.dart';
@@ -10,6 +11,7 @@ import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/order_details/cubit/order_details_cubit.dart';
 import 'package:htask/screens/order_details/cubit/order_details_states.dart';
+import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/styles/text_styles.dart';
 import 'package:htask/widgets/defulat_button.dart';
@@ -61,10 +63,13 @@ class OrderDetails extends StatelessWidget {
             listener: (context, state) async {
               if (state is SuccessChangeStatusToProcessState) {
                 log(state.message);
+                showSuccessToast(state.message);
+                Navigator.pop(context);
                 await homeCubit.getAllOrders(context);
               } else if (state is LoadingChangeStatusToProcessState) {
                 log('Loading');
-              } else if (state is ErrorChangeStatusToProcessState) {
+              } else if (state is ErrorOrderState) {
+                showErrorToast(state.error);
                 log('Errro ////${state.error}');
               }
             },
@@ -72,10 +77,14 @@ class OrderDetails extends StatelessWidget {
               listener: (context, state) async {
                 if (state is SuccessChangeStatusToProcessState) {
                   log(state.message);
+                  showSuccessToast(state.message);
+                  Navigator.pop(context);
+
                   await homeCubit.getAllOrders(context);
                 } else if (state is LoadingChangeStatusToProcessState) {
                   log('Loading');
-                } else if (state is ErrorChangeStatusToProcessState) {
+                } else if (state is ErrorOrderState) {
+                  showErrorToast(state.error);
                   log('Errro ////${state.error}');
                 }
               },
@@ -89,6 +98,7 @@ class OrderDetails extends StatelessWidget {
                       children: [
                         _Time(taskStatus: taskStatus),
                         _PersonalDataStatistics(
+                          floor: order.floor,
                           name: order.employeeName,
                           roomNum: order.roomNum,
                           assignedTo: getAssignedToIfSupervisor(context),
@@ -101,9 +111,9 @@ class OrderDetails extends StatelessWidget {
                         // actionWidget ?? Container()
                         _OrderDetailsActionButton(
                             taskStatus: taskStatus,
-                            orderId: order.id,
+                            order: order,
                             onPressed: () => homeCubit.onStatusTapped(
-                                context, taskStatus, order.id),
+                                context, taskStatus, order),
                             homeCubit: homeCubit)
                       ],
                     ),
@@ -204,11 +214,16 @@ class _Time extends StatelessWidget {
 
 class _PersonalDataStatistics extends StatelessWidget {
   const _PersonalDataStatistics(
-      {Key? key, this.assignedTo, required this.name, required this.roomNum})
+      {Key? key,
+      this.assignedTo,
+      required this.name,
+      required this.roomNum,
+      this.floor})
       : super(key: key);
   final String? assignedTo;
   final String name;
   final String roomNum;
+  final String? floor;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -220,13 +235,15 @@ class _PersonalDataStatistics extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _name(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _roomNumber(roomNum),
-                _floor(2),
-              ],
-            ),
+            if (floor == null) Center(child: _roomNumber(roomNum)),
+            if (floor != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _roomNumber(roomNum),
+                  _floor(floor!),
+                ],
+              ),
             if (assignedTo != null)
               SizedBox(
                 height: height * 0.06,
@@ -268,7 +285,7 @@ class _PersonalDataStatistics extends StatelessWidget {
     );
   }
 
-  Widget _floor(int number) {
+  Widget _floor(String number) {
     const TextStyle floorNumberTextStyle =
         TextStyle(color: AppColors.darkPrimaryColor, fontSize: 16);
     return Column(
@@ -408,27 +425,48 @@ class _OrderDetailsActionButton extends StatelessWidget {
   const _OrderDetailsActionButton(
       {Key? key,
       required this.taskStatus,
-      required this.orderId,
+      required this.order,
       required this.homeCubit,
       required this.onPressed})
       : super(key: key);
   final Task taskStatus;
-  final int orderId;
+  final OrderModel order;
   final HomeCubit homeCubit;
   final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
     log(taskStatus.toString());
     if (taskStatus is FinishedTask) return Container();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50.0),
-      child: DefaultButton(
-        text: taskStatus.getText(),
-        radius: 6,
-        onPressed: () {
-          homeCubit.onStatusTapped(context, taskStatus, orderId);
-        },
-      ),
+    if (taskStatus is PendingSupervisorTask) {
+      return Row(
+        children: [
+          Expanded(flex: 4, child: _defaultButton(context)),
+          Expanded(child: Container()),
+          Expanded(flex: 4, child: _endButton(context))
+        ],
+      );
+    }
+    return _defaultButton(context);
+  }
+
+  Widget _defaultButton(context) {
+    return DefaultButton(
+      text: taskStatus.getText(),
+      radius: 6,
+      onPressed: () {
+        homeCubit.onStatusTapped(context, taskStatus, order);
+      },
+    );
+  }
+
+  Widget _endButton(context) {
+    return DefaultButton(
+      text: 'Change assignment',
+      radius: 6,
+      onPressed: () async {
+        await SupervisorOrderDetailsCubit.instance(context)
+            .changeAssignedEmployee(context, order);
+      },
     );
   }
 }

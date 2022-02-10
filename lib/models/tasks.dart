@@ -1,6 +1,7 @@
 abstract class Task {
   const Task();
   String getText();
+  String getImagePath();
 }
 
 abstract class TimeTask extends Task {
@@ -13,11 +14,19 @@ abstract class TimeTask extends Task {
 abstract class ActiveTask extends TimeTask {
   const ActiveTask(int currentMinutes, int currentSeconds)
       : super(currentMinutes, currentSeconds);
+  @override
+  String getImagePath() {
+    return 'assets/images/timer.png';
+  }
 }
 
 abstract class PendingTask extends TimeTask {
   const PendingTask(int currentMinutes, int currentSeconds)
       : super(currentMinutes, currentSeconds);
+  @override
+  String getImagePath() {
+    return 'assets/images/waiting.png';
+  }
 }
 
 class FinishedTask extends Task {
@@ -26,6 +35,11 @@ class FinishedTask extends Task {
   @override
   String getText() {
     return '';
+  }
+
+  @override
+  String getImagePath() {
+    return 'assets/images/completed.png';
   }
 }
 
@@ -47,7 +61,7 @@ class PendingSupervisorTask extends PendingTask {
 
   @override
   String getText() {
-    return 'Change Assessment';
+    return 'End task';
   }
 }
 

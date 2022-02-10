@@ -62,7 +62,8 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(LoadingLoginState());
       if (selectedAccountType == null) {
-        throw Exception('Account type not selected');
+        emit(ErrorLoginState(errorMessage: 'Account type not selected'));
+        return;
       }
       final personalProfile = await _callLoginApi();
       log(personalProfile.toString());

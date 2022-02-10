@@ -48,7 +48,7 @@ Widget _listView(List<OrderModel> orders, Task task) {
     itemBuilder: (_, index) => StatusItem(
       orderModel: orders[index],
       taskStatus: task,
-      statusImagePath: 'assets/images/completed.png',
+      statusImagePath: task.getImagePath(),
     ),
   );
 }
