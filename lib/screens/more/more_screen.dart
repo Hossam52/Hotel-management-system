@@ -1,5 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/screens/login/cubit/auth_cubit.dart';
+import 'package:htask/screens/login/cubit/auth_states.dart';
+import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
+import 'package:htask/widgets/custom_switch.dart';
 import 'package:htask/widgets/home_header.dart';
 
 class MoreScreen extends StatelessWidget {
@@ -9,24 +16,43 @@ class MoreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.lightPrimary,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const HomeHeader(),
-            _buildItem('Available', trailing: const CustomSwitch()),
-            _buildItem('Report problem', imagePath: 'assets/images/report.png'),
-            _buildItem('Logout', imagePath: 'assets/images/logout.png'),
-          ],
-        ),
-      ),
+      body: Builder(builder: (context) {
+        return BlocListener<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is LoadingLogoutState) log('Loading logout state');
+            if (state is SuccessLogoutState) showSuccessToast(state.message);
+            if (state is ErrorLogoutState) showErrorToast(state.error);
+          },
+          child: SafeArea(
+            child: Column(
+              children: [
+                const HomeHeader(),
+                _buildItem('Available',
+                    trailing: CustomSwitch(
+                      val: false,
+                      onToggle: (val) {},
+                    )),
+                _buildItem('Report problem',
+                    imagePath: 'assets/images/report.png'),
+                _buildItem('Logout', imagePath: 'assets/images/logout.png',
+                    onTap: () async {
+                  await AuthCubit.instance(context).logout(context);
+                }),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 
-  Widget _buildItem(String text, {String? imagePath, Widget? trailing}) {
+  Widget _buildItem(String text,
+      {String? imagePath, Widget? trailing, VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
         contentPadding: const EdgeInsets.all(0),
+        onTap: onTap,
         title: Text(
           text,
           style: const TextStyle(
@@ -41,31 +67,6 @@ class MoreScreen extends StatelessWidget {
               ),
         trailing: trailing,
       ),
-    );
-  }
-}
-
-class CustomSwitch extends StatefulWidget {
-  const CustomSwitch({Key? key}) : super(key: key);
-
-  @override
-  _CustomSwitchState createState() => _CustomSwitchState();
-}
-
-class _CustomSwitchState extends State<CustomSwitch> {
-  bool val = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Switch(
-      trackColor: MaterialStateProperty.all(AppColors.white),
-      activeColor: AppColors.doneColor,
-      onChanged: (bool value) {
-        setState(() {
-          val = value;
-        });
-      },
-      value: val,
     );
   }
 }

@@ -2,7 +2,8 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:htask/layout/main_layout.dart';
+import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/layout/employee_layout/employee_layout.dart';
 import 'package:htask/layout/supervisor_layout/supervisor_home_layout.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/login/cubit/auth_states.dart';
@@ -36,7 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             if (state is SuccessLoginState) {
               showSuccessToast('Login successifully');
-              navigateToReplacement(context, _homeLayout(state.authType));
+              navigateToReplacement(context,
+                  AppCubit.instance(context).homeLayout(state.authType));
             } else if (state is ErrorLoginState) {
               showErrorToast(state.errorMessage);
             }
@@ -108,16 +110,6 @@ class _LoginScreenState extends State<LoginScreen> {
         authCubit.getPasswordIcon(),
       ),
     );
-  }
-
-  Widget _homeLayout(LoginAuthType loginAuthType) {
-    if (loginAuthType == LoginAuthType.supervisor) {
-      return const SuperVisorHomeLayout();
-    } else if (loginAuthType == LoginAuthType.employee) {
-      return const MainHomeLayout();
-    } else {
-      throw Exception('Unknown type');
-    }
   }
 
   Image _logo() => Image.asset(

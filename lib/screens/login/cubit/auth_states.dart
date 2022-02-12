@@ -23,3 +23,18 @@ class ErrorLoginState extends AuthState {
     required this.errorMessage,
   });
 }
+
+//////logout states
+class LoadingLogoutState extends AuthState {}
+
+class SuccessLogoutState extends AuthState {
+  final String message;
+
+  SuccessLogoutState(this.message);
+}
+
+class ErrorLogoutState extends AuthState {
+  final String error;
+
+  ErrorLogoutState(this.error);
+}

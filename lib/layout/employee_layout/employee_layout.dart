@@ -2,62 +2,75 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/layout/employee_layout/cubit/employee_cubit.dart';
+import 'package:htask/layout/employee_layout/cubit/employee_states.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/home.dart';
+import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/more/more_screen.dart';
 import 'package:htask/screens/staff/staff.dart';
 import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
+import 'package:htask/widgets/bottom_navigation.dart';
 import 'package:htask/widgets/error_widget.dart';
 import 'package:htask/widgets/home_header.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-class MainHomeLayout extends StatelessWidget {
-  const MainHomeLayout({Key? key}) : super(key: key);
+class EmployeeLayout extends StatelessWidget {
+  const EmployeeLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<HomeCubit>(
-      create: (context) => HomeCubit()..getAllOrders(context),
-      lazy: false,
-      child: PersistentTabView(
-        context,
-        screens: const [
-          _HomeEmployee(),
-          MoreScreen(),
-        ],
-        confineInSafeArea: true,
-        decoration: const NavBarDecoration(
-          colorBehindNavBar: Colors.green,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20),
-          ),
-          // colorBehindNavBar: AppColors.
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<HomeCubit>(
+          create: (context) => HomeCubit()..getAllOrders(context),
+          lazy: false,
         ),
-        items: [
-          _builNavItem('assets/images/home.png', 'Home'),
-          _builNavItem('assets/images/more.png', 'More'),
-        ],
-        navBarStyle: NavBarStyle.style7,
+        BlocProvider(
+          create: (context) => EmployeeCubit(),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (context) => AuthCubit(),
+        ),
+      ],
+      child: BlocBuilder<EmployeeCubit, EmployeeStates>(
+        builder: (context, state) {
+          final cubit = EmployeeCubit.instance(context);
+          return Scaffold(
+              bottomNavigationBar: CustomBottomNavBar(
+                curve: Curves.bounceInOut,
+                selectedColorOpacity: 0.2,
+                onTap: (index) {
+                  cubit.changeSelectedTabIndex(index);
+                },
+                currentIndex: cubit.selectedTabIndex,
+                items: [
+                  _builNavItem('assets/images/home.png', 'Home'),
+                  _builNavItem('assets/images/more.png', 'More'),
+                ],
+              ),
+              body: cubit.getScreen());
+        },
       ),
     );
   }
 
-  PersistentBottomNavBarItem _builNavItem(String iconPath, String title) {
-    return PersistentBottomNavBarItem(
-        activeColorPrimary: AppColors.lightPrimary,
-        activeColorSecondary: AppColors.darkPrimaryColor,
+  CustomBottomNavBarItem _builNavItem(String iconPath, String title) {
+    return CustomBottomNavBarItem(
+        selectedColor: AppColors.darkPrimaryColor,
         icon: Image.asset(
           iconPath,
           scale: 1.3,
         ),
-        title: title);
+        title: Text(title));
   }
 }
 
-class _HomeEmployee extends StatelessWidget {
-  const _HomeEmployee({Key? key}) : super(key: key);
+class HomeEmployee extends StatelessWidget {
+  const HomeEmployee({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

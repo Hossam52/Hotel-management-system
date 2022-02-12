@@ -82,13 +82,8 @@ class _PersonItem extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
       leading: FittedBox(
-        child: CircleAvatar(
-          child: ClipOval(
-            child: DefaultCachedImage(
-              imagePath: employee.image,
-            ),
-          ),
-          radius: 46,
+        child: DefaultCachedImage(
+          imagePath: employee.image,
         ),
       ),
       title: Text(

@@ -85,8 +85,8 @@ class StatusItem extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: _rowItem(item1.imagePath, item1.text)),
-            Expanded(child: _rowItem(item2.imagePath, item2.text)),
+            Flexible(child: _rowItem(item1.imagePath, item1.text)),
+            Flexible(child: _rowItem(item2.imagePath, item2.text)),
           ],
         ),
         const Divider(
@@ -104,7 +104,7 @@ class StatusItem extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        Text(text),
+        Flexible(child: Text(text)),
       ],
     );
   }

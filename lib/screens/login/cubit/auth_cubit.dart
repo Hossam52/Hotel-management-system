@@ -3,11 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/models/logout_model.dart';
 import 'package:htask/models/person_login_model.dart';
 import 'package:htask/screens/login/cubit/auth_states.dart';
+import 'package:htask/screens/login/login.dart';
+import 'package:htask/shared/constants.dart';
 import 'package:htask/shared/constants/api_constants.dart';
 import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 enum LoginAuthType { supervisor, employee }
 
@@ -67,7 +71,7 @@ class AuthCubit extends Cubit<AuthState> {
       }
       final personalProfile = await _callLoginApi();
       log(personalProfile.toString());
-      AppCubit.instance(context)
+      await AppCubit.instance(context)
           .setPersonalData(personalProfile, token, selectedAccountType!);
       emit(SuccessLoginState(selectedAccountType!));
     } catch (e) {
@@ -89,6 +93,38 @@ class AuthCubit extends Cubit<AuthState> {
       return model.supervisor;
     } else {
       throw Exception('Un known type');
+    }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    final token = AppCubit.instance(context).token;
+    final authType = AppCubit.instance(context).currentUserType!;
+
+    try {
+      emit(LoadingLogoutState());
+
+      final res = await _callLogoutApi(authType, token);
+
+      if (res.status) {
+        await AppCubit.instance(context).removeAllStoredDataInCache();
+        emit(SuccessLogoutState(res.message));
+        navigateToReplacement(context, const LoginScreen());
+      } else {
+        throw Exception(res.message);
+      }
+    } catch (e) {
+      emit(ErrorLogoutState(e.toString()));
+    }
+  }
+
+  Future<LogoutModel> _callLogoutApi(
+      LoginAuthType authType, String accessToken) async {
+    if (authType == LoginAuthType.employee) {
+      return await EmployeeServices.logout(accessToken);
+    } else if (authType == LoginAuthType.supervisor) {
+      return await SupervisorSurvices.logout(accessToken);
+    } else {
+      throw Exception('Unknown type');
     }
   }
 

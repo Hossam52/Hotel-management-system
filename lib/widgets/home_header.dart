@@ -20,11 +20,7 @@ class HomeHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            child:
-                ClipOval(child: DefaultCachedImage(imagePath: profile.image)),
-            radius: 40,
-          ),
+          DefaultCachedImage(imagePath: profile.image),
           const SizedBox(width: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,

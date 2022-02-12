@@ -7,6 +7,8 @@ import 'package:htask/models/person_login_model.dart';
 import 'package:htask/models/logout_model.dart';
 import 'package:htask/models/orders/all_orders_statueses_model.dart';
 import 'package:htask/models/supervisor/all_employees_to_assign.dart';
+import 'package:htask/models/supervisor/supervisor_employees/change_employee_status.dart';
+import 'package:htask/models/supervisor/supervisor_employees/supervisor_employees_model.dart';
 import 'package:htask/models/supervisor/supervisor_login.dart';
 import 'package:htask/shared/constants/api_constants.dart';
 import 'package:htask/shared/network/remote/dio_helper.dart';
@@ -88,5 +90,28 @@ class SupervisorSurvices {
     log(res.toString());
     AllEmployeesToAssign categoies = AllEmployeesToAssign.fromMap(res.data);
     return categoies;
+  }
+
+  static Future<SupervisorEmployeesModel> getMyEmployees(String token) async {
+    final res = await DioHelper.getData(
+      url: SupervisorApis.getMyEmployee,
+      token: token,
+    );
+    log(res.toString());
+    SupervisorEmployeesModel categoies =
+        SupervisorEmployeesModel.fromMap(res.data);
+    return categoies;
+  }
+
+  static Future<ChangeEmployeeStatusModel> changeEmployeeStatus(
+      String token, int id) async {
+    final res = await DioHelper.postData(
+        url: SupervisorApis.changeEmployeeStatus,
+        token: token,
+        data: {'employee_id': id});
+    log(res.toString());
+    ChangeEmployeeStatusModel employeeStatusModel =
+        ChangeEmployeeStatusModel.fromMap(res.data);
+    return employeeStatusModel;
   }
 }

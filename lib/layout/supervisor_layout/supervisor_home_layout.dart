@@ -1,12 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/layout/supervisor_layout/cubit/supervisor_cubit.dart';
+import 'package:htask/layout/supervisor_layout/cubit/supervisor_states.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/home.dart';
+import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/more/more_screen.dart';
+import 'package:htask/screens/staff/cubit/staff_cubit.dart';
 import 'package:htask/screens/staff/staff.dart';
 import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
+import 'package:htask/widgets/bottom_navigation.dart';
 import 'package:htask/widgets/home_header.dart';
 import 'package:htask/widgets/services_toaday.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -16,46 +23,57 @@ class SuperVisorHomeLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<HomeCubit>(
-        create: (context) => HomeCubit()..getAllCategories(context),
-        lazy: false,
-        child: PersistentTabView(
-          context,
-          screens: const [
-            _SupervisorHome(),
-            StaffScreen(),
-            MoreScreen(),
-          ],
-          confineInSafeArea: true,
-          decoration: const NavBarDecoration(
-            colorBehindNavBar: Colors.green,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
-          ),
-          items: [
-            _builNavItem('assets/images/home.png', 'Home'),
-            _builNavItem('assets/images/staff.png', 'Staff'),
-            _builNavItem('assets/images/more.png', 'More'),
-          ],
-          navBarStyle: NavBarStyle.style7,
-        ));
+    log('Hello from supervisor layout');
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SupervisorCubit>(
+            create: (context) => SupervisorCubit(), lazy: false),
+        BlocProvider<HomeCubit>(
+            create: (context) => HomeCubit()..getAllCategories(context),
+            lazy: false),
+        BlocProvider<StaffCubit>(
+          create: (context) => StaffCubit(),
+        ),
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(),
+        ),
+      ],
+      child: BlocBuilder<SupervisorCubit, SupervisorStates>(
+        builder: (context, state) {
+          final cubit = SupervisorCubit.instance(context);
+          return Scaffold(
+              bottomNavigationBar: CustomBottomNavBar(
+                curve: Curves.bounceInOut,
+                selectedColorOpacity: 0.2,
+                onTap: (index) {
+                  cubit.changeSelectedTabIndex(index);
+                },
+                currentIndex: cubit.selectedTabIndex,
+                items: [
+                  _builNavItem('assets/images/home.png', 'Home'),
+                  _builNavItem('assets/images/staff.png', 'Staff'),
+                  _builNavItem('assets/images/more.png', 'More'),
+                ],
+              ),
+              body: cubit.getScreen());
+        },
+      ),
+    );
   }
 
-  PersistentBottomNavBarItem _builNavItem(String iconPath, String title) {
-    return PersistentBottomNavBarItem(
-        activeColorPrimary: AppColors.lightPrimary,
-        activeColorSecondary: AppColors.darkPrimaryColor,
+  CustomBottomNavBarItem _builNavItem(String iconPath, String title) {
+    return CustomBottomNavBarItem(
+        selectedColor: AppColors.darkPrimaryColor,
         icon: Image.asset(
           iconPath,
           scale: 1.3,
         ),
-        title: title);
+        title: Text(title));
   }
 }
 
-class _SupervisorHome extends StatelessWidget {
-  const _SupervisorHome({Key? key}) : super(key: key);
+class SupervisorHome extends StatelessWidget {
+  const SupervisorHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

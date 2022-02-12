@@ -106,7 +106,7 @@ class OrderDetails extends StatelessWidget {
                         const SizedBox(height: 30),
                         _OrderDetailsItems(orderDetails: order.orderdetails),
                         const SizedBox(height: 30),
-                        const _Price(price: 120),
+                        _Price(price: order.totalPrice),
                         const SizedBox(height: 30),
                         // actionWidget ?? Container()
                         _OrderDetailsActionButton(
@@ -316,11 +316,6 @@ class _OrderDetailsItems extends StatelessWidget {
       : super(key: key);
   final List<OrderDetailModel> orderDetails;
 
-  final List<String> items = const [
-    'Washing clothes',
-    '3 pieces',
-    'Needed as soon as possible plz'
-  ];
   @override
   Widget build(BuildContext context) {
     const textStyle = TextStyle(fontSize: 16);

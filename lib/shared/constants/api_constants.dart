@@ -13,6 +13,8 @@ abstract class SupervisorApis {
   static const String getAuthCategory = '$url/getAuthCategory';
   static const String getAvaEmployee = '$url/getAvaEmployee';
   static const String assignEmployeeToOrder = '$url/AssignEmployeeToOrder';
+  static const String getMyEmployee = '$url/getMyEmployee';
+  static const String changeEmployeeStatus = '$url/changeEmployeeStatus';
 }
 
 /////////////// Employee

@@ -21,15 +21,12 @@ class ServiceItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(30)),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundColor: selected
-                ? AppColors.selectedColor
-                : AppColors.selectedColor.withOpacity(0.6),
-            // backgroundImage: AssetImage(serviceModel.imagePath),
-            child:
-                ClipOval(child: DefaultCachedImage(imagePath: category.image)),
-            radius: 20,
-          ),
+          DefaultCachedImage(
+              radius: 25,
+              color: selected
+                  ? AppColors.selectedColor
+                  : AppColors.selectedColor.withOpacity(0.6),
+              imagePath: category.image),
           const SizedBox(width: 10),
           Padding(
             padding: const EdgeInsets.all(8.0),
