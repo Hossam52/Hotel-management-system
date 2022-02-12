@@ -11,11 +11,22 @@ class DefaultCachedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return Container(
+    //   width: radius!,
+    //   decoration: BoxDecoration(
+    //     shape: BoxShape.circle,
+    //     image: DecorationImage(
+    //       fit: BoxFit.fill,
+    //       image: CachedNetworkImageProvider(imagePath),
+    //     ),
+    //   ),
+    // );
     return CircleAvatar(
       backgroundColor: color,
-      child: ClipOval(
-        child: CachedNetworkImage(imageUrl: imagePath, fit: BoxFit.fill),
-      ),
+      backgroundImage: CachedNetworkImageProvider(imagePath),
+      // child: ClipOval(
+      //   child: CachedNetworkImage(imageUrl: imagePath, fit: BoxFit.fill),
+      // ),
       radius: radius,
     );
   }
