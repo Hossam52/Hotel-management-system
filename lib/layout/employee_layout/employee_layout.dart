@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/employee_layout/cubit/employee_cubit.dart';
 import 'package:htask/layout/employee_layout/cubit/employee_states.dart';
+import 'package:htask/layout/widgets/selected_filtered_date.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/home.dart';
@@ -102,7 +103,8 @@ class HomeEmployee extends StatelessWidget {
               return SingleChildScrollView(
                 child: Column(
                   children: const [
-                    HomeHeader(),
+                    HomeHeader(showFilterByDate: true),
+                    SelectedFilteredDate(),
                     SizedBox(height: 10),
                     Padding(
                       padding: EdgeInsets.all(padding),

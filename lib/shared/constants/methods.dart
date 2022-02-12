@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:htask/styles/colors.dart';
+import 'package:intl/intl.dart';
 
 void showSuccessToast(String msg) {
   Fluttertoast.showToast(msg: msg, backgroundColor: AppColors.doneColor);
@@ -24,4 +25,12 @@ void checkResponse(Response res) {
       throw Exception('Unknown error happened');
     }
   }
+}
+
+String formatDateWithoutTime(DateTime date) {
+  return DateFormat('yyyy-MM-dd').format(date);
+}
+
+String formatDateWithTime(DateTime date) {
+  return DateFormat('yyyy-MM-dd hh:mm').format(date);
 }

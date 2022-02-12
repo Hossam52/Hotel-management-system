@@ -6,6 +6,8 @@ class ChangeTabIndexState extends HomeState {}
 
 class ChangeCategoryIndexState extends HomeState {}
 
+class ChangeDateFilterState extends HomeState {}
+
 //All orders
 class LoadingAllOrdersHomeState extends HomeState {}
 

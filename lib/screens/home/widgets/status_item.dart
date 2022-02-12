@@ -4,6 +4,7 @@ import 'package:htask/models/tasks.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/order_details/order_details.dart';
 import 'package:htask/shared/constants.dart';
+import 'package:htask/shared/constants/methods.dart';
 
 import 'package:htask/styles/colors.dart';
 import 'package:intl/intl.dart';
@@ -21,15 +22,14 @@ class StatusItem extends StatelessWidget {
   final OrderModel orderModel;
   @override
   Widget build(BuildContext context) {
-    final dateFormatter = DateFormat('yyyy-MM-dd hh:mm');
     final homeCubit = HomeCubit.instance(context);
     final date = DateTime.parse(orderModel.date);
     final actualEndTimeDate = orderModel.actualEndTime != null
         ? DateTime.parse(orderModel.actualEndTime!)
         : null;
     final formattedDate = actualEndTimeDate != null
-        ? dateFormatter.format(actualEndTimeDate)
-        : dateFormatter.format(date);
+        ? formatDateWithTime(actualEndTimeDate)
+        : formatDateWithTime(date);
 
     return GestureDetector(
       onTap: () => pushNewScreen(context,

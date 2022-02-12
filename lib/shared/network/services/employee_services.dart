@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:htask/models/Employee/employee_login_model.dart';
+import 'package:htask/models/categories/category_request_model.dart';
 import 'package:htask/models/orders/change_order_status.dart';
 import 'package:htask/models/person_login_model.dart';
 import 'package:htask/models/logout_model.dart';
@@ -26,9 +27,12 @@ class EmployeeServices {
     return logoutModel;
   }
 
-  static Future<AllOrderStatusesModel> getOrders(String token) async {
+  static Future<AllOrderStatusesModel> getOrders(String token,
+      {CategoryRequestModel? requestModel}) async {
     final res = await DioHelper.postData(
-        url: EmployeeApis.getOrders, token: token, data: {});
+        url: EmployeeApis.getOrders,
+        token: token,
+        data: requestModel == null ? {} : requestModel.toMap());
     AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
     return allOrders;
   }

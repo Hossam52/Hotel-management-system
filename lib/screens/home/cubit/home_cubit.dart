@@ -18,6 +18,7 @@ import 'package:htask/screens/order_details/cubit/order_details_cubit.dart';
 import 'package:htask/screens/staff/assign_staff_employee_to_order.dart';
 import 'package:htask/screens/staff/staff.dart';
 import 'package:htask/shared/constants.dart';
+import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
 
@@ -43,7 +44,7 @@ class HomeCubit extends Cubit<HomeState> {
         imagePath: 'assets/images/finished.png',
         widget: const FinishedWidget()),
   ];
-
+  DateTime? filterByDate;
   late AllOrderStatusesModel allOrders;
   late AllCategoriesModel allCategories;
 
@@ -65,10 +66,17 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
 //////APIS
-  Future<void> getAllOrders(BuildContext context,
-      {String? date, int? categoryId}) async {
+  Future<void> getAllOrders(
+    BuildContext context,
+  ) async {
     final loginAuthType = AppCubit.instance(context).currentUserType;
     final token = AppCubit.instance(context).token;
+    final date =
+        filterByDate != null ? formatDateWithoutTime(filterByDate!) : null;
+    log('Selected date is $date');
+    final categoryId = selectedCategoryIndex != null
+        ? allCategories.categories[selectedCategoryIndex!].id
+        : null;
     try {
       emit(LoadingAllOrdersHomeState());
       allOrders = await _callApiToGetOrders(loginAuthType!, token,
@@ -84,7 +92,8 @@ class HomeCubit extends Cubit<HomeState> {
       LoginAuthType authType, String token,
       {CategoryRequestModel? requestModel}) async {
     if (authType == LoginAuthType.employee) {
-      return await EmployeeServices.getOrders(token);
+      return await EmployeeServices.getOrders(token,
+          requestModel: requestModel);
     }
     if (authType == LoginAuthType.supervisor) {
       return await SupervisorSurvices.getOrders(token,
@@ -176,11 +185,18 @@ class HomeCubit extends Cubit<HomeState> {
   void changeSelectedCategory(BuildContext context, {int? index}) {
     selectedCategoryIndex = index;
     emit(ChangeCategoryIndexState());
-    if (index == null) {
-      getAllOrders(context);
-    } else {
-      final categoryId = allCategories.categories[index].id;
-      getAllOrders(context, categoryId: categoryId);
-    }
+    getAllOrders(context);
+    return;
+    // if (index == null) {
+    //   getAllOrders(context);
+    // } else {
+    //   final categoryId = allCategories.categories[index].id;
+    //   getAllOrders(context, categoryId: categoryId);
+    // }
+  }
+
+  void changeFilterDate(DateTime? date) {
+    filterByDate = date;
+    emit(ChangeDateFilterState());
   }
 }

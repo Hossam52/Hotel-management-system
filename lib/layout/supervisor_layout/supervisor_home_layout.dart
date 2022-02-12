@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/supervisor_layout/cubit/supervisor_cubit.dart';
 import 'package:htask/layout/supervisor_layout/cubit/supervisor_states.dart';
+import 'package:htask/layout/widgets/selected_filtered_date.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/home.dart';
@@ -96,7 +97,10 @@ class SupervisorHome extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const HomeHeader(),
+                  const HomeHeader(
+                    showFilterByDate: true,
+                  ),
+                  const SelectedFilteredDate(),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(padding),
