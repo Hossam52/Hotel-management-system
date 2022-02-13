@@ -7,9 +7,11 @@ import 'package:htask/models/person_login_model.dart';
 import 'package:htask/models/logout_model.dart';
 import 'package:htask/models/orders/all_orders_statueses_model.dart';
 import 'package:htask/models/supervisor/all_employees_to_assign.dart';
+import 'package:htask/models/supervisor/assign_order_to_employee.dart';
 import 'package:htask/models/supervisor/supervisor_employees/change_employee_status.dart';
 import 'package:htask/models/supervisor/supervisor_employees/supervisor_employees_model.dart';
 import 'package:htask/models/supervisor/supervisor_login.dart';
+import 'package:htask/screens/staff/assign_staff_employee_to_order.dart';
 import 'package:htask/shared/constants/api_constants.dart';
 import 'package:htask/shared/network/remote/dio_helper.dart';
 
@@ -72,6 +74,7 @@ class SupervisorSurvices {
 
   static Future<AllEmployeesToAssign> getAllEmployees(
       String token, GetAvaEmployeesRequest request) async {
+    log(request.toMap().toString());
     final res = await DioHelper.postData(
         url: SupervisorApis.getAvaEmployee,
         token: token,
@@ -81,14 +84,14 @@ class SupervisorSurvices {
     return categoies;
   }
 
-  static Future<AllEmployeesToAssign> assignEmployeeToOrder(
-      String token, GetAvaEmployeesRequest request) async {
+  static Future<AssignOrderToEmployee> assignEmployeeToOrder(
+      String token, AssignOrderToEmployeeRequest request) async {
     final res = await DioHelper.postData(
-        url: SupervisorApis.getAvaEmployee,
+        url: SupervisorApis.assignEmployeeToOrder,
         token: token,
         data: request.toMap());
     log(res.toString());
-    AllEmployeesToAssign categoies = AllEmployeesToAssign.fromMap(res.data);
+    AssignOrderToEmployee categoies = AssignOrderToEmployee.fromMap(res.data);
     return categoies;
   }
 

@@ -82,6 +82,7 @@ class HomeCubit extends Cubit<HomeState> {
       allOrders = await _callApiToGetOrders(loginAuthType!, token,
           requestModel:
               CategoryRequestModel(date: date, categoryId: categoryId));
+      log(allOrders.newStatus.toString());
       emit(SuccessAllOrdersHomeState());
     } catch (e) {
       emit(ErrorAllOrdersHomeState(e.toString()));

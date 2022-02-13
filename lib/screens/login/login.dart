@@ -164,3 +164,46 @@ class _RadioButtonAccountType extends StatelessWidget {
     );
   }
 }
+
+class ImageRadioButton extends StatelessWidget {
+  const ImageRadioButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedAuthType = AuthCubit.instance(context).selectedAccountType;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            AuthCubit.instance(context)
+                .changeSelectedAccountType(LoginAuthType.employee);
+          },
+          child: Container(
+            height: 56,
+            width: 56,
+            color: selectedAuthType == LoginAuthType.employee
+                ? Colors.grey
+                : Colors.transparent,
+            child: Image.asset('assets/images/employee_image.png'),
+          ),
+        ),
+        SizedBox(width: 4),
+        GestureDetector(
+          onTap: () {
+            AuthCubit.instance(context)
+                .changeSelectedAccountType(LoginAuthType.supervisor);
+          },
+          child: Container(
+            height: 56,
+            width: 56,
+            color: selectedAuthType == LoginAuthType.supervisor
+                ? Colors.grey
+                : Colors.transparent,
+            child: Image.asset('assets/images/supervisor_image.png'),
+          ),
+        ),
+      ],
+    );
+  }
+}

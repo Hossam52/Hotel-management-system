@@ -3,6 +3,7 @@ import 'dart:convert';
 class OrderDetailModel {
   int id;
   String service;
+  String service_id;
   String image;
   String price;
   String quantity;
@@ -13,22 +14,23 @@ class OrderDetailModel {
     required this.image,
     required this.price,
     required this.quantity,
+    required this.service_id,
   });
 
-  OrderDetailModel copyWith({
-    int? id,
-    String? service,
-    String? image,
-    String? price,
-    String? quantity,
-  }) {
+  OrderDetailModel copyWith(
+      {int? id,
+      String? service,
+      String? image,
+      String? price,
+      String? quantity,
+      String? service_id}) {
     return OrderDetailModel(
-      id: id ?? this.id,
-      service: service ?? this.service,
-      image: image ?? this.image,
-      price: price ?? this.price,
-      quantity: quantity ?? this.quantity,
-    );
+        id: id ?? this.id,
+        service: service ?? this.service,
+        image: image ?? this.image,
+        price: price ?? this.price,
+        quantity: quantity ?? this.quantity,
+        service_id: service_id ?? this.service_id);
   }
 
   Map<String, dynamic> toMap() {
@@ -38,17 +40,18 @@ class OrderDetailModel {
       'image': image,
       'price': price,
       'quantity': quantity,
+      'service_id': service_id,
     };
   }
 
   factory OrderDetailModel.fromMap(Map<String, dynamic> map) {
     return OrderDetailModel(
-      id: map['id']?.toInt() ?? 0,
-      service: map['service'] ?? '',
-      image: map['iameg'] ?? '',
-      price: map['price'] ?? 0.0,
-      quantity: map['quantity'] ?? '',
-    );
+        id: map['id']?.toInt() ?? 0,
+        service: map['service'] ?? '',
+        image: map['iameg'] ?? '',
+        price: map['price'] ?? 0.0,
+        quantity: map['quantity'] ?? '',
+        service_id: map['service_id'] ?? '');
   }
 
   String toJson() => json.encode(toMap());
@@ -58,7 +61,7 @@ class OrderDetailModel {
 
   @override
   String toString() {
-    return 'OrderDetailModel(id: $id, service: $service, image: $image, price: $price, quantity: $quantity)';
+    return 'OrderDetailModel(id: $id, service: $service,service_id: $service_id image: $image, price: $price, quantity: $quantity)';
   }
 
   @override
@@ -70,13 +73,15 @@ class OrderDetailModel {
         other.service == service &&
         other.image == image &&
         other.price == price &&
-        other.quantity == quantity;
+        other.quantity == quantity &&
+        other.service_id == service_id;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
         service.hashCode ^
+        service_id.hashCode ^
         image.hashCode ^
         price.hashCode ^
         quantity.hashCode;

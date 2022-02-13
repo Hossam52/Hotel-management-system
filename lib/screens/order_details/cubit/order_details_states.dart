@@ -23,3 +23,20 @@ class ErrorOrderState extends OrderDetailsState {
 
   ErrorOrderState(this.error);
 }
+
+//For change assignment
+
+class ChangingEmployeeassignmentState extends OrderDetailsState {}
+
+class SuccessChangingEmployeeassignmentState extends OrderDetailsState {
+  String message;
+  SuccessChangingEmployeeassignmentState({
+    required this.message,
+  });
+}
+
+class ErrorChangingEmployeeassignmentState extends OrderDetailsState {
+  final String error;
+
+  ErrorChangingEmployeeassignmentState(this.error);
+}

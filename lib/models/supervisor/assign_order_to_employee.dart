@@ -1,8 +1,57 @@
 import 'dart:convert';
 
 class AssignOrderToEmployee {
-  // bool status;
+  bool status;
+  String message;
+  AssignOrderToEmployee({
+    required this.status,
+    required this.message,
+  });
 
+  AssignOrderToEmployee copyWith({
+    bool? status,
+    String? message,
+  }) {
+    return AssignOrderToEmployee(
+      status: status ?? this.status,
+      message: message ?? this.message,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'status': status,
+      'message': message,
+    };
+  }
+
+  factory AssignOrderToEmployee.fromMap(Map<String, dynamic> map) {
+    return AssignOrderToEmployee(
+      status: map['status'] ?? false,
+      message: map['message'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory AssignOrderToEmployee.fromJson(String source) =>
+      AssignOrderToEmployee.fromMap(json.decode(source));
+
+  @override
+  String toString() =>
+      'AssignOrderToEmployee(status: $status, message: $message)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AssignOrderToEmployee &&
+        other.status == status &&
+        other.message == message;
+  }
+
+  @override
+  int get hashCode => status.hashCode ^ message.hashCode;
 }
 
 class AssignOrderToEmployeeRequest {

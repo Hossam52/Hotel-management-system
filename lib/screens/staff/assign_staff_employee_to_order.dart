@@ -6,13 +6,14 @@ import 'package:htask/screens/staff/cubit/staff_state.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/default_cached_image.dart';
 import 'package:htask/widgets/error_widget.dart';
+import 'package:htask/widgets/no_data.dart';
 
 class AssignStaffEmployeeToOrder extends StatelessWidget {
   const AssignStaffEmployeeToOrder(
       {Key? key, required this.roomId, required this.seID})
       : super(key: key);
   final String roomId;
-  final int seID;
+  final String seID;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +50,11 @@ class AssignStaffEmployeeToOrder extends StatelessWidget {
 
   Widget _persons() {
     return BlocBuilder<StaffCubit, StaffStates>(builder: (context, state) {
+      if (state is ErrorllEmployeesToAssignStaffState) {
+        return DefaultErrorWidget(
+            refreshMethod: () async => StaffCubit.instance(context)
+                .getAllStaffToAssign(context, roomId, seID));
+      }
       final employees =
           StaffCubit.instance(context).allEmployeesToAssign.employees;
       return Card(

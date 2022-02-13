@@ -25,7 +25,7 @@ class StaffCubit extends Cubit<StaffStates> {
   }
 
   Future<void> getAllStaffToAssign(
-      BuildContext context, String roomId, int seID) async {
+      BuildContext context, String roomId, String seID) async {
     final token = AppCubit.instance(context).token;
     try {
       emit(LoadingAllEmployeesToAssignStaffState());
@@ -33,9 +33,14 @@ class StaffCubit extends Cubit<StaffStates> {
         token,
         GetAvaEmployeesRequest(
           roomID: roomId,
-          seID: seID.toString(),
+          seID: seID,
         ),
       );
+      if (res.status == false) {
+        emit(ErrorllEmployeesToAssignStaffState('No data'));
+        return;
+      }
+      log(res.toString());
       allEmployeesToAssign = res;
       emit(SuccessAllEmployeesToAssignStaffState());
     } catch (e) {

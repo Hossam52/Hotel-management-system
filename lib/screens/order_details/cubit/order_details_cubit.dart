@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
 import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/supervisor/all_employees_to_assign.dart';
+import 'package:htask/models/supervisor/assign_order_to_employee.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/order_details/cubit/order_details_states.dart';
 import 'package:htask/screens/staff/assign_staff_employee_to_order.dart';
 import 'package:htask/shared/constants/api_constants.dart';
+import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
 
@@ -63,20 +65,31 @@ class SupervisorOrderDetailsCubit extends OrderDetailsCubit {
   Future<void> changeAssignedEmployee(
       BuildContext context, OrderModel order) async {
     final token = AppCubit.instance(context).token;
-    int seID = order.orderdetails.first.id;
+    String seID = order.orderdetails.first.service_id;
+    log(' ${order.roomId}  seID $seID');
     final employeeNum = await Navigator.of(context).push<int?>(
       MaterialPageRoute(
         builder: (_) => AssignStaffEmployeeToOrder(
-          // roomId: order.roomId,
-          // seID: seID,
-          roomId: '1',
-          seID: 5,
+          roomId: order.roomId,
+          seID: seID,
         ),
       ),
     );
-    log('After assign employee $employeeNum');
-    final res = await SupervisorSurvices.assignEmployeeToOrder(token,
-        GetAvaEmployeesRequest(roomID: order.roomNum, seID: seID.toString()));
+    if (employeeNum == null) {
+      return;
+    }
+    try {
+      emit(ChangingEmployeeassignmentState());
+      final res = await SupervisorSurvices.assignEmployeeToOrder(
+          token,
+          AssignOrderToEmployeeRequest(
+              orderId: order.id, employeeId: employeeNum.toInt()));
+      if (res.status) showSuccessToast(res.message);
+      log(res.message);
+      emit(SuccessChangingEmployeeassignmentState(message: res.message));
+    } catch (e) {
+      emit(ErrorChangingEmployeeassignmentState(e.toString()));
+    }
   }
 }
 

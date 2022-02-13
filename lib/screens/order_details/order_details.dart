@@ -432,7 +432,7 @@ class _OrderDetailsActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     log(taskStatus.toString());
     if (taskStatus is FinishedTask) return Container();
-    if (taskStatus is PendingSupervisorTask) {
+    if (taskStatus is ActiveSupervisorTask) {
       return Row(
         children: [
           Expanded(flex: 4, child: _defaultButton(context)),
