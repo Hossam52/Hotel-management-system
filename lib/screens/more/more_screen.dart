@@ -27,11 +27,11 @@ class MoreScreen extends StatelessWidget {
             child: Column(
               children: [
                 const HomeHeader(),
-                _buildItem('Available',
-                    trailing: CustomSwitch(
-                      val: false,
-                      onToggle: (val) {},
-                    )),
+                // _buildItem('Available',
+                //     trailing: CustomSwitch(
+                //       val: false,
+                //       onToggle: (val) {},
+                //     )),
                 _buildItem('Report problem',
                     imagePath: 'assets/images/report.png'),
                 _buildItem('Logout', imagePath: 'assets/images/logout.png',
