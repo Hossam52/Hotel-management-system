@@ -20,14 +20,14 @@ class CategoryRequestModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'categoryId': categoryId,
+      'category_id': categoryId,
       'date': date,
     };
   }
 
   factory CategoryRequestModel.fromMap(Map<String, dynamic> map) {
     return CategoryRequestModel(
-      categoryId: map['categoryId'],
+      categoryId: map['category_id'],
       date: map['date'],
     );
   }

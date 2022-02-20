@@ -17,7 +17,7 @@ class SupervisorEmployeeModel {
     required this.block,
     required this.image,
     required this.res,
-  }) : isBlocked = block == 'block';
+  }) : isBlocked = block == 'unblocked';
 
   SupervisorEmployeeModel copyWith({
     int? id,

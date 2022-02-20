@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             _logo(),
@@ -77,8 +80,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               validator: authCubit.validatePassword,
                             ),
                             const SizedBox(height: 20),
-                            const _RadioButtonAccountType(),
-                            const SizedBox(height: 20),
+                            const _AuthTypeImages(),
+                            const SizedBox(height: 40),
                             DefaultButton(
                                 text: 'Login',
                                 loading: loading,
@@ -112,98 +115,83 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Image _logo() => Image.asset(
-        'assets/images/logo.png',
-        scale: 1.4,
+  Widget _logo() => Row(
+        children: [
+          const Spacer(),
+          const Spacer(),
+          Image.asset('assets/images/logo.png', scale: 4.8),
+          const Spacer(),
+        ],
       );
 }
 
-class _RadioButtonAccountType extends StatelessWidget {
-  const _RadioButtonAccountType({Key? key}) : super(key: key);
-  final String supervisor = 'Supervisor';
-  final String employee = 'Employee';
+class _AuthTypeImages extends StatelessWidget {
+  const _AuthTypeImages({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {},
-      buildWhen: (previous, current) =>
-          current is ChangeSelectedAccountTypeState,
+    return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        return CustomRadioButton(
-          elevation: 0,
-          unSelectedColor: Theme.of(context).canvasColor,
-          enableShape: true,
-          autoWidth: true,
-          buttonLables: [
-            supervisor,
-            employee,
+        final selectedAuthType =
+            AuthCubit.instance(context).selectedAccountType;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: _buildAuthTypeWidget('assets/images/supervisor_image.png',
+                  type: LoginAuthType.supervisor,
+                  isSelected: selectedAuthType == LoginAuthType.supervisor,
+                  displayTypeString: 'Supervisor'),
+            ),
+            Expanded(
+              child: _buildAuthTypeWidget('assets/images/employee_image.png',
+                  type: LoginAuthType.employee,
+                  isSelected: selectedAuthType == LoginAuthType.employee,
+                  displayTypeString: 'Employee'),
+            ),
           ],
-          buttonValues: [
-            supervisor,
-            employee,
-          ],
-          buttonTextStyle: const ButtonTextStyle(
-              selectedColor: Colors.white,
-              unSelectedColor: Colors.black,
-              textStyle: TextStyle(fontSize: 16)),
-          radioButtonValue: (value) {
-            String val = value as String;
-            if (val == employee) {
-              AuthCubit.instance(context)
-                  .changeSelectedAccountType(LoginAuthType.employee);
-            } else if (val == supervisor) {
-              AuthCubit.instance(context)
-                  .changeSelectedAccountType(LoginAuthType.supervisor);
-            } else {
-              throw Exception('Unknown type');
-            }
-          },
-          selectedColor: AppColors.darkPrimaryColor,
         );
       },
     );
   }
-}
 
-class ImageRadioButton extends StatelessWidget {
-  const ImageRadioButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final selectedAuthType = AuthCubit.instance(context).selectedAccountType;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        GestureDetector(
+  Widget _buildAuthTypeWidget(String imagePath,
+      {required LoginAuthType type,
+      required bool isSelected,
+      required String displayTypeString}) {
+    return Builder(builder: (context) {
+      return Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.darkPrimaryColor
+              : Theme.of(context).canvasColor,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: GestureDetector(
           onTap: () {
-            AuthCubit.instance(context)
-                .changeSelectedAccountType(LoginAuthType.employee);
+            AuthCubit.instance(context).changeSelectedAccountType(type);
           },
-          child: Container(
-            height: 56,
-            width: 56,
-            color: selectedAuthType == LoginAuthType.employee
-                ? Colors.grey
-                : Colors.transparent,
-            child: Image.asset('assets/images/employee_image.png'),
+          child: Row(
+            children: [
+              Text(
+                displayTypeString,
+                style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                    fontSize: 16),
+              ),
+              Expanded(
+                child: SizedBox(
+                  height: 56,
+                  width: 56,
+                  child: Image.asset(imagePath),
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(width: 4),
-        GestureDetector(
-          onTap: () {
-            AuthCubit.instance(context)
-                .changeSelectedAccountType(LoginAuthType.supervisor);
-          },
-          child: Container(
-            height: 56,
-            width: 56,
-            color: selectedAuthType == LoginAuthType.supervisor
-                ? Colors.grey
-                : Colors.transparent,
-            child: Image.asset('assets/images/supervisor_image.png'),
-          ),
-        ),
-      ],
-    );
+      );
+    });
   }
 }
