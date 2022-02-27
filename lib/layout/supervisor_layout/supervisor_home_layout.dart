@@ -17,6 +17,7 @@ import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/bottom_navigation.dart';
 import 'package:htask/widgets/home_header.dart';
 import 'package:htask/widgets/services_toaday.dart';
+import 'package:htask/widgets/svg_image_widget.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class SuperVisorHomeLayout extends StatelessWidget {
@@ -51,9 +52,15 @@ class SuperVisorHomeLayout extends StatelessWidget {
                 },
                 currentIndex: cubit.selectedTabIndex,
                 items: [
-                  _builNavItem('assets/images/home.png', 'Home'),
-                  _builNavItem('assets/images/staff.png', 'Staff'),
-                  _builNavItem('assets/images/more.png', 'More'),
+                  _builNavItem(
+                      'assets/images/icons/home_bottom_tab.svg', 'Home'),
+                  _builNavItem(
+                      'assets/images/icons/staff_bottom_tab.svg', 'Staff'),
+                  _builNavItem(
+                      'assets/images/icons/notification_bottom_tab.svg',
+                      'Notification'),
+                  _builNavItem(
+                      'assets/images/icons/more_bottom_tab.svg', 'More'),
                 ],
               ),
               body: cubit.getScreen());
@@ -65,9 +72,11 @@ class SuperVisorHomeLayout extends StatelessWidget {
   CustomBottomNavBarItem _builNavItem(String iconPath, String title) {
     return CustomBottomNavBarItem(
         selectedColor: AppColors.darkPrimaryColor,
-        icon: Image.asset(
-          iconPath,
-          scale: 1.3,
+        icon: SvgImageWidget(
+          path: iconPath,
+          color: AppColors.darkPrimaryColor,
+          width: 15,
+          height: 15,
         ),
         title: Text(title));
   }

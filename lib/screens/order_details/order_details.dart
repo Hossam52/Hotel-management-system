@@ -15,6 +15,7 @@ import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/styles/text_styles.dart';
 import 'package:htask/widgets/defulat_button.dart';
+import 'package:htask/widgets/svg_image_widget.dart';
 
 class OrderDetails extends StatelessWidget {
   const OrderDetails(
@@ -127,16 +128,19 @@ class OrderDetails extends StatelessWidget {
 
   Widget _backButton() {
     return Builder(builder: (context) {
-      return GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: Row(
-          children: const [
-            Icon(Icons.arrow_back_ios),
-            Text(
-              'Back',
-              style: TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
-            )
-          ],
+      return FittedBox(
+        child: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Row(
+            children: const [
+              Icon(Icons.arrow_back_ios),
+              Text(
+                'Back',
+                style:
+                    TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
+              )
+            ],
+          ),
         ),
       );
     });
@@ -186,18 +190,22 @@ class _Time extends StatelessWidget {
   Widget _done() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
+      children: const [
+        Text(
           'Done',
           style: TextStyle(
               color: AppColors.doneColor,
               fontSize: 16,
               fontWeight: FontWeight.bold),
         ),
-        const SizedBox(
+        SizedBox(
           width: 20,
         ),
-        Image.asset('assets/images/completed.png'),
+        SvgImageWidget(
+          path: 'assets/images/icons/completed.svg',
+          width: 25,
+          height: 25,
+        ),
       ],
     );
   }
@@ -257,7 +265,8 @@ class _PersonalDataStatistics extends StatelessWidget {
 
   Widget _name() {
     return Row(children: [
-      Image.asset('assets/images/user.png'),
+      const SvgImageWidget(
+          path: 'assets/images/icons/person.svg', width: 15, height: 15),
       const SizedBox(width: 10),
       RichText(
         text: TextSpan(

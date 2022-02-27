@@ -27,7 +27,7 @@ class AuthCubit extends Cubit<AuthState> {
   bool visiblePassword = false;
   late String token;
 
-  LoginAuthType? selectedAccountType;
+  LoginAuthType? selectedAccountType = LoginAuthType.employee;
   void changeVisiblePassword() {
     visiblePassword = !visiblePassword;
     emit(ChangeVisiblePasswordState());

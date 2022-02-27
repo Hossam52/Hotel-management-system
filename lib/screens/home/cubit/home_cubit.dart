@@ -21,6 +21,7 @@ import 'package:htask/shared/constants.dart';
 import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
+import 'package:time_range_picker/time_range_picker.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(InitialHomeState());
@@ -31,20 +32,26 @@ class HomeCubit extends Cubit<HomeState> {
     TabBarItem(
         isSelected: true,
         text: 'Active',
-        imagePath: 'assets/images/active.png',
+        imagePath: 'assets/images/icons/active.svg',
         widget: const ActiveWidget()),
     TabBarItem(
         isSelected: false,
         text: 'Pending',
-        imagePath: 'assets/images/pending.png',
+        imagePath: 'assets/images/icons/pending.svg',
         widget: const PendingWidget()),
     TabBarItem(
         isSelected: false,
         text: 'Finished',
-        imagePath: 'assets/images/finished.png',
+        imagePath: 'assets/images/icons/finished.svg',
         widget: const FinishedWidget()),
+    TabBarItem(
+        isSelected: false,
+        text: 'Late',
+        imagePath: 'assets/images/icons/finished.svg',
+        widget: const LateWidget()),
   ];
   DateTime? filterByDate;
+  TimeRange? filterByTime;
   late AllOrderStatusesModel allOrders;
   late AllCategoriesModel allCategories;
 
@@ -198,6 +205,11 @@ class HomeCubit extends Cubit<HomeState> {
 
   void changeFilterDate(DateTime? date) {
     filterByDate = date;
+    emit(ChangeDateFilterState());
+  }
+
+  void changeFilterTimeRange(TimeRange? time) {
+    filterByTime = time;
     emit(ChangeDateFilterState());
   }
 }

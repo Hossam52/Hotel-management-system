@@ -7,6 +7,7 @@ import 'package:htask/shared/constants.dart';
 import 'package:htask/shared/constants/methods.dart';
 
 import 'package:htask/styles/colors.dart';
+import 'package:htask/widgets/svg_image_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
@@ -51,7 +52,7 @@ class StatusItem extends StatelessWidget {
               _rowRecord(
                 item1: _RowItemModel(
                     text: orderModel.id.toString(),
-                    imagePath: 'assets/images/id.png'),
+                    imagePath: 'assets/images/icons/id.svg'),
                 item2: _RowItemModel(
                     text: formattedDate, imagePath: statusImagePath),
               ),
@@ -60,15 +61,15 @@ class StatusItem extends StatelessWidget {
                     _RowItemModel(text: orderModel.orderdetails.first.service),
                 item2: _RowItemModel(
                     text: '${orderModel.totalPrice} L.E',
-                    imagePath: 'assets/images/cash.png'),
+                    imagePath: 'assets/images/icons/money.svg'),
               ),
               _rowRecord(
                 item1: _RowItemModel(
                     text: orderModel.roomNum,
-                    imagePath: 'assets/images/door.png'),
+                    imagePath: 'assets/images/icons/door.svg'),
                 item2: _RowItemModel(
                     text: orderModel.employeeName,
-                    imagePath: 'assets/images/user.png'),
+                    imagePath: 'assets/images/icons/person.svg'),
               ),
             ],
           ),
@@ -86,6 +87,7 @@ class StatusItem extends StatelessWidget {
         Row(
           children: [
             Flexible(child: _rowItem(item1.imagePath, item1.text)),
+            const SizedBox(width: 5),
             Flexible(child: _rowItem(item2.imagePath, item2.text)),
           ],
         ),
@@ -100,7 +102,8 @@ class StatusItem extends StatelessWidget {
   Widget _rowItem(String? imagePath, String text) {
     return Row(
       children: [
-        if (imagePath != null) Image.asset(imagePath),
+        if (imagePath != null)
+          SvgImageWidget(path: imagePath, width: 14, height: 14),
         const SizedBox(
           width: 10,
         ),

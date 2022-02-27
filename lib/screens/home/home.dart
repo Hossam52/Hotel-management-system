@@ -8,6 +8,7 @@ import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/home_header.dart';
 import 'package:htask/widgets/services_toaday.dart';
+import 'package:htask/widgets/svg_image_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -74,17 +75,20 @@ class HomeTabsStatuses extends StatelessWidget {
                   color: AppColors.selectedColor.withOpacity(0.38),
                   borderRadius: BorderRadius.circular(30)),
               padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (int i = 0; i < tabBars.length; i++)
-                    FittedBox(
-                      child: GestureDetector(
-                        onTap: () => cubit.changeTabIndex(i),
-                        child: _buildTapContent(tabBars[i]),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    for (int i = 0; i < tabBars.length; i++)
+                      FittedBox(
+                        child: GestureDetector(
+                          onTap: () => cubit.changeTabIndex(i),
+                          child: _buildTapContent(tabBars[i]),
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
             Card(
@@ -112,7 +116,11 @@ class HomeTabsStatuses extends StatelessWidget {
           if (tab.isSelected)
             Row(
               children: [
-                Image.asset(tab.imagePath, scale: 1.3),
+                SvgImageWidget(
+                  path: tab.imagePath,
+                  width: 23,
+                  height: 23,
+                ),
                 const SizedBox(
                   width: 15,
                 )

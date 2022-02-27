@@ -10,11 +10,35 @@ import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/login/login.dart';
 import 'package:htask/shared/network/local/cache_helper.dart';
 
+enum Language { arabic, english }
+
+extension LanguageString on Language {
+  String get getString {
+    switch (this) {
+      case Language.arabic:
+        return 'Arabic';
+
+      case Language.english:
+        return 'English';
+
+      default:
+        return '';
+    }
+  }
+}
+
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(InitalAppState());
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
   LoginAuthType? currentUserType;
+
+  Language language = Language.english;
+  void changeLanguage(Language language) {
+    this.language = language;
+    emit(ChangeAppLanguage());
+  }
+
   PersonLoginModel? _personalData;
   late String token;
   PersonLoginModel get getProfile => _personalData!;

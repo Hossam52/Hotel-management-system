@@ -16,7 +16,7 @@ abstract class ActiveTask extends TimeTask {
       : super(currentMinutes, currentSeconds);
   @override
   String getImagePath() {
-    return 'assets/images/timer.png';
+    return 'assets/images/icons/timer.svg';
   }
 }
 
@@ -25,12 +25,26 @@ abstract class PendingTask extends TimeTask {
       : super(currentMinutes, currentSeconds);
   @override
   String getImagePath() {
-    return 'assets/images/waiting.png';
+    return 'assets/images/icons/pending.svg';
   }
 }
 
 class FinishedTask extends Task {
   const FinishedTask();
+
+  @override
+  String getText() {
+    return '';
+  }
+
+  @override
+  String getImagePath() {
+    return 'assets/images/icons/completed.svg';
+  }
+}
+
+class LateTasks extends Task {
+  const LateTasks();
 
   @override
   String getText() {

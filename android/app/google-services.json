@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "405469619544",
+    "project_id": "htask-e5ca0",
+    "storage_bucket": "htask-e5ca0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405469619544:android:e30a88d42534a2686f712d",
+        "android_client_info": {
+          "package_name": "com.example.htask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405469619544-vc42p302fpidko0p1rtmnktueso61p2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdhgqgG4vVsORFJetoTOJaz4N8U3PcnQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405469619544-vc42p302fpidko0p1rtmnktueso61p2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -38,6 +38,17 @@ class FinishedWidget extends StatelessWidget {
   }
 }
 
+class LateWidget extends StatelessWidget {
+  const LateWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final newOrders = HomeCubit.instance(context).allOrders.endStatus;
+    final data = newOrders.data;
+    return _listView(data, const LateTasks());
+  }
+}
+
 Widget _listView(List<OrderModel> orders, Task task) {
   if (orders.isEmpty) return const NoData();
   return ListView.separated(
