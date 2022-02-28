@@ -78,17 +78,30 @@ class HomeCubit extends Cubit<HomeState> {
   ) async {
     final loginAuthType = AppCubit.instance(context).currentUserType;
     final token = AppCubit.instance(context).token;
-    final date =
-        filterByDate != null ? formatDateWithoutTime(filterByDate!) : null;
+    DateTime? searchedFilterDate = filterByDate;
+    if (filterByTime != null && filterByDate == null) {
+      searchedFilterDate = DateTime.now();
+    }
+    final date = searchedFilterDate != null
+        ? formatDateWithoutTime(searchedFilterDate)
+        : null;
     log('Selected date is $date');
     final categoryId = selectedCategoryIndex != null
         ? allCategories.categories[selectedCategoryIndex!].id
         : null;
     try {
       emit(LoadingAllOrdersHomeState());
-      allOrders = await _callApiToGetOrders(loginAuthType!, token,
-          requestModel:
-              CategoryRequestModel(date: date, categoryId: categoryId));
+      allOrders = await _callApiToGetOrders(
+        loginAuthType!,
+        token,
+        requestModel: CategoryRequestModel(
+          date: date,
+          categoryId: categoryId,
+          from:
+              filterByTime == null ? null : formatTime(filterByTime!.startTime),
+          to: filterByTime == null ? null : formatTime(filterByTime!.endTime),
+        ),
+      );
       log(allOrders.newStatus.toString());
       emit(SuccessAllOrdersHomeState());
     } catch (e) {
@@ -99,6 +112,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<AllOrderStatusesModel> _callApiToGetOrders(
       LoginAuthType authType, String token,
       {CategoryRequestModel? requestModel}) async {
+    log(requestModel.toString());
     if (authType == LoginAuthType.employee) {
       return await EmployeeServices.getOrders(token,
           requestModel: requestModel);

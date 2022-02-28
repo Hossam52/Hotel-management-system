@@ -6,6 +6,7 @@ import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
+import 'package:htask/widgets/error_widget.dart';
 import 'package:htask/widgets/home_header.dart';
 import 'package:htask/widgets/services_toaday.dart';
 import 'package:htask/widgets/svg_image_widget.dart';
@@ -19,37 +20,37 @@ class HomeScreen extends StatelessWidget {
     const double padding = 14;
     return Scaffold(
       backgroundColor: AppColors.lightPrimary,
-      body: BlocConsumer<HomeCubit, HomeState>(
-        listener: (context, state) {
-          if (state is ErrorAllCategoriesHomeState) showErrorToast(state.error);
-        },
-        builder: (context, state) {
-          if (state is LoadingAllCategoriesHomeState) {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: AppColors.darkPrimaryColor,
-            ));
-          }
-          return SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const HomeHeader(),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(padding),
-                    child: SizedBox(
-                        height: height * 0.13, child: const ServiceToday()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(padding),
-                    child: HomeTabsStatuses(),
-                  ),
-                ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const HomeHeader(),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(padding),
+                child: SizedBox(
+                    height: height * 0.13,
+                    child: BlocConsumer<HomeCubit, HomeState>(
+                        listener: (context, state) {
+                      if (state is ErrorAllCategoriesHomeState)
+                        showErrorToast(state.error);
+                    }, builder: (context, state) {
+                      if (state is LoadingAllCategoriesHomeState) {
+                        return const Center(
+                            child: CircularProgressIndicator(
+                          color: AppColors.darkPrimaryColor,
+                        ));
+                      }
+                      return const ServiceToday();
+                    })),
               ),
-            ),
-          );
-        },
+              const Padding(
+                padding: EdgeInsets.all(padding),
+                child: HomeTabsStatuses(),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -59,9 +60,18 @@ class HomeTabsStatuses extends StatelessWidget {
   const HomeTabsStatuses({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state is ErrorAllOrdersHomeState) showErrorToast(state.error);
+      },
       builder: (context, state) {
-        if (state is LoadingAllOrdersHomeState) {
+        if (state is ErrorAllOrdersHomeState) {
+          return DefaultErrorWidget(refreshMethod: () {
+            HomeCubit.instance(context).getAllOrders(context);
+          });
+        }
+        if (state is LoadingAllOrdersHomeState ||
+            state is LoadingAllCategoriesHomeState) {
           return const Center(
             child: CircularProgressIndicator(),
           );

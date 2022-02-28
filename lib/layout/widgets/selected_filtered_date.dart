@@ -128,30 +128,34 @@ class _FilteredDate extends StatelessWidget {
   Widget build(BuildContext context) {
     const textStyle = TextStyle(fontSize: 17, color: AppColors.white);
 
-    final date = HomeCubit.instance(context).filterByDate;
-    if (date == null) {
-      return Container();
-    }
-    final dateString = formatDateWithoutTime(date);
-    return _ColoredContainer(
-      child: Row(
-        children: [
-          Text(
-            dateString,
-            style: textStyle,
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        final date = HomeCubit.instance(context).filterByDate;
+        if (date == null) {
+          return Container();
+        }
+        final dateString = formatDateWithoutTime(date);
+        return _ColoredContainer(
+          child: Row(
+            children: [
+              Text(
+                dateString,
+                style: textStyle,
+              ),
+              InkWell(
+                onTap: () {
+                  HomeCubit.instance(context).changeFilterDate(null);
+                  HomeCubit.instance(context).getAllOrders(context);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Icon(Icons.cancel, color: Colors.white),
+                ),
+              )
+            ],
           ),
-          InkWell(
-            onTap: () {
-              HomeCubit.instance(context).changeFilterDate(null);
-              HomeCubit.instance(context).getAllOrders(context);
-            },
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Icon(Icons.cancel, color: Colors.white),
-            ),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -34,3 +34,7 @@ String formatDateWithoutTime(DateTime date) {
 String formatDateWithTime(DateTime date) {
   return DateFormat('yyyy-MM-dd hh:mm').format(date);
 }
+
+String formatTime(TimeOfDay time) {
+  return '${time.hour}:${time.minute}';
+}

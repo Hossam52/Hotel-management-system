@@ -34,19 +34,19 @@ class _NotificationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: const [
             Text(
               'Notification title',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 5),
             Text(
               'This is description this is descriptionThis is description this is description',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 18),
             ),
           ],
         ),
