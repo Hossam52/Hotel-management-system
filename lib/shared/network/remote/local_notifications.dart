@@ -19,6 +19,7 @@ class LocalNotifications {
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await _notification.initialize(initializationSettings,
         onSelectNotification: ((payload) {
+      log('From local notification');
       navigator.currentState!.push(
         MaterialPageRoute(
           builder: (_) => OrderDetails(
@@ -36,7 +37,7 @@ class LocalNotifications {
                 endTime: '022-02-28T13:05:40.000000Z',
                 actualEndTime: '022-02-28T13:05:40.000000Z',
                 orderdetails: [],
-                roomId: '4'),
+                roomId: 4),
             homeCubit: HomeCubit(),
           ),
         ),

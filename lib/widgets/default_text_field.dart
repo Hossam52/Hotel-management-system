@@ -17,25 +17,28 @@ class DefaultTextField extends StatelessWidget {
   final Widget? passwordWidget;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextFormField(
-          controller: controller,
-          obscureText: isPassword,
-          validator: validator,
-          decoration: InputDecoration(
-              hintText: hintText,
-              filled: true,
-              suffixIcon: passwordWidget,
-              fillColor: AppColors.white,
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none)),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Column(
+        children: [
+          TextFormField(
+            controller: controller,
+            obscureText: isPassword,
+            validator: validator,
+            decoration: InputDecoration(
+                hintText: hintText,
+                filled: true,
+                suffixIcon: passwordWidget,
+                fillColor: AppColors.white,
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none)),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
     );
   }
 }

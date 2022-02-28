@@ -12,8 +12,8 @@ class AssignStaffEmployeeToOrder extends StatelessWidget {
   const AssignStaffEmployeeToOrder(
       {Key? key, required this.roomId, required this.seID})
       : super(key: key);
-  final String roomId;
-  final String seID;
+  final int roomId;
+  final int seID;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

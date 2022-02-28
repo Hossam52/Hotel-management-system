@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:htask/models/Employee/employee_login_model.dart';
 import 'package:htask/models/categories/category_request_model.dart';
+import 'package:htask/models/notifications/notification_model.dart';
 import 'package:htask/models/orders/change_order_status.dart';
 import 'package:htask/models/person_login_model.dart';
 import 'package:htask/models/logout_model.dart';
@@ -54,6 +55,13 @@ class EmployeeServices {
         token: token,
         data: {'order_id': orderId});
     ChangeOrderStatusModel status = ChangeOrderStatusModel.fromMap(res.data);
+    return status;
+  }
+
+  static Future<NotificationsModel> getAllNotifications(String token) async {
+    final res = await DioHelper.getData(
+        url: EmployeeApis.getNotifications, token: token);
+    NotificationsModel status = NotificationsModel.fromJson(res.data);
     return status;
   }
 }

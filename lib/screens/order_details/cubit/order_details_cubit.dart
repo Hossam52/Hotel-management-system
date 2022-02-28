@@ -65,7 +65,7 @@ class SupervisorOrderDetailsCubit extends OrderDetailsCubit {
   Future<void> changeAssignedEmployee(
       BuildContext context, OrderModel order) async {
     final token = AppCubit.instance(context).token;
-    String seID = order.orderdetails.first.service_id;
+    int seID = order.orderdetails.first.service_id;
     log(' ${order.roomId}  seID $seID');
     final employeeNum = await Navigator.of(context).push<int?>(
       MaterialPageRoute(

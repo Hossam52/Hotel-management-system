@@ -8,7 +8,7 @@ import 'package:htask/shared/constants/methods.dart';
 
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/svg_image_widget.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class StatusItem extends StatelessWidget {
@@ -32,46 +32,49 @@ class StatusItem extends StatelessWidget {
         ? formatDateWithTime(actualEndTimeDate)
         : formatDateWithTime(date);
 
-    return GestureDetector(
-      onTap: () => pushNewScreen(context,
-          screen: OrderDetails(
-            homeCubit: homeCubit,
-            order: orderModel,
-            taskStatus: taskStatus,
-          ),
-          withNavBar: false),
-      child: Container(
-        decoration: BoxDecoration(
-            color: AppColors.primaryColor.withOpacity(0.25),
-            borderRadius: BorderRadius.circular(10)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _rowRecord(
-                item1: _RowItemModel(
-                    text: orderModel.id.toString(),
-                    imagePath: 'assets/images/icons/id.svg'),
-                item2: _RowItemModel(
-                    text: formattedDate, imagePath: statusImagePath),
-              ),
-              _rowRecord(
-                item1:
-                    _RowItemModel(text: orderModel.orderdetails.first.service),
-                item2: _RowItemModel(
-                    text: '${orderModel.totalPrice} L.E',
-                    imagePath: 'assets/images/icons/money.svg'),
-              ),
-              _rowRecord(
-                item1: _RowItemModel(
-                    text: orderModel.roomNum,
-                    imagePath: 'assets/images/icons/door.svg'),
-                item2: _RowItemModel(
-                    text: orderModel.employeeName,
-                    imagePath: 'assets/images/icons/person.svg'),
-              ),
-            ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: GestureDetector(
+        onTap: () => pushNewScreen(context,
+            screen: OrderDetails(
+              homeCubit: homeCubit,
+              order: orderModel,
+              taskStatus: taskStatus,
+            ),
+            withNavBar: false),
+        child: Container(
+          decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.25),
+              borderRadius: BorderRadius.circular(10)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _rowRecord(
+                  item1: _RowItemModel(
+                      text: orderModel.id.toString(),
+                      imagePath: 'assets/images/icons/id.svg'),
+                  item2: _RowItemModel(
+                      text: formattedDate, imagePath: statusImagePath),
+                ),
+                _rowRecord(
+                  item1: _RowItemModel(
+                      text: orderModel.orderdetails.first.service),
+                  item2: _RowItemModel(
+                      text: '${orderModel.totalPrice} L.E',
+                      imagePath: 'assets/images/icons/money.svg'),
+                ),
+                _rowRecord(
+                  item1: _RowItemModel(
+                      text: orderModel.roomNum,
+                      imagePath: 'assets/images/icons/door.svg'),
+                  item2: _RowItemModel(
+                      text: orderModel.employeeName,
+                      imagePath: 'assets/images/icons/person.svg'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

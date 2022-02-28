@@ -115,13 +115,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _logo() => Row(
-        children: [
-          const Spacer(),
-          const Spacer(),
-          Image.asset('assets/images/logo.png', scale: 4.8),
-          const Spacer(),
-        ],
+  Widget _logo() => Directionality(
+        textDirection: TextDirection.ltr,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // const Spacer(),
+            // const Spacer(),
+            Image.asset('assets/images/logo.png', scale: 4.8),
+            // const Spacer(),
+          ],
+        ),
       );
 }
 

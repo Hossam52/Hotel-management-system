@@ -53,7 +53,7 @@ class LateTasks extends Task {
 
   @override
   String getImagePath() {
-    return 'assets/images/completed.png';
+    return 'assets/images/icons/completed.svg';
   }
 }
 

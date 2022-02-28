@@ -129,16 +129,16 @@ class AvailableEmployeeToAssign {
 }
 
 class GetAvaEmployeesRequest {
-  String roomID;
-  String seID;
+  int roomID;
+  int seID;
   GetAvaEmployeesRequest({
     required this.roomID,
     required this.seID,
   });
 
   GetAvaEmployeesRequest copyWith({
-    String? roomID,
-    String? seID,
+    int? roomID,
+    int? seID,
   }) {
     return GetAvaEmployeesRequest(
       roomID: roomID ?? this.roomID,

@@ -12,7 +12,7 @@ class OrderModel {
   final String supervisorName;
   final String status;
   final String roomNum;
-  final String roomId;
+  final int roomId;
   final String payment;
   final String? floor;
   final String date;
@@ -36,7 +36,7 @@ class OrderModel {
       required this.roomId,
       this.totalPrice = 0}) {
     for (var element in orderdetails) {
-      totalPrice += double.tryParse(element.price) ?? 0;
+      totalPrice += element.price * element.quantity;
     }
   }
 
@@ -47,7 +47,7 @@ class OrderModel {
     String? supervisorName,
     String? status,
     String? roomNum,
-    String? roomId,
+    int? roomId,
     String? payment,
     String? floor,
     String? date,

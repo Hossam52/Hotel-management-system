@@ -214,10 +214,12 @@ class _EmployeeResponsibilitiesWidget extends StatelessWidget {
             ),
             Row(children: [
               Flexible(
-                  child:
-                      Center(child: _richText('From room: ', res.form_room))),
+                  child: Center(
+                      child:
+                          _richText('From room: ', res.form_room.toString()))),
               Flexible(
-                  child: Center(child: _richText('To room: ', res.to_room))),
+                  child: Center(
+                      child: _richText('To room: ', res.to_room.toString()))),
             ]),
             _richText('Floor: ', res.floor)
           ],

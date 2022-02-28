@@ -44,11 +44,11 @@ class HomeCubit extends Cubit<HomeState> {
         text: 'Finished',
         imagePath: 'assets/images/icons/finished.svg',
         widget: const FinishedWidget()),
-    TabBarItem(
-        isSelected: false,
-        text: 'Late',
-        imagePath: 'assets/images/icons/finished.svg',
-        widget: const LateWidget()),
+    // TabBarItem(
+    //     isSelected: false,
+    //     text: 'Late',
+    //     imagePath: 'assets/images/icons/finished.svg',
+    //     widget: const LateWidget()),
   ];
   DateTime? filterByDate;
   TimeRange? filterByTime;

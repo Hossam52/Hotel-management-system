@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:htask/models/categories/all_categories_model.dart';
 import 'package:htask/models/categories/category_request_model.dart';
+import 'package:htask/models/notifications/notification_model.dart';
 import 'package:htask/models/orders/change_order_status.dart';
 import 'package:htask/models/person_login_model.dart';
 import 'package:htask/models/logout_model.dart';
@@ -39,6 +40,7 @@ class SupervisorSurvices {
         url: SupervisorApis.getOrders,
         token: token,
         data: requestModel == null ? {} : requestModel.toMap());
+    log(res.toString());
     AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
     return allOrders;
   }
@@ -116,5 +118,12 @@ class SupervisorSurvices {
     ChangeEmployeeStatusModel employeeStatusModel =
         ChangeEmployeeStatusModel.fromMap(res.data);
     return employeeStatusModel;
+  }
+
+  static Future<NotificationsModel> getAllNotifications(String token) async {
+    final res = await DioHelper.getData(
+        url: SupervisorApis.getNotifications, token: token);
+    NotificationsModel status = NotificationsModel.fromJson(res.data);
+    return status;
   }
 }

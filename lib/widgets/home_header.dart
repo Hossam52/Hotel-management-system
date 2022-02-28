@@ -51,6 +51,12 @@ class HomeHeader extends StatelessWidget {
   }
 
   Widget _filterWidget(context) {
+    return GestureDetector(
+      child: Icon(Icons.filter_alt_rounded, color: AppColors.white),
+      onTap: () {
+        _onDateTapped(context);
+      },
+    );
     return PopupMenuButton<String>(
       onSelected: (value) async {
         log(value.toString());

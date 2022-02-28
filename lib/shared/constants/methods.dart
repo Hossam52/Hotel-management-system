@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +15,7 @@ void showErrorToast(String msg) {
 }
 
 void checkResponse(Response res) {
+  log(res.toString());
   if (!(res.statusCode! >= 200 && res.statusCode! <= 300)) {
     print(res.statusCode);
     if (res.data['message'] != null) {

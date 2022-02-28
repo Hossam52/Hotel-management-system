@@ -81,7 +81,7 @@ class FCM {
                 endTime: '022-02-28T13:05:40.000000Z',
                 actualEndTime: '022-02-28T13:05:40.000000Z',
                 orderdetails: [],
-                roomId: '4'),
+                roomId: 4),
             homeCubit: HomeCubit(),
           ),
         ),
@@ -91,7 +91,9 @@ class FCM {
 
   Future<void> _notificationOnAppOpened(
       GlobalKey<NavigatorState> navigatorKey) async {
+    log((await FirebaseMessaging.instance.getToken())!);
     FirebaseMessaging.onMessage.listen((message) {
+      log(message.data.toString());
       log('In onMessage found ${message.data}');
       if (message.data['order'] == '/order') {
         log('From onMessage found order');

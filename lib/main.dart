@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return EasyLocalization(
-      path: 'assets/translations/',
+      path: 'assets/translations',
       supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
       fallbackLocale: const Locale('en', 'US'),
       child: MultiBlocProvider(

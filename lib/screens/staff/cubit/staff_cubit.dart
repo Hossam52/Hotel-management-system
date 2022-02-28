@@ -25,7 +25,7 @@ class StaffCubit extends Cubit<StaffStates> {
   }
 
   Future<void> getAllStaffToAssign(
-      BuildContext context, String roomId, String seID) async {
+      BuildContext context, int roomId, int seID) async {
     final token = AppCubit.instance(context).token;
     try {
       emit(LoadingAllEmployeesToAssignStaffState());

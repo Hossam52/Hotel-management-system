@@ -98,8 +98,8 @@ class EmployeeResponsibilitiesModel {
   int id;
   String unit;
   String floor;
-  String form_room;
-  String to_room;
+  int form_room;
+  int to_room;
   EmployeeResponsibilitiesModel({
     required this.id,
     required this.unit,
@@ -112,8 +112,8 @@ class EmployeeResponsibilitiesModel {
     int? id,
     String? unit,
     String? floor,
-    String? form_room,
-    String? to_room,
+    int? form_room,
+    int? to_room,
   }) {
     return EmployeeResponsibilitiesModel(
       id: id ?? this.id,
