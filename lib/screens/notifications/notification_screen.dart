@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:htask/styles/colors.dart';
 
@@ -8,7 +9,7 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title:  Text('Notifications'.tr()),
         centerTitle: true,
       ),
       body: Padding(
@@ -38,9 +39,9 @@ class _NotificationItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          children: const [
+          children:  [
             Text(
-              'Notification title',
+              'NotificationTitle'.tr(),
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             SizedBox(height: 5),

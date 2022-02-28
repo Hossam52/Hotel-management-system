@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/models/supervisor/all_employees_to_assign.dart';
@@ -20,7 +21,7 @@ class AssignStaffEmployeeToOrder extends StatelessWidget {
       backgroundColor: AppColors.lightPrimary,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Select employee'),
+        title:  Text('SelectEmployee'.tr()),
       ),
       body: SafeArea(
         child: BlocProvider<StaffCubit>(
@@ -96,14 +97,14 @@ class _PersonItem extends StatelessWidget {
         employee.name,
         style: const TextStyle(fontSize: 16),
       ),
-      subtitle: Text('Orders number count: ${employee.orderNum}'),
+      subtitle: Text('${"OrdersNumberCount".tr()}: ${employee.orderNum}'),
       isThreeLine: true,
       trailing: TextButton(
         onPressed: () {
           Navigator.pop(context, employee.id);
         },
         child: Text(
-          'Select ${employee.name} ',
+          '${'Select'.tr()} ${employee.name} ',
           style: TextStyle(fontSize: 16),
         ),
       ),

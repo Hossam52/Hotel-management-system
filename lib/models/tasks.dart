@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 abstract class Task {
   const Task();
   String getText();
@@ -65,7 +67,7 @@ class ActiveSupervisorTask extends ActiveTask {
 
   @override
   String getText() {
-    return 'Start task';
+    return 'StartTask'.tr();
   }
 }
 
@@ -75,7 +77,7 @@ class PendingSupervisorTask extends PendingTask {
 
   @override
   String getText() {
-    return 'End task';
+    return 'EndTask'.tr();
   }
 }
 
@@ -87,7 +89,7 @@ class ActiveEmployeeTask extends ActiveTask {
 
   @override
   String getText() {
-    return 'Start task';
+    return 'StartTask'.tr();
   }
 }
 
@@ -97,6 +99,6 @@ class PendingEmployeeTask extends PendingTask {
 
   @override
   String getText() {
-    return 'End Task';
+    return 'EndTask'.tr();
   }
 }

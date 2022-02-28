@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -67,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 40,
                             ),
                             DefaultTextField(
-                              hintText: 'Email',
+                              hintText: 'Email'.tr(),
                               isPassword: false,
                               controller: authCubit.loginEmailController,
                               validator: authCubit.validateEmail,

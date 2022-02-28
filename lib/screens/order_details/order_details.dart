@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -40,8 +41,8 @@ class OrderDetails extends StatelessWidget {
           toolbarTextStyle: const TextStyle(color: Colors.black),
           iconTheme: IconTheme.of(context).copyWith(color: Colors.black),
           leading: !Navigator.canPop(context) ? null : _backButton(),
-          title: const Text(
-            'Order details',
+          title:  Text(
+            'OrderDetails'.tr(),
             style: TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
           ),
         ),
@@ -132,10 +133,10 @@ class OrderDetails extends StatelessWidget {
         child: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Row(
-            children: const [
+            children:  [
               Icon(Icons.arrow_back_ios),
               Text(
-                'Back',
+                'Back'.tr(),
                 style:
                     TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
               )
@@ -190,9 +191,9 @@ class _Time extends StatelessWidget {
   Widget _done() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children:  [
         Text(
-          'Done',
+          'Done'.tr(),
           style: TextStyle(
               color: AppColors.doneColor,
               fontSize: 16,
@@ -212,9 +213,9 @@ class _Time extends StatelessWidget {
 
   String _timeTitle() {
     if (taskStatus is ActiveTask) {
-      return 'Estimated time';
+      return 'EstimatedTime'.tr();
     } else if (taskStatus is PendingTask) {
-      return 'Remaining estimated';
+      return 'RemainingEstimated'.tr();
     }
     return '';
   }
@@ -285,11 +286,11 @@ class _PersonalDataStatistics extends StatelessWidget {
     return Column(
       children: [
         Text(
-          number,
+          number.tr(),
           style: roomNumberTextStyle.copyWith(
               fontSize: 90, fontWeight: FontWeight.bold),
         ),
-        const Text('Room Number', style: roomNumberTextStyle),
+         Text('RoomNumber'.tr(), style: roomNumberTextStyle),
       ],
     );
   }
@@ -300,11 +301,11 @@ class _PersonalDataStatistics extends StatelessWidget {
     return Column(
       children: [
         Text(
-          number.toString(),
+          number.toString().tr(),
           style: floorNumberTextStyle.copyWith(
               fontSize: 53, fontWeight: FontWeight.bold),
         ),
-        const Text('Floor', style: floorNumberTextStyle),
+         Text('Floor'.tr(), style: floorNumberTextStyle),
       ],
     );
   }
@@ -312,7 +313,7 @@ class _PersonalDataStatistics extends StatelessWidget {
   Widget _assignedTo() {
     if (assignedTo != null) {
       return Text(
-        'Assigned to $assignedTo',
+        'AssignedTo $assignedTo'.tr(),
         style: const TextStyle(fontSize: 16),
       );
     }
@@ -331,7 +332,7 @@ class _OrderDetailsItems extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Order Details',
+        Text('OrderDetails'.tr(),
             style: textStyle.copyWith(fontWeight: FontWeight.bold)),
         ListView.builder(
           shrinkWrap: true,
@@ -376,8 +377,8 @@ class _Price extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'Price',
+             Text(
+              'Price'.tr(),
               style: TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
             ),
             Center(
@@ -416,9 +417,9 @@ class _ChangeAssignmentButton extends StatelessWidget {
 
   String _getText() {
     if (taskStatus is ActiveTask) {
-      return 'Start task';
+      return 'StartTask'.tr();
     } else if (taskStatus is PendingTask) {
-      return 'End task';
+      return 'EndTask'.tr();
     } else {
       return '';
     }
@@ -465,7 +466,7 @@ class _OrderDetailsActionButton extends StatelessWidget {
 
   Widget _endButton(context) {
     return DefaultButton(
-      text: 'Change assignment',
+      text: 'ChangeAssignment'.tr(),
       radius: 6,
       onPressed: () async {
         await SupervisorOrderDetailsCubit.instance(context)

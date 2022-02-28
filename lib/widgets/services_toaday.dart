@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
@@ -18,7 +19,7 @@ class ServiceToday extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Your service today are: '),
+         Text('YourServiceTodayAre'.tr()),
         Expanded(flex: 2, child: Container()),
         Expanded(
           flex: 4,

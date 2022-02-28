@@ -1,0 +1,35 @@
+
+{
+  "Available": "متاح الان",
+  "HaveGreateWorkingDay": "نتمني لك يوم رائع ",
+  "YourServiceTodayAre": "هذه هي خدمتك اليوم",
+  "Search":"ابحث ",
+  "OrderDetails": "تفاصيل الطلب",
+  "Back": "رجوع",
+  "EstimatedTime":"الوقت المقدر",
+  "RemainingEstimated": "الوقت المقدر المتبقي",
+  "Done": "تم",
+  "RoomNumber": "رقم الحجرة",
+  "number": "رقم",
+  "Floor": "الطابق",
+  "AssignedTo":"مخصص ل ",
+  "Price":"السعر",
+  "StartTask": "بداية المهمة",
+  "EndTask": "نهاية المهمة",
+  "ChangeAssignment":"تغيير التخصص",
+  "Notifications": "الاشعارات",
+  "NotificationTitle": "عنوان الاشعار",
+  "SelectEmployee": "اختر الموظف",
+  "OrdersNumberCount":"عدد الطلبات المتبقية",
+  "Select": "اختر",
+  "FromRoom": "من حجرة",
+  "Loading": "يتم التحميل الان",
+  "ErrorHappened": "حدث خطاْ ما",
+  "Refreshnow": "التحديث الان",
+  "Hello": "مرحباً",
+  "NoData": "لا توجد بيانات",
+  "Press": "اضغط"
+
+
+
+}

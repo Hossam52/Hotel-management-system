@@ -1,0 +1,34 @@
+{
+  "Available": "Available",
+  "HaveGreateWorkingDay": "Have a great working day",
+  "YourServiceTodayAre": "Your service today are",
+  "Search":"Search",
+  "OrderDetails": "Order details",
+  "Back": "Back",
+  "EstimatedTime":"Estimated time",
+  "RemainingEstimated": "Remaining estimated Time",
+  "Done": "Done",
+  "RoomNumber": "Room Number",
+  "number": "number",
+  "Floor": "Floor",
+  "AssignedTo":"Assigned to",
+  "Price":"Price",
+  "StartTask": "Start task",
+  "EndTask": "End task",
+  "ChangeAssignment":"Change assignment",
+  "Notifications": "Notifications",
+  "NotificationTitle": "Notification title",
+  "SelectEmployee": "Select employee",
+  "OrdersNumberCount":"Orders number count",
+  "Select": "Select",
+  "FromRoom": "FromRoom",
+  "Loading": "Loading ...",
+  "ErrorHappened": "Error happened",
+  "Refreshnow": "Refresh now",
+  "Hello": "Hello",
+  "NoData": "No data",
+  "Press": "Press"
+
+
+
+}

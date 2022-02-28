@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return EasyLocalization(
-      path: 'assets/translations/',
+      path: 'assets/translations',
       supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
       fallbackLocale: const Locale('en', 'US'),
       child: MultiBlocProvider(
@@ -69,7 +69,8 @@ class _MyAppState extends State<MyApp> {
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               navigatorKey: navigatorKey,
-              locale: context.locale,
+              // locale: context.locale,
+              locale: Locale("ar"),
               title: 'HTask',
               theme: ThemeData(
                 primarySwatch: Colors.blue,
@@ -92,7 +93,7 @@ class _TestLocalNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: const Text('Press'),
+      child:  Text('Press'.tr()),
       onPressed: () {
         LocalNotifications.showNotification(
           title: 'Hossam',

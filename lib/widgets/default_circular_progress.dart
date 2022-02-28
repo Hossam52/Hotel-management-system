@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:htask/styles/colors.dart';
 
@@ -8,9 +9,9 @@ class DefaultCircularProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: const [
+      children:  [
         Text(
-          'Loading ...',
+          'Loading'.tr(),
           style: TextStyle(fontSize: 16, color: AppColors.white),
         ),
         CircularProgressIndicator(

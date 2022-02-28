@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
@@ -31,14 +32,14 @@ class HomeHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Hello, ${profile.name}',
+                '${"Hello".tr()}, ${profile.name}',
                 style: AppTextStyles.textStyle1,
               ),
               const SizedBox(
                 height: 10,
               ),
-              const Text(
-                'Have a greate working day',
+               Text(
+                'HaveGreateWorkingDay'.tr(),
                 style: AppTextStyles.textStyle2,
               ),
             ],
