@@ -1,4 +1,4 @@
-package com.example.htask
+package com.htask.ordering
 
 import io.flutter.embedding.android.FlutterActivity
 

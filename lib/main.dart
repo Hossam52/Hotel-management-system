@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:htask/screens/login/login.dart';
 import 'package:htask/screens/staff/staff.dart';
 import 'package:htask/shared/network/local/cache_helper.dart';
 import 'package:htask/shared/network/remote/dio_helper.dart';
+import 'package:htask/shared/network/remote/local_notification_statuses.dart';
 import 'package:htask/shared/network/remote/local_notifications.dart';
 import 'package:htask/shared/network/remote/notifications.dart';
 import 'package:htask/translations/translation_loader.dart';
@@ -61,6 +63,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> initialize() async {
     await FCM().setNotifications(navigatorKey);
+    log((await FirebaseMessaging.instance.getToken())!);
   }
 
   @override
@@ -77,8 +80,8 @@ class _MyAppState extends State<MyApp> {
             supportedLocales: context.supportedLocales,
             navigatorKey: navigatorKey,
             locale: context.locale,
-            // locale: Locale("ar"),
-            title: 'HTask',
+            // locale: Locale("ar", 'EG'),
+            title: 'H-Task',
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
@@ -101,7 +104,8 @@ class _TestLocalNotification extends StatelessWidget {
     return TextButton(
       child: Text('Press'.tr()),
       onPressed: () {
-        LocalNotifications.showNotification(
+        LocalNotifications.showLocalNotification(
+          properties: AuthLocalNotification(),
           title: 'Hossam',
           body: 'body',
           payload: 'payload',

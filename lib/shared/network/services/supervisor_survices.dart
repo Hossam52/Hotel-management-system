@@ -126,4 +126,14 @@ class SupervisorSurvices {
     NotificationsModel status = NotificationsModel.fromJson(res.data);
     return status;
   }
+
+  static Future<NotificationsModel> getNextNotificationPage(
+      String token, int nextPage) async {
+    final res = await DioHelper.getData(
+        url: EmployeeApis.getNotifications,
+        token: token,
+        query: {'page': nextPage});
+    NotificationsModel status = NotificationsModel.fromJson(res.data);
+    return status;
+  }
 }

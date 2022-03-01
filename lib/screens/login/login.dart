@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               validator: authCubit.validateEmail,
                             ),
                             DefaultTextField(
-                              hintText: 'Password',
+                              hintText: 'Password'.tr(),
                               passwordWidget: _passwordWidget(authCubit),
                               isPassword: authCubit.visiblePassword,
                               controller: authCubit.loginPasswordController,
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             const _AuthTypeImages(),
                             const SizedBox(height: 40),
                             DefaultButton(
-                                text: 'Login',
+                                text: 'Login'.tr(),
                                 loading: loading,
                                 onPressed: () async {
                                   if (authCubit.formKey.currentState!
@@ -147,13 +147,13 @@ class _AuthTypeImages extends StatelessWidget {
               child: _buildAuthTypeWidget('assets/images/supervisor_image.png',
                   type: LoginAuthType.supervisor,
                   isSelected: selectedAuthType == LoginAuthType.supervisor,
-                  displayTypeString: 'Supervisor'),
+                  displayTypeString: 'Supervisor'.tr()),
             ),
             Expanded(
               child: _buildAuthTypeWidget('assets/images/employee_image.png',
                   type: LoginAuthType.employee,
                   isSelected: selectedAuthType == LoginAuthType.employee,
-                  displayTypeString: 'Employee'),
+                  displayTypeString: 'Employee'.tr()),
             ),
           ],
         );

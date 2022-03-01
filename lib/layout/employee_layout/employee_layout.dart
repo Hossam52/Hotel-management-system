@@ -68,7 +68,10 @@ class EmployeeLayout extends StatelessWidget {
   CustomBottomNavBarItem _builNavItem(String iconPath, String title) {
     return CustomBottomNavBarItem(
         selectedColor: AppColors.darkPrimaryColor,
-        icon: SvgImageWidget(path: iconPath),
+        icon: SvgImageWidget(
+          path: iconPath,
+          color: AppColors.darkPrimaryColor,
+        ),
         // Image.asset(
         //   iconPath,
         //   scale: 1.3,

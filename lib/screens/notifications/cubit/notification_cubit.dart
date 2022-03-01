@@ -13,9 +13,9 @@ class NotificationCubit extends Cubit<NotificationStates> {
       BlocProvider.of<NotificationCubit>(context);
   NotificationsModel? notifications;
   Future<void> getAllNotifications(context) async {
-    final notifications = await _getNotificationsAccordingToType(context);
     try {
       emit(LoadingNotificationState());
+      final notifications = await _getNotificationsAccordingToType(context);
       this.notifications = notifications;
       emit(SuccessNotificationState());
     } catch (e) {
@@ -32,6 +32,47 @@ class NotificationCubit extends Cubit<NotificationStates> {
 
       case LoginAuthType.supervisor:
         return SupervisorSurvices.getAllNotifications(token);
+      default:
+        throw Exception('Un defined type');
+    }
+  }
+
+  Future<void> getNextPage(context) async {
+    try {
+      if (notifications == null) return;
+      final currentNotifications = this.notifications!.notifications!;
+      final currentPage = currentNotifications.meta!.currentPage;
+      final lastPage = currentNotifications.meta!.lastPage;
+      if (currentPage == lastPage) return;
+
+      emit(LoadingNotificationState());
+      final newNotifications =
+          await _getNextNotificationsPageAccordingToType(context);
+      newNotifications;
+      notifications!.notifications!.copyWith(
+        meta: newNotifications.notifications!.meta,
+        links: newNotifications.notifications!.links,
+      );
+      notifications!.notifications!.data!.addAll(
+        newNotifications.notifications!.data!,
+      );
+      emit(SuccessNotificationState());
+    } catch (e) {
+      emit(ErrorNotificationState(error: e.toString()));
+    }
+  }
+
+  Future<NotificationsModel> _getNextNotificationsPageAccordingToType(
+      context) async {
+    final nextPage = notifications!.notifications!.meta!.currentPage + 1;
+    final user = AppCubit.instance(context).currentUserType;
+    final token = AppCubit.instance(context).token;
+    switch (user) {
+      case LoginAuthType.employee:
+        return EmployeeServices.getNextNotificationPage(token, 1);
+
+      case LoginAuthType.supervisor:
+        return SupervisorSurvices.getNextNotificationPage(token, 1);
       default:
         throw Exception('Un defined type');
     }

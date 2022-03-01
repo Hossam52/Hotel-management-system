@@ -30,7 +30,19 @@
   "Press": "Press",
   "Active":"Active",
   "Pending":"Pending",
-  "Finished":"Finished"
+  "Finished":"Finished",
+  "Language":"Language",
+  "ReportProblem":"Report problem",
+  "Logout":"Logout",
+  "Arabic":"لغة عربية",
+  "English":"English",
+  "Email":"Email",
+  "Password":"Password",
+  "Login":"Login",
+  "Employee":"Employee",
+  "Supervisor":"Supervisor",
+  "FilteredDateIs":"Filtered date is"
+
 
 
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -11,118 +12,99 @@ import 'package:htask/models/tasks.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/login/login.dart';
 import 'package:htask/screens/order_details/order_details.dart';
+import 'package:htask/shared/network/remote/local_notification_statuses.dart';
 import 'package:htask/shared/network/remote/local_notifications.dart';
+import 'package:htask/shared/network/remote/push_notification_model.dart';
+
+void _checkRedirection(RemoteMessage message) {
+  log('notification title ${message.notification!.title} body ${message.notification!.title}');
+  final data = message.data;
+  // PushNotificationModel? notificationModel;
+  // if (data.containsKey('data')) {
+  //   notificationModel = PushNotificationModel.fromMap(data);
+  // }
+  // if (data.containsKey('order_id')) {
+  //   log('order_id -------' + data['order_id']);
+  //   notificationModel = PushNotificationModel(
+  //       body: '',
+  //       title: '',
+  //       data: PushNotificationData.fromJson(data['order_id']));
+  // }
+  // log(notificationModel.toString());
+  // final notificationData = data['data'];
+  // OrderModel order = OrderModel.fromJson(notificationData);
+  // final jsonDecode = json.decode(data['order_id']);
+  // final OrderModel order = OrderModel.fromJson(data['order_id']);
+  // log(jsonDecode.runtimeType.toString());
+
+  // Map<String, dynamic> map = json.decode(data['order_id']);
+  // log('-------------' + map.toString());
+  if (data.containsKey('order_id')) {
+    LocalNotifications.showLocalNotification(
+      properties: OrdersLocalNotification(),
+      title: message.notification!.title, // message.notification!.title,
+      body: message.notification!.body, //message.notification!.body,
+      payload: json.encode(data),
+    );
+  } else if (message.data.containsKey('change_available')) {
+    LocalNotifications.showLocalNotification(
+      properties: ChangeAvailableLocalNotification(),
+      title: message.notification!.title, // message.notification!.title,
+      body: message.notification!.body, //message.notification!.body,
+      payload: message.data['change_available'],
+    );
+  } else if (message.data.containsKey('auth')) {
+    LocalNotifications.showLocalNotification(
+      properties: AuthLocalNotification(),
+      title: message.notification!.title, // message.notification!.title,
+      body: message.notification!.body, //message.notification!.body,
+      payload: message.data['auth'],
+    );
+  } else {
+    LocalNotifications.showLocalNotification(
+      properties: DefaultLocalNotification(),
+      title: message.notification!.title, // message.notification!.title,
+      body: message.notification!.body, //message.notification!.body,
+    );
+  }
+}
 
 class FCM {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  final _firebaseMessaging = FirebaseMessaging.instance;
-
-  // final streamCtlr = StreamController<String>.broadcast();
-  // final titleCtlr = StreamController<String>.broadcast();
-  // final bodyCtlr = StreamController<String>.broadcast();
-
   setNotifications(GlobalKey<NavigatorState> navigatorKey) async {
     await LocalNotifications.initialize(navigatorKey);
 
-    FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(alert: true, badge: true);
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
 
     log('Start notification');
-    // await _notificationOnAppTerminated(navigatorKey);
+    await _notificationOnAppTerminated(navigatorKey);
     await _notificationOnAppBackground(navigatorKey);
     await _notificationOnAppOpened(navigatorKey);
-
-    // await _notificationOnAppOpened(navigatorKey);
-    // FirebaseMessaging.onMessage.listen(
-    //   (message) async {
-    //     log('Notification On Message');
-    //     log(message.data.toString());
-    //     if (message.data.containsKey('data')) {
-    //       log('data ${(message.data['data'] as Map<String, dynamic>)['screen']} ');
-    //       // Handle data message
-    //       streamCtlr.sink.add(message.data['data']);
-    //     }
-    //     if (message.data.containsKey('notification')) {
-    //       // Handle notification message
-    //       streamCtlr.sink.add(message.data['notification']);
-    //     }
-    //     // Or do other work.
-    //     titleCtlr.sink.add(message.notification!.title!);
-    //     bodyCtlr.sink.add(message.notification!.body!);
-    //   },
-    // );
-    // // With this token you can test it easily on your phone
-    // final token =
-    //     _firebaseMessaging.getToken().then((value) => print('Token: $value'));
   }
 
   Future<void> _notificationOnAppTerminated(
       GlobalKey<NavigatorState> navigatorKey) async {
     final message = await FirebaseMessaging.instance.getInitialMessage();
-    log('In background found ${message?.data}');
-    if (message?.data['order'] == '/order') {
-      log('From termination found order');
-      navigatorKey.currentState!.push(
-        MaterialPageRoute(
-          builder: (_) => OrderDetails(
-            taskStatus: ActiveSupervisorTask(12, 12),
-            order: OrderModel(
-                id: 1,
-                guestName: 'guestName',
-                employeeName: 'employeeName',
-                supervisorName: 'supervisorName',
-                status: 'new',
-                roomNum: '500',
-                payment: 'Cash',
-                floor: '2',
-                date: '022-02-28T13:05:40.000000Z',
-                endTime: '022-02-28T13:05:40.000000Z',
-                actualEndTime: '022-02-28T13:05:40.000000Z',
-                orderdetails: [],
-                roomId: 4),
-            homeCubit: HomeCubit(),
-          ),
-        ),
-      );
-    }
+    if (message == null) return;
+    _checkRedirection(message);
   }
 
   Future<void> _notificationOnAppOpened(
       GlobalKey<NavigatorState> navigatorKey) async {
-    log((await FirebaseMessaging.instance.getToken())!);
     FirebaseMessaging.onMessage.listen((message) {
-      log(message.data.toString());
       log('In onMessage found ${message.data}');
-      if (message.data['order'] == '/order') {
-        log('From onMessage found order');
-        LocalNotifications.showNotification(
-            title: message.notification!.title ?? '',
-            body: message.notification!.body ?? '',
-            payload: message.data['order']);
-      }
+      _checkRedirection(message);
     });
   }
 
   Future<void> _notificationOnAppBackground(
       GlobalKey<NavigatorState> navigatorKey) async {
     FirebaseMessaging.onMessageOpenedApp.listen((message) async {
-      log('In background found ${message.data}');
-      // await LocalNotifications.showNotification(
-      //     title: message.notification!.title ?? '',
-      //     body: message.notification!.body ?? '');
-      if (message.data['order'] == '/order') {
-        log('From termination found order');
-        navigatorKey.currentState!
-            .push(MaterialPageRoute(builder: (_) => const LoginScreen()));
-      }
+      log('In openedApp found ${message.data}');
+      _checkRedirection(message);
     });
-  }
-
-  dispose() {
-    // streamCtlr.close();
-    // bodyCtlr.close();
-    // titleCtlr.close();
   }
 }

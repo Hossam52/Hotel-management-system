@@ -71,7 +71,7 @@ class SelectedFilteredDate extends StatelessWidget {
     return Row(
       children: [
         _headerText(
-          'Filtered date is: ',
+          'FilteredDateIs'.tr() + ' : ',
           textStyle,
         ),
         const _FilteredDate(),

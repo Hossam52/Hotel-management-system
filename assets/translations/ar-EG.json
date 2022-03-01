@@ -1,26 +1,25 @@
-
 {
   "Available": "متاح الان",
   "HaveGreateWorkingDay": "نتمني لك يوم رائع ",
   "YourServiceTodayAre": "هذه هي خدمتك اليوم",
-  "Search":"ابحث ",
+  "Search": "ابحث ",
   "OrderDetails": "تفاصيل الطلب",
   "Back": "رجوع",
-  "EstimatedTime":"الوقت المقدر",
+  "EstimatedTime": "الوقت المقدر",
   "RemainingEstimated": "الوقت المقدر المتبقي",
   "Done": "تم",
   "RoomNumber": "رقم الحجرة",
   "number": "رقم",
   "Floor": "الطابق",
-  "AssignedTo":"مخصص ل ",
-  "Price":"السعر",
+  "AssignedTo": "مخصص ل ",
+  "Price": "السعر",
   "StartTask": "بداية المهمة",
   "EndTask": "نهاية المهمة",
-  "ChangeAssignment":"تغيير التخصص",
+  "ChangeAssignment": "تغيير التخصص",
   "Notifications": "الاشعارات",
   "NotificationTitle": "عنوان الاشعار",
   "SelectEmployee": "اختر الموظف",
-  "OrdersNumberCount":"عدد الطلبات المتبقية",
+  "OrdersNumberCount": "عدد الطلبات المتبقية",
   "Select": "اختر",
   "FromRoom": "من حجرة",
   "Loading": "يتم التحميل الان",
@@ -28,10 +27,20 @@
   "Refreshnow": "التحديث الان",
   "Hello": "مرحباً",
   "NoData": "لا توجد بيانات",
-  "Press": "اضغط"
- ,"Active":"الحالية",
-  "Pending":"المنتظرة",
-  "Finished":"المنتهية"
-
+  "Press": "اضغط",
+  "Active": "الحالية",
+  "Pending": "المنتظرة",
+  "Finished": "المنتهية",
+  "Language": "اللغة",
+  "ReportProblem": "الابلاغ عن خطأ",
+  "Logout": "تسجيل الخروج",
+  "Arabic": "لغة عربية",
+  "English": "English",
+  "Email": "الايميل",
+  "Password": "كلمة المرور",
+  "Login": "تسجيل الدخول",
+  "Employee": "موظف",
+  "Supervisor": "مشرف"
+  ,  "FilteredDateIs":"الفلترة بالتاريخ"
 
 }

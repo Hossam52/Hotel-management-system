@@ -18,10 +18,10 @@ extension LanguageString on Language {
   String get getString {
     switch (this) {
       case Language.arabic:
-        return 'Arabic';
+        return 'Arabic'.tr();
 
       case Language.english:
-        return 'English';
+        return 'English'.tr();
 
       default:
         return '';

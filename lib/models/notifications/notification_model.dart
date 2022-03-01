@@ -26,6 +26,18 @@ class NotificationsModel {
     }
     return data;
   }
+
+  NotificationsModel copyWith({
+    bool? status,
+    int? countUnreadNotify,
+    Notifications? notifications,
+  }) {
+    return NotificationsModel(
+      status: status ?? this.status,
+      countUnreadNotify: countUnreadNotify ?? this.countUnreadNotify,
+      notifications: notifications ?? this.notifications,
+    );
+  }
 }
 
 class Notifications {
@@ -60,6 +72,18 @@ class Notifications {
     }
     return data;
   }
+
+  Notifications copyWith({
+    List<NotificationData>? data,
+    PaginnationLinks? links,
+    PaginnationMeta? meta,
+  }) {
+    return Notifications(
+      data: data ?? this.data,
+      links: links ?? this.links,
+      meta: meta ?? this.meta,
+    );
+  }
 }
 
 class NotificationData {
@@ -68,7 +92,7 @@ class NotificationData {
   String? body;
   String? type;
   ReciverId? reciverId;
-  String? orderId;
+  int? orderId;
   String? readAt;
 
   NotificationData(

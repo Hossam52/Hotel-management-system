@@ -32,17 +32,17 @@ class HomeCubit extends Cubit<HomeState> {
   final List<TabBarItem> tabBars = [
     TabBarItem(
         isSelected: true,
-        text: 'Active'.tr(),
+        text: 'Active',
         imagePath: 'assets/images/icons/active.svg',
         widget: const ActiveWidget()),
     TabBarItem(
         isSelected: false,
-        text: 'Pending'.tr(),
+        text: 'Pending',
         imagePath: 'assets/images/icons/pending.svg',
         widget: const PendingWidget()),
     TabBarItem(
         isSelected: false,
-        text: 'Finished'.tr(),
+        text: 'Finished',
         imagePath: 'assets/images/icons/finished.svg',
         widget: const FinishedWidget()),
     // TabBarItem(

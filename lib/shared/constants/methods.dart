@@ -42,5 +42,7 @@ String formatTime(TimeOfDay time) {
   return '${time.hour}:${time.minute}';
 }
 
-Future<String?> get getDeviceToken async =>
-    await FirebaseMessaging.instance.getToken();
+Future<String?> get getDeviceToken async {
+  log((await FirebaseMessaging.instance.getToken())!);
+  return await FirebaseMessaging.instance.getToken();
+}

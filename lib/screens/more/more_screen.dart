@@ -21,49 +21,56 @@ class MoreScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.lightPrimary,
       body: Builder(builder: (context) {
-        return BlocListener<AuthCubit, AuthState>(
-          listener: (context, state) {
-            if (state is LoadingLogoutState) log('Loading logout state');
-            if (state is SuccessLogoutState) showSuccessToast(state.message);
-            if (state is ErrorLogoutState) showErrorToast(state.error);
-          },
-          child: SafeArea(
-            child: Column(
-              children: [
-                const HomeHeader(),
-                // _buildItem('Available',
-                //     trailing: CustomSwitch(
-                //       val: false,
-                //       onToggle: (val) {},
-                //     )),
-                _buildItem('Report problem',
-                    imagePath: 'assets/images/icons/report.svg'),
-                _buildItem('Logout',
-                    imagePath: 'assets/images/icons/logout.svg',
-                    onTap: () async {
-                  await AuthCubit.instance(context).logout(context);
-                }),
-                BlocBuilder<AppCubit, AppState>(
-                  buildWhen: (previous, current) =>
-                      current is ChangeAppLanguage,
-                  builder: (context, state) {
-                    return _buildItem('Language',
-                        imagePath: 'assets/images/icons/language.svg',
-                        trailing: Text(
-                          AppCubit.instance(context).language.getString,
-                          style: const TextStyle(
-                            fontSize: 14,
-                          ),
-                        ), onTap: () async {
-                      showDialog(
-                          context: context,
-                          builder: (_) => _ChangeLanguageDialog());
-                    });
-                  },
+        return BlocBuilder<AppCubit, AppState>(
+          buildWhen: (previous, current) => current is ChangeAppLanguage,
+          builder: (context, state) {
+            return BlocListener<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state is LoadingLogoutState) log('Loading logout state');
+                if (state is SuccessLogoutState)
+                  showSuccessToast(state.message);
+                if (state is ErrorLogoutState) showErrorToast(state.error);
+              },
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    const HomeHeader(),
+                    // _buildItem('Available',
+                    //     trailing: CustomSwitch(
+                    //       val: false,
+                    //       onToggle: (val) {},
+                    //     )),
+                    _buildItem('ReportProblem'.tr(),
+                        imagePath: 'assets/images/icons/report.svg'),
+
+                    BlocBuilder<AppCubit, AppState>(
+                      buildWhen: (previous, current) =>
+                          current is ChangeAppLanguage,
+                      builder: (context, state) {
+                        return _buildItem('Language'.tr(),
+                            imagePath: 'assets/images/icons/language.svg',
+                            trailing: Text(
+                              AppCubit.instance(context).language.getString,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ), onTap: () async {
+                          showDialog(
+                              context: context,
+                              builder: (_) => _ChangeLanguageDialog());
+                        });
+                      },
+                    ),
+                    _buildItem('Logout'.tr(),
+                        imagePath: 'assets/images/icons/logout.svg',
+                        onTap: () async {
+                      await AuthCubit.instance(context).logout(context);
+                    }),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       }),
     );
@@ -111,6 +118,7 @@ class _ChangeLanguageDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _languageRow(context, const Locale('ar', 'EG'), Language.arabic),
+              const SizedBox(height: 10),
               _languageRow(context, const Locale('en', 'US'), Language.english),
             ],
           ),
@@ -124,26 +132,30 @@ class _ChangeLanguageDialog extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         AppCubit.instance(context).changeLanguage(context, locale);
+        Navigator.pop(context);
       },
       child: Card(
-        child: Row(
-          children: [
-            Expanded(
-              child: displayedLanguage == AppCubit.instance(context).language
-                  ? const Icon(Icons.done, size: 25)
-                  : Container(),
-            ),
-            Expanded(
-              flex: 5,
-              child: Text(
-                displayedLanguage.getString,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: displayedLanguage == AppCubit.instance(context).language
+                    ? const Icon(Icons.done, size: 25)
+                    : Container(),
+              ),
+              Expanded(
+                flex: 5,
+                child: Text(
+                  displayedLanguage.getString,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

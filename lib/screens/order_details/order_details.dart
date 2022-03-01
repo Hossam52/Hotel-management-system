@@ -326,6 +326,7 @@ class _OrderDetailsItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(orderDetails.length.toString());
     const textStyle = TextStyle(fontSize: 16);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,6 +354,7 @@ class _OrderDetailItem extends StatelessWidget {
     return Row(
       children: [
         const SizedBox(width: 20),
+        Text('(${details.quantity}) EG', style: textStyle),
         Text(
           details.service,
           style: textStyle,

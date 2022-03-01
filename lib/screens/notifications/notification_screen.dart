@@ -36,25 +36,33 @@ class NotificationScreen extends StatelessWidget {
               }
               if (state is ErrorNotificationState) {
                 return DefaultErrorWidget(
-                    refreshMethod: () => NotificationCubit.instance(context)
-                        .getAllNotifications(context));
+                  refreshMethod: () => NotificationCubit.instance(context)
+                      .getAllNotifications(context),
+                  textColor: AppColors.blue1,
+                );
               }
-              if (notification == null) {
-                return const Center(
-                    child: Text(
-                  'No Data',
-                  style: TextStyle(fontSize: 20),
-                ));
-              }
-              final data = notification.notifications!.data!;
-              return ListView.separated(
-                itemBuilder: (_, index) {
-                  return _NotificationItem(notification: data[index]);
-                },
-                itemCount: data.length,
-                separatorBuilder: (_, index) {
-                  return const SizedBox(height: 10);
-                },
+
+              final data = notification!.notifications!.data!;
+              return Column(
+                children: [
+                  // TextButton(
+                  //     onPressed: () {
+                  //       NotificationCubit.instance(context)
+                  //           .getNextPage(context);
+                  //     },
+                  //     child: Text('Press')),
+                  Expanded(
+                    child: ListView.separated(
+                      itemBuilder: (_, index) {
+                        return _NotificationItem(notification: data[index]);
+                      },
+                      itemCount: data.length,
+                      separatorBuilder: (_, index) {
+                        return const SizedBox(height: 10);
+                      },
+                    ),
+                  ),
+                ],
               );
             },
           ),
@@ -73,18 +81,22 @@ class _NotificationItem extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+        child: Row(
           children: [
-            Text(
-              notification.title!,
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            SizedBox(height: 5),
-            Text(
-              notification.body!,
-              style: TextStyle(fontSize: 18),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  notification.title!,
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  notification.body!,
+                  style: TextStyle(fontSize: 18),
+                ),
+              ],
             ),
           ],
         ),
