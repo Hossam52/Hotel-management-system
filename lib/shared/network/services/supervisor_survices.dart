@@ -40,7 +40,7 @@ class SupervisorSurvices {
         url: SupervisorApis.getOrders,
         token: token,
         data: requestModel == null ? {} : requestModel.toMap());
-    log(res.toString());
+
     AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
     return allOrders;
   }
@@ -81,7 +81,7 @@ class SupervisorSurvices {
         url: SupervisorApis.getAvaEmployee,
         token: token,
         data: request.toMap());
-    log(res.toString());
+
     AllEmployeesToAssign categoies = AllEmployeesToAssign.fromMap(res.data);
     return categoies;
   }
@@ -92,7 +92,7 @@ class SupervisorSurvices {
         url: SupervisorApis.assignEmployeeToOrder,
         token: token,
         data: request.toMap());
-    log(res.toString());
+
     AssignOrderToEmployee categoies = AssignOrderToEmployee.fromMap(res.data);
     return categoies;
   }
@@ -102,7 +102,7 @@ class SupervisorSurvices {
       url: SupervisorApis.getMyEmployee,
       token: token,
     );
-    log(res.toString());
+
     SupervisorEmployeesModel categoies =
         SupervisorEmployeesModel.fromMap(res.data);
     return categoies;
@@ -114,7 +114,7 @@ class SupervisorSurvices {
         url: SupervisorApis.changeEmployeeStatus,
         token: token,
         data: {'employee_id': id});
-    log(res.toString());
+
     ChangeEmployeeStatusModel employeeStatusModel =
         ChangeEmployeeStatusModel.fromMap(res.data);
     return employeeStatusModel;

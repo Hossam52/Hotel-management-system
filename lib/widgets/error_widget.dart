@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:htask/styles/colors.dart';
 
@@ -17,14 +18,14 @@ class DefaultErrorWidget extends StatelessWidget {
             color: AppColors.darkPrimaryColor,
           ),
           const SizedBox(height: 20),
-          const Text('Error happened'),
+           Text('ErrorHappened'.tr()),
           const SizedBox(height: 20),
           TextButton(
             onPressed: refreshMethod,
             style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all(Colors.white)),
-            child: const Text(
-              'Refresh now',
+            child:  Text(
+              'Refreshnow'.tr(),
             ),
           ),
         ],

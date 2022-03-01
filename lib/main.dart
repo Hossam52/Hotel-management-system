@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,12 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/bloc_observer.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/layout/cubit/app_states.dart';
 import 'package:htask/screens/login/login.dart';
 import 'package:htask/screens/staff/staff.dart';
 import 'package:htask/shared/network/local/cache_helper.dart';
 import 'package:htask/shared/network/remote/dio_helper.dart';
 import 'package:htask/shared/network/remote/local_notifications.dart';
 import 'package:htask/shared/network/remote/notifications.dart';
+import 'package:htask/translations/translation_loader.dart';
 
 import 'layout/supervisor_layout/supervisor_home_layout.dart';
 
@@ -25,9 +29,15 @@ Future<void> main() async {
 
   DioHelper.init();
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const MyApp(), // Wrap your app
+    EasyLocalization(
+      path: 'assets/translations',
+      supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
+      fallbackLocale: const Locale('en', 'US'),
+      assetLoader: const CodegenLoader(),
+      child: DevicePreview(
+        enabled: !kReleaseMode,
+        builder: (context) => const MyApp(), // Wrap your app
+      ),
     ),
   );
 }
@@ -55,32 +65,29 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return EasyLocalization(
-      path: 'assets/translations',
-      supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
-      fallbackLocale: const Locale('en', 'US'),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => AppCubit(), lazy: false),
-        ],
-        child: Builder(
-          builder: (context) {
-            return MaterialApp(
-              localizationsDelegates: context.localizationDelegates,
-              supportedLocales: context.supportedLocales,
-              navigatorKey: navigatorKey,
-              locale: context.locale,
-              title: 'HTask',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-              ),
-              home:
-                  //  const _TestLocalNotification(),
-                  // const _TestNotification(),
-                  AppCubit.instance(context).loginScreenOrHomeScreen(),
-            );
-          },
-        ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AppCubit(context.locale), lazy: false),
+      ],
+      child: Builder(
+        builder: (context) {
+          log('Saved language is ${context.locale.toString()}');
+          return MaterialApp(
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            navigatorKey: navigatorKey,
+            locale: context.locale,
+            // locale: Locale("ar"),
+            title: 'HTask',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home:
+                //  const _TestLocalNotification(),
+                // const _TestNotification(),
+                AppCubit.instance(context).loginScreenOrHomeScreen(),
+          );
+        },
       ),
     );
   }
@@ -92,7 +99,7 @@ class _TestLocalNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: const Text('Press'),
+      child: Text('Press'.tr()),
       onPressed: () {
         LocalNotifications.showNotification(
           title: 'Hossam',

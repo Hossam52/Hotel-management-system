@@ -74,15 +74,18 @@ class PersonLoginModel {
 class EmployeeRequestModel {
   String email;
   String password;
+  String mobileToken;
   EmployeeRequestModel({
     required this.email,
     required this.password,
+    required this.mobileToken,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'email': email,
       'password': password,
+      'mobile_token': mobileToken,
     };
   }
 }

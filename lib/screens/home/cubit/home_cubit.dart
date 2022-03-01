@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
@@ -31,17 +32,17 @@ class HomeCubit extends Cubit<HomeState> {
   final List<TabBarItem> tabBars = [
     TabBarItem(
         isSelected: true,
-        text: 'Active',
+        text: 'Active'.tr(),
         imagePath: 'assets/images/icons/active.svg',
         widget: const ActiveWidget()),
     TabBarItem(
         isSelected: false,
-        text: 'Pending',
+        text: 'Pending'.tr(),
         imagePath: 'assets/images/icons/pending.svg',
         widget: const PendingWidget()),
     TabBarItem(
         isSelected: false,
-        text: 'Finished',
+        text: 'Finished'.tr(),
         imagePath: 'assets/images/icons/finished.svg',
         widget: const FinishedWidget()),
     // TabBarItem(
@@ -102,7 +103,6 @@ class HomeCubit extends Cubit<HomeState> {
           to: filterByTime == null ? null : formatTime(filterByTime!.endTime),
         ),
       );
-      log(allOrders.newStatus.toString());
       emit(SuccessAllOrdersHomeState());
     } catch (e) {
       emit(ErrorAllOrdersHomeState(e.toString()));

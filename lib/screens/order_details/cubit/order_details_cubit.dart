@@ -85,7 +85,6 @@ class SupervisorOrderDetailsCubit extends OrderDetailsCubit {
           AssignOrderToEmployeeRequest(
               orderId: order.id, employeeId: employeeNum.toInt()));
       if (res.status) showSuccessToast(res.message);
-      log(res.message);
       emit(SuccessChangingEmployeeassignmentState(message: res.message));
     } catch (e) {
       emit(ErrorChangingEmployeeassignmentState(e.toString()));

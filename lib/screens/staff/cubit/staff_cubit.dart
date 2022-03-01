@@ -40,7 +40,6 @@ class StaffCubit extends Cubit<StaffStates> {
         emit(ErrorllEmployeesToAssignStaffState('No data'));
         return;
       }
-      log(res.toString());
       allEmployeesToAssign = res;
       emit(SuccessAllEmployeesToAssignStaffState());
     } catch (e) {

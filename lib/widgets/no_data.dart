@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:htask/styles/colors.dart';
 
@@ -10,9 +11,9 @@ class NoData extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: const [
+        children:  [
           Icon(Icons.error, color: AppColors.blue1),
-          Center(child: Text('No data', style: TextStyle(fontSize: 20))),
+          Center(child: Text('NoData'.tr(), style: TextStyle(fontSize: 20))),
         ],
       ),
     );

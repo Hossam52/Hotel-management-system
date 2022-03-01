@@ -1,6 +1,5 @@
 ///////////
-const String BASE_URL =
-    'http://algorithm.demo.carmartapp.com/HotelTask/public/';
+const String BASE_URL = 'https://hotelstask.com/hotelTask/public/';
 
 /////////////// Supervisor
 abstract class SupervisorApis {

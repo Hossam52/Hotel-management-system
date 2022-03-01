@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:htask/styles/colors.dart';
@@ -15,7 +16,6 @@ void showErrorToast(String msg) {
 }
 
 void checkResponse(Response res) {
-  log(res.toString());
   if (!(res.statusCode! >= 200 && res.statusCode! <= 300)) {
     print(res.statusCode);
     if (res.data['message'] != null) {
@@ -41,3 +41,6 @@ String formatDateWithTime(DateTime date) {
 String formatTime(TimeOfDay time) {
   return '${time.hour}:${time.minute}';
 }
+
+Future<String?> get getDeviceToken async =>
+    await FirebaseMessaging.instance.getToken();

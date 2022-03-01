@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
@@ -109,8 +110,8 @@ class _ChangeLanguageDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _languageRow(context, Language.arabic),
-              _languageRow(context, Language.english),
+              _languageRow(context, const Locale('ar', 'EG'), Language.arabic),
+              _languageRow(context, const Locale('en', 'US'), Language.english),
             ],
           ),
         );
@@ -118,10 +119,11 @@ class _ChangeLanguageDialog extends StatelessWidget {
     );
   }
 
-  Widget _languageRow(BuildContext context, Language displayedLanguage) {
+  Widget _languageRow(
+      BuildContext context, Locale locale, Language displayedLanguage) {
     return GestureDetector(
       onTap: () {
-        AppCubit.instance(context).changeLanguage(displayedLanguage);
+        AppCubit.instance(context).changeLanguage(context, locale);
       },
       child: Card(
         child: Row(

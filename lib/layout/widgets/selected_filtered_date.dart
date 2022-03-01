@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
@@ -50,7 +51,7 @@ class SelectedFilteredDate extends StatelessWidget {
         await HomeCubit.instance(context).getAllOrders(context);
       },
       child: Text(
-        'Search',
+        'Search'.tr(),
         style: textStyle,
       ),
     );

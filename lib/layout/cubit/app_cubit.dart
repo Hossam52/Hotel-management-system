@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_states.dart';
@@ -8,6 +9,7 @@ import 'package:htask/layout/supervisor_layout/supervisor_home_layout.dart';
 import 'package:htask/models/person_login_model.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/login/login.dart';
+import 'package:htask/shared/constants/constants.dart';
 import 'package:htask/shared/network/local/cache_helper.dart';
 
 enum Language { arabic, english }
@@ -28,14 +30,29 @@ extension LanguageString on Language {
 }
 
 class AppCubit extends Cubit<AppState> {
-  AppCubit() : super(InitalAppState());
+  AppCubit(Locale _currentLocale) : super(InitalAppState()) {
+    _changeLocale(_currentLocale);
+  }
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
   LoginAuthType? currentUserType;
+  void _changeLocale(Locale locale) {
+    if (locale.languageCode == const Locale('ar', 'EG').languageCode) {
+      lang = 'ar';
+      language = Language.arabic;
+    } else if (locale.languageCode == const Locale('en', 'US').languageCode) {
+      lang = 'en';
+      language = Language.english;
+    } else {
+      lang = 'en';
+      language = Language.english;
+    }
+  }
 
   Language language = Language.english;
-  void changeLanguage(Language language) {
-    this.language = language;
+  void changeLanguage(BuildContext context, Locale newLocale) {
+    _changeLocale(newLocale);
+    context.setLocale(newLocale);
     emit(ChangeAppLanguage());
   }
 

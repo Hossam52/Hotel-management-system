@@ -9,6 +9,7 @@ import 'package:htask/screens/login/cubit/auth_states.dart';
 import 'package:htask/screens/login/login.dart';
 import 'package:htask/shared/constants.dart';
 import 'package:htask/shared/constants/api_constants.dart';
+import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -80,9 +81,11 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<PersonLoginModel> _callLoginApi() async {
+    final deviceToken = await getDeviceToken;
     final loginRequestModel = EmployeeRequestModel(
         email: loginEmailController.text,
-        password: loginPasswordController.text);
+        password: loginPasswordController.text,
+        mobileToken: deviceToken!);
     if (selectedAccountType == LoginAuthType.employee) {
       final model = await EmployeeServices.login(loginRequestModel);
       token = model.token;

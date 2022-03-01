@@ -1,7 +1,10 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/layout/cubit/app_states.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/styles/text_styles.dart';
@@ -17,36 +20,41 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profile = AppCubit.instance(context).getProfile;
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-        color: AppColors.blue1,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-      ),
-      child: Row(
-        children: [
-          DefaultCachedImage(imagePath: profile.image),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+    return BlocBuilder<AppCubit, AppState>(
+      buildWhen: ((previous, current) => current is ChangeAppLanguage),
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+            color: AppColors.blue1,
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+          ),
+          child: Row(
             children: [
-              Text(
-                'Hello, ${profile.name}',
-                style: AppTextStyles.textStyle1,
+              DefaultCachedImage(imagePath: profile.image),
+              const SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '${"Hello".tr()}, ${profile.name}',
+                    style: AppTextStyles.textStyle1,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'HaveGreateWorkingDay'.tr(),
+                    style: AppTextStyles.textStyle2,
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                'Have a greate working day',
-                style: AppTextStyles.textStyle2,
-              ),
+              const Spacer(),
+              if (showFilterByDate) Expanded(child: _filterWidget(context)),
             ],
           ),
-          const Spacer(),
-          if (showFilterByDate) Expanded(child: _filterWidget(context)),
-        ],
-      ),
+        );
+      },
     );
   }
 

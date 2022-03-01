@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
@@ -23,6 +24,7 @@ class StaffScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    log('Available'.tr());
     const double padding = 14;
     return Scaffold(
         backgroundColor: AppColors.lightPrimary,
@@ -112,8 +114,8 @@ class _PersonItem extends StatelessWidget {
   Widget _availableWidget(BuildContext context, bool isBlocked) {
     return Column(
       children: [
-        const Text(
-          'Available',
+        Text(
+          'Available'.tr(),
           style: TextStyle(fontSize: 16),
         ),
         const SizedBox(
@@ -215,13 +217,13 @@ class _EmployeeResponsibilitiesWidget extends StatelessWidget {
             Row(children: [
               Flexible(
                   child: Center(
-                      child:
-                          _richText('From room: ', res.form_room.toString()))),
+                      child: _richText(
+                          '${"FromRoom".tr()}: ', res.form_room.toString()))),
               Flexible(
                   child: Center(
                       child: _richText('To room: ', res.to_room.toString()))),
             ]),
-            _richText('Floor: ', res.floor)
+            _richText('${"Floor".tr()}: ', res.floor)
           ],
         ),
       ),
