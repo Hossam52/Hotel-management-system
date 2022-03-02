@@ -40,11 +40,11 @@ class PaginnationMeta {
 
   Map<String, dynamic> toMap() {
     return {
-      'currentPage': currentPage,
+      'current_page': currentPage,
       'from': from,
-      'lastPage': lastPage,
+      'last_page': lastPage,
       'path': path,
-      'perPage': perPage,
+      'per_page': perPage,
       'to': to,
       'total': total,
     };
@@ -52,11 +52,11 @@ class PaginnationMeta {
 
   factory PaginnationMeta.fromMap(Map<String, dynamic> map) {
     return PaginnationMeta(
-      currentPage: map['currentPage']?.toInt() ?? 0,
+      currentPage: map['current_page']?.toInt() ?? 0,
       from: map['from']?.toInt() ?? 0,
-      lastPage: map['lastPage']?.toInt() ?? 0,
+      lastPage: map['last_page']?.toInt() ?? 0,
       path: map['path'] ?? '',
-      perPage: map['perPage']?.toInt() ?? 0,
+      perPage: map['per_page']?.toInt() ?? 0,
       to: map['to']?.toInt() ?? 0,
       total: map['total']?.toInt() ?? 0,
     );

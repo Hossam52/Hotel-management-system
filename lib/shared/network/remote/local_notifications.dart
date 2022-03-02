@@ -29,11 +29,26 @@ class LocalNotifications {
       log(order.totalPrice.toString());
       log('From local notification');
       if (jsonDecode.containsKey('order_id')) {
+        final status = order.status;
+        Task task;
+        switch (status) {
+          case 'new':
+            task = const ActiveEmployeeTask(15, 12);
+            break;
+          case 'process':
+            task = const PendingEmployeeTask(15, 12);
+            break;
+          case 'end':
+            task = const FinishedTask();
+            break;
+          default:
+            task = const FinishedTask();
+        }
         navigator.currentState!.push(MaterialPageRoute(
-          builder: (_) => OrderDetails(
-            taskStatus: const ActiveSupervisorTask(12, 12),
+          builder: (context) => OrderDetails(
+            taskStatus: task,
             order: order,
-            homeCubit: HomeCubit(),
+            homeCubit: HomeCubit(context),
           ),
         ));
       }

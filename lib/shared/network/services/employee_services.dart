@@ -29,10 +29,22 @@ class EmployeeServices {
   }
 
   static Future<AllOrderStatusesModel> getOrders(String token,
+      {int? page, CategoryRequestModel? requestModel}) async {
+    final res = await DioHelper.postData(
+        url: EmployeeApis.getOrders,
+        query: {'page': page},
+        token: token,
+        data: requestModel == null ? {} : requestModel.toMap());
+    AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
+    return allOrders;
+  }
+
+  static Future<AllOrderStatusesModel> getNextOrderPage(String token, int page,
       {CategoryRequestModel? requestModel}) async {
     final res = await DioHelper.postData(
         url: EmployeeApis.getOrders,
         token: token,
+        query: {'page': page},
         data: requestModel == null ? {} : requestModel.toMap());
     AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
     return allOrders;

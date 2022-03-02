@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/supervisor_layout/cubit/supervisor_cubit.dart';
 import 'package:htask/layout/supervisor_layout/cubit/supervisor_states.dart';
+import 'package:htask/layout/widgets/bottom_tab_item.dart';
+import 'package:htask/layout/widgets/notification_widget.dart';
 import 'package:htask/layout/widgets/selected_filtered_date.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/home.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/more/more_screen.dart';
+import 'package:htask/screens/notifications/cubit/notification_cubit.dart';
 import 'package:htask/screens/staff/cubit/staff_cubit.dart';
 import 'package:htask/screens/staff/staff.dart';
 import 'package:htask/shared/constants/methods.dart';
@@ -20,6 +23,7 @@ import 'package:htask/widgets/services_toaday.dart';
 import 'package:htask/widgets/svg_image_widget.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
+//Y-m-d G:i:s
 class SuperVisorHomeLayout extends StatelessWidget {
   const SuperVisorHomeLayout({Key? key}) : super(key: key);
 
@@ -31,13 +35,18 @@ class SuperVisorHomeLayout extends StatelessWidget {
         BlocProvider<SupervisorCubit>(
             create: (context) => SupervisorCubit(), lazy: false),
         BlocProvider<HomeCubit>(
-            create: (context) => HomeCubit()..getAllCategories(context),
+            create: (context) => HomeCubit(context)..getAllCategories(context),
             lazy: false),
         BlocProvider<StaffCubit>(
           create: (context) => StaffCubit(),
         ),
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              NotificationCubit(context)..getAllNotifications(context),
+          lazy: false,
         ),
       ],
       child: BlocBuilder<SupervisorCubit, SupervisorStates>(
@@ -52,15 +61,19 @@ class SuperVisorHomeLayout extends StatelessWidget {
                 },
                 currentIndex: cubit.selectedTabIndex,
                 items: [
-                  _builNavItem(
-                      'assets/images/icons/home_bottom_tab.svg', 'Home'),
-                  _builNavItem(
-                      'assets/images/icons/staff_bottom_tab.svg', 'Staff'),
-                  _builNavItem(
-                      'assets/images/icons/notification_bottom_tab.svg',
-                      'Notification'),
-                  _builNavItem(
-                      'assets/images/icons/more_bottom_tab.svg', 'More'),
+                  _buildNavItem(
+                      const BottomTabItem(
+                          iconPath: 'assets/images/icons/home_bottom_tab.svg'),
+                      'Home'),
+                  _buildNavItem(
+                      const BottomTabItem(
+                          iconPath: 'assets/images/icons/staff_bottom_tab.svg'),
+                      'Staff'),
+                  _buildNavItem(const NotificationWidget(), 'Notification'),
+                  _buildNavItem(
+                      const BottomTabItem(
+                          iconPath: 'assets/images/icons/more_bottom_tab.svg'),
+                      'More'),
                 ],
               ),
               body: cubit.getScreen());
@@ -69,15 +82,10 @@ class SuperVisorHomeLayout extends StatelessWidget {
     );
   }
 
-  CustomBottomNavBarItem _builNavItem(String iconPath, String title) {
+  CustomBottomNavBarItem _buildNavItem(Widget icon, String title) {
     return CustomBottomNavBarItem(
         selectedColor: AppColors.darkPrimaryColor,
-        icon: SvgImageWidget(
-          path: iconPath,
-          color: AppColors.darkPrimaryColor,
-          width: 15,
-          height: 15,
-        ),
+        icon: icon,
         title: Text(title));
   }
 }

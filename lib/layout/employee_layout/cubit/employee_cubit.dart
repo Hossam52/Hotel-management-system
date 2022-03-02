@@ -12,7 +12,7 @@ class EmployeeCubit extends Cubit<EmployeeStates> {
   int selectedTabIndex = 0;
   final _employeeScreens = [
     const HomeEmployee(),
-    const NotificationScreen(),
+    NotificationScreen(),
     const MoreScreen(),
   ];
 

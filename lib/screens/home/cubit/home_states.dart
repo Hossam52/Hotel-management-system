@@ -19,6 +19,16 @@ class ErrorAllOrdersHomeState extends HomeState {
   ErrorAllOrdersHomeState(this.error);
 }
 
+class LoadingNextAllOrdersHomeState extends HomeState {}
+
+class SuccessNextAllOrdersHomeState extends HomeState {}
+
+class ErrorNextAllOrdersHomeState extends HomeState {
+  final String error;
+
+  ErrorNextAllOrdersHomeState(this.error);
+}
+
 //All categories
 class LoadingAllCategoriesHomeState extends HomeState {}
 

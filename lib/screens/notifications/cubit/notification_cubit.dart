@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
@@ -8,7 +10,9 @@ import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
 
 class NotificationCubit extends Cubit<NotificationStates> {
-  NotificationCubit() : super(InitialNotificationState());
+  NotificationCubit(BuildContext context) : super(InitialNotificationState()) {
+    _addListener(context);
+  }
   static NotificationCubit instance(BuildContext context) =>
       BlocProvider.of<NotificationCubit>(context);
   NotificationsModel? notifications;
@@ -21,6 +25,18 @@ class NotificationCubit extends Cubit<NotificationStates> {
     } catch (e) {
       emit(ErrorNotificationState(error: e.toString()));
     }
+  }
+
+  ScrollController scrollController = ScrollController();
+  void _addListener(context) {
+    scrollController.addListener(() async {
+      final maxScrollExtent = scrollController.position.maxScrollExtent;
+      final currentScrollPosition = scrollController.position.pixels;
+      const delta = 200;
+      if (maxScrollExtent - currentScrollPosition <= delta) {
+        await getNextPage(context);
+      }
+    });
   }
 
   Future<NotificationsModel> _getNotificationsAccordingToType(context) async {
@@ -39,26 +55,29 @@ class NotificationCubit extends Cubit<NotificationStates> {
 
   Future<void> getNextPage(context) async {
     try {
-      if (notifications == null) return;
-      final currentNotifications = this.notifications!.notifications!;
+      if (notifications == null) {
+        return;
+      }
+      final currentNotifications = notifications!.notifications!;
       final currentPage = currentNotifications.meta!.currentPage;
       final lastPage = currentNotifications.meta!.lastPage;
+      log('current page $currentPage last page$lastPage');
       if (currentPage == lastPage) return;
 
-      emit(LoadingNotificationState());
+      emit(LoadingMoreNotificationState());
       final newNotifications =
           await _getNextNotificationsPageAccordingToType(context);
       newNotifications;
-      notifications!.notifications!.copyWith(
+      notifications!.notifications = notifications!.notifications!.copyWith(
         meta: newNotifications.notifications!.meta,
         links: newNotifications.notifications!.links,
       );
       notifications!.notifications!.data!.addAll(
         newNotifications.notifications!.data!,
       );
-      emit(SuccessNotificationState());
+      emit(SuccessMoreNotificationState());
     } catch (e) {
-      emit(ErrorNotificationState(error: e.toString()));
+      emit(ErrorMoreNotificationState(error: e.toString()));
     }
   }
 
@@ -69,10 +88,10 @@ class NotificationCubit extends Cubit<NotificationStates> {
     final token = AppCubit.instance(context).token;
     switch (user) {
       case LoginAuthType.employee:
-        return EmployeeServices.getNextNotificationPage(token, 1);
+        return EmployeeServices.getNextNotificationPage(token, nextPage);
 
       case LoginAuthType.supervisor:
-        return SupervisorSurvices.getNextNotificationPage(token, 1);
+        return SupervisorSurvices.getNextNotificationPage(token, nextPage);
       default:
         throw Exception('Un defined type');
     }

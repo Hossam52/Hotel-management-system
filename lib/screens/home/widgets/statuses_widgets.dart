@@ -10,9 +10,11 @@ class ActiveWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final newOrders = HomeCubit.instance(context).allOrders.newStatus;
+    final HomeCubit homeCubit = HomeCubit.instance(context);
+    final newOrders = homeCubit.allOrders.newStatus;
     final data = newOrders.data;
-    return _listView(data, HomeCubit.instance(context).getActiveTask(context));
+    return _listView(data, homeCubit.getActiveTask(context),
+        homeCubit.activeScrollController);
   }
 }
 
@@ -21,9 +23,12 @@ class PendingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final newOrders = HomeCubit.instance(context).allOrders.processStatus;
+    final HomeCubit homeCubit = HomeCubit.instance(context);
+
+    final newOrders = homeCubit.allOrders.processStatus;
     final data = newOrders.data;
-    return _listView(data, HomeCubit.instance(context).getPendingTask(context));
+    return _listView(data, homeCubit.getPendingTask(context),
+        homeCubit.pendingScrollController);
   }
 }
 
@@ -32,9 +37,15 @@ class FinishedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final newOrders = HomeCubit.instance(context).allOrders.endStatus;
+    final HomeCubit homeCubit = HomeCubit.instance(context);
+
+    final newOrders = homeCubit.allOrders.endStatus;
     final data = newOrders.data;
-    return _listView(data, const FinishedTask());
+    return _listView(
+      data,
+      const FinishedTask(),
+      homeCubit.finishedScrollController,
+    );
   }
 }
 
@@ -43,15 +54,17 @@ class FinishedWidget extends StatelessWidget {
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final newOrders = HomeCubit.instance(context).allOrders.endStatus;
+//     final newOrders = homeCubit.allOrders.endStatus;
 //     final data = newOrders.data;
 //     return _listView(data, const LateTasks());
 //   }
 // }
 
-Widget _listView(List<OrderModel> orders, Task task) {
+Widget _listView(
+    List<OrderModel> orders, Task task, ScrollController controller) {
   if (orders.isEmpty) return const NoData();
   return ListView.separated(
+    // controller: controller,
     shrinkWrap: true,
     primary: false,
     separatorBuilder: (_, index) => const SizedBox(height: 15),

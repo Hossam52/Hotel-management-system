@@ -9,8 +9,7 @@ import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/error_widget.dart';
 
 class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
-
+  NotificationScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,52 +19,56 @@ class NotificationScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: BlocProvider(
-          create: (context) =>
-              NotificationCubit()..getAllNotifications(context),
-          lazy: false,
-          child: BlocConsumer<NotificationCubit, NotificationStates>(
-            listener: (context, state) {
-              if (state is ErrorNotificationState) showErrorToast(state.error);
-            },
-            builder: (context, state) {
-              final notification =
-                  NotificationCubit.instance(context).notifications;
-              if (state is LoadingNotificationState) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (state is ErrorNotificationState) {
-                return DefaultErrorWidget(
-                  refreshMethod: () => NotificationCubit.instance(context)
-                      .getAllNotifications(context),
-                  textColor: AppColors.blue1,
-                );
-              }
+        child: BlocConsumer<NotificationCubit, NotificationStates>(
+          listener: (context, state) {
+            if (state is ErrorNotificationState) showErrorToast(state.error);
+          },
+          builder: (context, state) {
+            final notification =
+                NotificationCubit.instance(context).notifications;
+            if (state is LoadingNotificationState) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is ErrorNotificationState) {
+              return DefaultErrorWidget(
+                refreshMethod: () => NotificationCubit.instance(context)
+                    .getAllNotifications(context),
+                textColor: AppColors.blue1,
+              );
+            }
 
-              final data = notification!.notifications!.data!;
-              return Column(
-                children: [
-                  // TextButton(
-                  //     onPressed: () {
-                  //       NotificationCubit.instance(context)
-                  //           .getNextPage(context);
-                  //     },
-                  //     child: Text('Press')),
-                  Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (_, index) {
-                        return _NotificationItem(notification: data[index]);
-                      },
-                      itemCount: data.length,
-                      separatorBuilder: (_, index) {
-                        return const SizedBox(height: 10);
-                      },
+            final data = notification!.notifications!.data!;
+            return Column(
+              children: [
+                // TextButton(
+                //     onPressed: () {
+                //       NotificationCubit.instance(context)
+                //           .getNextPage(context);
+                //     },
+                //     child: Text('Press')),
+                Expanded(
+                  child: ListView.separated(
+                    controller:
+                        NotificationCubit.instance(context).scrollController,
+                    itemBuilder: (_, index) {
+                      return _NotificationItem(notification: data[index]);
+                    },
+                    itemCount: data.length,
+                    separatorBuilder: (_, index) {
+                      return const SizedBox(height: 10);
+                    },
+                  ),
+                ),
+                if (state is LoadingMoreNotificationState)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
                     ),
                   ),
-                ],
-              );
-            },
-          ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -81,22 +84,20 @@ class _NotificationItem extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  notification.title!,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  notification.body!,
-                  style: TextStyle(fontSize: 18),
-                ),
-              ],
+            Text(
+              notification.title!,
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            SizedBox(height: 5),
+            Text(
+              notification.body!,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 18),
             ),
           ],
         ),

@@ -14,7 +14,7 @@ class SupervisorCubit extends Cubit<SupervisorStates> {
   final _supervisorScreens = [
     const SupervisorHome(),
     const StaffScreen(),
-    const NotificationScreen(),
+    NotificationScreen(),
     const MoreScreen(),
   ];
 

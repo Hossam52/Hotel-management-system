@@ -35,12 +35,24 @@ class SupervisorSurvices {
   }
 
   static Future<AllOrderStatusesModel> getOrders(String token,
-      {CategoryRequestModel? requestModel}) async {
+      {int? page, CategoryRequestModel? requestModel}) async {
     final res = await DioHelper.postData(
         url: SupervisorApis.getOrders,
         token: token,
+        query: {'page': page},
         data: requestModel == null ? {} : requestModel.toMap());
 
+    AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
+    return allOrders;
+  }
+
+  static Future<AllOrderStatusesModel> getNextOrderPage(String token, int page,
+      {CategoryRequestModel? requestModel}) async {
+    final res = await DioHelper.postData(
+        url: EmployeeApis.getOrders,
+        token: token,
+        query: {'page': page},
+        data: requestModel == null ? {} : requestModel.toMap());
     AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
     return allOrders;
   }
@@ -130,10 +142,20 @@ class SupervisorSurvices {
   static Future<NotificationsModel> getNextNotificationPage(
       String token, int nextPage) async {
     final res = await DioHelper.getData(
-        url: EmployeeApis.getNotifications,
+        url: SupervisorApis.getNotifications,
         token: token,
         query: {'page': nextPage});
     NotificationsModel status = NotificationsModel.fromJson(res.data);
+    log('${status.notifications!.meta}');
+    return status;
+  }
+
+  static Future<NotificationsModel> deleteNotification(
+      String token, int nextPage) async {
+    final res = await DioHelper.postData(
+        url: SupervisorApis.deleteNotification, token: token, data: {});
+    NotificationsModel status = NotificationsModel.fromJson(res.data);
+    log('${status.notifications!.meta}');
     return status;
   }
 }

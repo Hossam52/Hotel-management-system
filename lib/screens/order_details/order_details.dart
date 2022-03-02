@@ -284,7 +284,7 @@ class _PersonalDataStatistics extends StatelessWidget {
     return Column(
       children: [
         Text(
-          number.tr(),
+          number,
           style: roomNumberTextStyle.copyWith(
               fontSize: 90, fontWeight: FontWeight.bold),
         ),
@@ -299,7 +299,7 @@ class _PersonalDataStatistics extends StatelessWidget {
     return Column(
       children: [
         Text(
-          number.toString().tr(),
+          number.toString(),
           style: floorNumberTextStyle.copyWith(
               fontSize: 53, fontWeight: FontWeight.bold),
         ),
@@ -311,7 +311,7 @@ class _PersonalDataStatistics extends StatelessWidget {
   Widget _assignedTo() {
     if (assignedTo != null) {
       return Text(
-        'AssignedTo $assignedTo'.tr(),
+        '${'AssignedTo'.tr()} $assignedTo',
         style: const TextStyle(fontSize: 16),
       );
     }

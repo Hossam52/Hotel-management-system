@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/employee_layout/cubit/employee_cubit.dart';
 import 'package:htask/layout/employee_layout/cubit/employee_states.dart';
+import 'package:htask/layout/widgets/bottom_tab_item.dart';
+import 'package:htask/layout/widgets/notification_widget.dart';
 import 'package:htask/layout/widgets/selected_filtered_date.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/home.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/more/more_screen.dart';
+import 'package:htask/screens/notifications/cubit/notification_cubit.dart';
 import 'package:htask/screens/staff/staff.dart';
 import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
@@ -27,7 +30,7 @@ class EmployeeLayout extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<HomeCubit>(
-          create: (context) => HomeCubit()..getAllOrders(context),
+          create: (context) => HomeCubit(context)..getAllOrders(context),
           lazy: false,
         ),
         BlocProvider(
@@ -36,6 +39,11 @@ class EmployeeLayout extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => AuthCubit(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              NotificationCubit(context)..getAllNotifications(context),
+          lazy: false,
         ),
       ],
       child: BlocBuilder<EmployeeCubit, EmployeeStates>(
@@ -50,13 +58,15 @@ class EmployeeLayout extends StatelessWidget {
                 },
                 currentIndex: cubit.selectedTabIndex,
                 items: [
-                  _builNavItem(
-                      'assets/images/icons/home_bottom_tab.svg', 'Home'),
-                  _builNavItem(
-                      'assets/images/icons/notification_bottom_tab.svg',
-                      'Notification'),
-                  _builNavItem(
-                      'assets/images/icons/more_bottom_tab.svg', 'More'),
+                  _buildNavItem(
+                      const BottomTabItem(
+                          iconPath: 'assets/images/icons/home_bottom_tab.svg'),
+                      'Home'),
+                  _buildNavItem(const NotificationWidget(), 'Notification'),
+                  _buildNavItem(
+                      const BottomTabItem(
+                          iconPath: 'assets/images/icons/more_bottom_tab.svg'),
+                      'More'),
                 ],
               ),
               body: cubit.getScreen());
@@ -65,18 +75,12 @@ class EmployeeLayout extends StatelessWidget {
     );
   }
 
-  CustomBottomNavBarItem _builNavItem(String iconPath, String title) {
+  CustomBottomNavBarItem _buildNavItem(Widget icon, String title) {
     return CustomBottomNavBarItem(
-        selectedColor: AppColors.darkPrimaryColor,
-        icon: SvgImageWidget(
-          path: iconPath,
-          color: AppColors.darkPrimaryColor,
-        ),
-        // Image.asset(
-        //   iconPath,
-        //   scale: 1.3,
-        // ),
-        title: Text(title));
+      selectedColor: AppColors.darkPrimaryColor,
+      icon: icon,
+      title: Text(title),
+    );
   }
 }
 

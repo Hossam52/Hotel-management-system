@@ -12,3 +12,14 @@ class ErrorNotificationState extends NotificationStates {
     required this.error,
   });
 }
+
+class LoadingMoreNotificationState extends NotificationStates {}
+
+class SuccessMoreNotificationState extends NotificationStates {}
+
+class ErrorMoreNotificationState extends NotificationStates {
+  final String error;
+  ErrorMoreNotificationState({
+    required this.error,
+  });
+}

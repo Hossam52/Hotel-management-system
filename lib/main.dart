@@ -28,7 +28,6 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
   await CacheHelper.init(); // Cache Initialize
-
   DioHelper.init();
   runApp(
     EasyLocalization(

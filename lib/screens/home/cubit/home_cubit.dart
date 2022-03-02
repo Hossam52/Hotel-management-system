@@ -25,9 +25,41 @@ import 'package:htask/shared/network/services/supervisor_survices.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(InitialHomeState());
+  HomeCubit(BuildContext context) : super(InitialHomeState()) {
+    _addScrollControllerListeners(context);
+  }
   static HomeCubit instance(BuildContext context) =>
       BlocProvider.of<HomeCubit>(context);
+  final activeScrollController = ScrollController();
+  final pendingScrollController = ScrollController();
+  final finishedScrollController = ScrollController();
+  void _addScrollControllerListeners(context) {
+    activeScrollController.addListener(() async {
+      log('1');
+      final maxScrollExtent = activeScrollController.position.maxScrollExtent;
+      final currentScrollPosition = activeScrollController.position.pixels;
+      const delta = 200;
+      if (maxScrollExtent - currentScrollPosition <= delta) {
+        await getNextOrdersPage(context);
+      }
+    });
+    pendingScrollController.addListener(() async {
+      final maxScrollExtent = pendingScrollController.position.maxScrollExtent;
+      final currentScrollPosition = pendingScrollController.position.pixels;
+      const delta = 200;
+      if (maxScrollExtent - currentScrollPosition <= delta) {
+        await getNextOrdersPage(context);
+      }
+    });
+    finishedScrollController.addListener(() async {
+      final maxScrollExtent = finishedScrollController.position.maxScrollExtent;
+      final currentScrollPosition = finishedScrollController.position.pixels;
+      const delta = 200;
+      if (maxScrollExtent - currentScrollPosition <= delta) {
+        await getNextOrdersPage(context);
+      }
+    });
+  }
 
   final List<TabBarItem> tabBars = [
     TabBarItem(
@@ -55,6 +87,7 @@ class HomeCubit extends Cubit<HomeState> {
   TimeRange? filterByTime;
   late AllOrderStatusesModel allOrders;
   late AllCategoriesModel allCategories;
+  bool firstGetData = true;
 
   int selectedTabIndex = 0;
   int? selectedCategoryIndex;
@@ -103,25 +136,111 @@ class HomeCubit extends Cubit<HomeState> {
           to: filterByTime == null ? null : formatTime(filterByTime!.endTime),
         ),
       );
+      firstGetData = false;
       emit(SuccessAllOrdersHomeState());
     } catch (e) {
       emit(ErrorAllOrdersHomeState(e.toString()));
     }
   }
 
+  Future<void> getNextOrdersPage(context) async {
+    final loginAuthType = AppCubit.instance(context).currentUserType;
+    final token = AppCubit.instance(context).token;
+    DateTime? searchedFilterDate = filterByDate;
+
+    final currentOrders = allOrders.newStatus;
+    final currentPage = currentOrders.meta.currentPage;
+    final lastPage = currentOrders.meta.lastPage;
+    log('current page $currentPage last page$lastPage');
+    if (currentPage == lastPage) return;
+    int? nextPage = currentPage + 1;
+
+    if (filterByTime != null && filterByDate == null) {
+      searchedFilterDate = DateTime.now();
+    }
+    final date = searchedFilterDate != null
+        ? formatDateWithoutTime(searchedFilterDate)
+        : null;
+    log('Selected date is $date');
+    final categoryId = selectedCategoryIndex != null
+        ? allCategories.categories[selectedCategoryIndex!].id
+        : null;
+    try {
+      emit(LoadingNextAllOrdersHomeState());
+      final newOrder = await _callApiToGetOrders(
+        loginAuthType!,
+        token,
+        page: 1,
+        requestModel: CategoryRequestModel(
+          date: date,
+          categoryId: categoryId,
+          from:
+              filterByTime == null ? null : formatTime(filterByTime!.startTime),
+          to: filterByTime == null ? null : formatTime(filterByTime!.endTime),
+        ),
+      );
+      _copyOrderData(newOrder);
+      emit(SuccessNextAllOrdersHomeState());
+    } catch (e) {
+      emit(ErrorNextAllOrdersHomeState(e.toString()));
+    }
+  }
+
+  void _copyOrderData(AllOrderStatusesModel newOrder) {
+    allOrders.newStatus = allOrders.newStatus.copyWith(
+      meta: newOrder.newStatus.meta,
+      links: newOrder.newStatus.links,
+    );
+    allOrders.processStatus = allOrders.processStatus.copyWith(
+      meta: newOrder.processStatus.meta,
+      links: newOrder.processStatus.links,
+    );
+    allOrders.endStatus = allOrders.endStatus.copyWith(
+      meta: newOrder.endStatus.meta,
+      links: newOrder.endStatus.links,
+    );
+    allOrders.newStatus.data.addAll(
+      newOrder.newStatus.data,
+    );
+    allOrders.processStatus.data.addAll(
+      newOrder.processStatus.data,
+    );
+    allOrders.endStatus.data.addAll(
+      newOrder.endStatus.data,
+    );
+  }
+
   Future<AllOrderStatusesModel> _callApiToGetOrders(
       LoginAuthType authType, String token,
-      {CategoryRequestModel? requestModel}) async {
+      {CategoryRequestModel? requestModel, int? page}) async {
     log(requestModel.toString());
     if (authType == LoginAuthType.employee) {
       return await EmployeeServices.getOrders(token,
-          requestModel: requestModel);
+          page: page, requestModel: requestModel);
     }
     if (authType == LoginAuthType.supervisor) {
       return await SupervisorSurvices.getOrders(token,
-          requestModel: requestModel);
+          page: page, requestModel: requestModel);
     } else {
       throw Exception('Unknown type');
+    }
+  }
+
+  Future<AllOrderStatusesModel> _getNextAllOrdersPageAccordingToType(context,
+      {CategoryRequestModel? requestModel}) async {
+    final nextPage = allOrders.newStatus.meta.currentPage + 1;
+    final user = AppCubit.instance(context).currentUserType;
+    final token = AppCubit.instance(context).token;
+    switch (user) {
+      case LoginAuthType.employee:
+        return EmployeeServices.getNextOrderPage(token, nextPage,
+            requestModel: requestModel);
+
+      case LoginAuthType.supervisor:
+        return SupervisorSurvices.getNextOrderPage(token, nextPage,
+            requestModel: requestModel);
+      default:
+        throw Exception('Un defined type');
     }
   }
 

@@ -23,6 +23,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.lightPrimary,
       body: SafeArea(
         child: SingleChildScrollView(
+          controller: HomeCubit.instance(context).activeScrollController,
           child: Column(
             children: [
               const HomeHeader(),
@@ -33,8 +34,9 @@ class HomeScreen extends StatelessWidget {
                     height: height * 0.13,
                     child: BlocConsumer<HomeCubit, HomeState>(
                         listener: (context, state) {
-                      if (state is ErrorAllCategoriesHomeState)
+                      if (state is ErrorAllCategoriesHomeState) {
                         showErrorToast(state.error);
+                      }
                     }, builder: (context, state) {
                       if (state is LoadingAllCategoriesHomeState) {
                         return const Center(
@@ -107,7 +109,23 @@ class HomeTabsStatuses extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15)),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: tabBars[cubit.selectedTabIndex].widget,
+                  child: Column(
+                    children: [
+                      tabBars[cubit.selectedTabIndex].widget,
+                      BlocBuilder<HomeCubit, HomeState>(
+                        builder: (context, state) {
+                          if (state is LoadingNextAllOrdersHomeState) {
+                            return const Center(
+                                child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            ));
+                          }
+                          return Container();
+                        },
+                      )
+                    ],
+                  ),
                 )),
             const SizedBox(height: 30),
           ],
