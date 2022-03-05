@@ -21,8 +21,9 @@ class NotificationWidget extends StatelessWidget {
         }
         final notificationCount =
             notificationCubit.notifications!.countUnreadNotify;
+        log(notificationCount.toString());
         return Badge(
-            showBadge: notificationCount != 0 || notificationCount == null,
+            showBadge: notificationCount != 0 && notificationCount != null,
             badgeContent: FittedBox(
               child: Text(
                 notificationCount.toString(),

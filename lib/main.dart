@@ -28,6 +28,8 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
   await CacheHelper.init(); // Cache Initialize
+  FirebaseMessaging.onBackgroundMessage(
+      FCM.notificationOnAppBackgroundOrTerminated);
   DioHelper.init();
   runApp(
     EasyLocalization(

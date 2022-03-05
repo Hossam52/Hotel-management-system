@@ -115,6 +115,7 @@ class HomeEmployee extends StatelessWidget {
                         HomeCubit.instance(context).getAllOrders(context));
               }
               return SingleChildScrollView(
+                controller: HomeCubit.instance(context).homeScrollController,
                 child: Column(
                   children: const [
                     HomeHeader(showFilterByDate: true),

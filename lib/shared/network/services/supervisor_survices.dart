@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:htask/models/categories/all_categories_model.dart';
 import 'package:htask/models/categories/category_request_model.dart';
+import 'package:htask/models/notifications/delete_notification_model.dart';
 import 'package:htask/models/notifications/notification_model.dart';
+import 'package:htask/models/notifications/read_notifications.dart';
 import 'package:htask/models/orders/change_order_status.dart';
 import 'package:htask/models/person_login_model.dart';
 import 'package:htask/models/logout_model.dart';
@@ -150,12 +152,25 @@ class SupervisorSurvices {
     return status;
   }
 
-  static Future<NotificationsModel> deleteNotification(
-      String token, int nextPage) async {
+  static Future<DeleteNotifyResponse> deleteNotification(
+      String token, DeleteNotifyRequest notificationRequest) async {
     final res = await DioHelper.postData(
-        url: SupervisorApis.deleteNotification, token: token, data: {});
-    NotificationsModel status = NotificationsModel.fromJson(res.data);
-    log('${status.notifications!.meta}');
+        url: SupervisorApis.deleteNotification,
+        token: token,
+        data: notificationRequest.toMap());
+    log(res.data.toString());
+    DeleteNotifyResponse status = DeleteNotifyResponse.fromMap(res.data);
+    return status;
+  }
+
+  static Future<ReadNotificationsModelResponse> readNotifications(
+      String token) async {
+    final res = await DioHelper.getData(
+      url: SupervisorApis.readNotifications,
+      token: token,
+    );
+    ReadNotificationsModelResponse status =
+        ReadNotificationsModelResponse.fromMap(res.data);
     return status;
   }
 }

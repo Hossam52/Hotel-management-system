@@ -30,30 +30,15 @@ class HomeCubit extends Cubit<HomeState> {
   }
   static HomeCubit instance(BuildContext context) =>
       BlocProvider.of<HomeCubit>(context);
-  final activeScrollController = ScrollController();
-  final pendingScrollController = ScrollController();
-  final finishedScrollController = ScrollController();
+
+  final homeScrollController = ScrollController();
   void _addScrollControllerListeners(context) {
-    activeScrollController.addListener(() async {
-      log('1');
-      final maxScrollExtent = activeScrollController.position.maxScrollExtent;
-      final currentScrollPosition = activeScrollController.position.pixels;
-      const delta = 200;
-      if (maxScrollExtent - currentScrollPosition <= delta) {
-        await getNextOrdersPage(context);
-      }
-    });
-    pendingScrollController.addListener(() async {
-      final maxScrollExtent = pendingScrollController.position.maxScrollExtent;
-      final currentScrollPosition = pendingScrollController.position.pixels;
-      const delta = 200;
-      if (maxScrollExtent - currentScrollPosition <= delta) {
-        await getNextOrdersPage(context);
-      }
-    });
-    finishedScrollController.addListener(() async {
-      final maxScrollExtent = finishedScrollController.position.maxScrollExtent;
-      final currentScrollPosition = finishedScrollController.position.pixels;
+    homeScrollController.addListener(() async {
+      if (state is LoadingNextAllOrdersHomeState) {
+        return;
+      } //Add this to know if there is current loading to get the next page if yes then do nothing else get next page We do this as the thresh hold executes many so we want to eliminate it
+      final maxScrollExtent = homeScrollController.position.maxScrollExtent;
+      final currentScrollPosition = homeScrollController.position.pixels;
       const delta = 200;
       if (maxScrollExtent - currentScrollPosition <= delta) {
         await getNextOrdersPage(context);
@@ -170,7 +155,7 @@ class HomeCubit extends Cubit<HomeState> {
       final newOrder = await _callApiToGetOrders(
         loginAuthType!,
         token,
-        page: 1,
+        page: nextPage,
         requestModel: CategoryRequestModel(
           date: date,
           categoryId: categoryId,

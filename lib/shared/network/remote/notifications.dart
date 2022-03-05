@@ -80,8 +80,9 @@ class FCM {
         alert: true, badge: true, sound: true);
 
     log('Start notification');
+    // await _notificationOnAppBackgroundOrTerminated(navigatorKey);
     await _notificationOnAppTerminated(navigatorKey);
-    await _notificationOnAppBackground(navigatorKey);
+    // await _notificationOnAppBackground(navigatorKey);
     await _notificationOnAppOpened(navigatorKey);
   }
 
@@ -98,6 +99,14 @@ class FCM {
       log('In onMessage found ${message.data}');
       _checkRedirection(message);
     });
+  }
+
+  static Future<void> notificationOnAppBackgroundOrTerminated(
+      RemoteMessage message) async {
+    log('In BackgroundOrTerminated found ${message.data}');
+    _checkRedirection(message);
+    return;
+    FirebaseMessaging.onBackgroundMessage((message) async {});
   }
 
   Future<void> _notificationOnAppBackground(

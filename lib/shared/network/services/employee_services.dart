@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:htask/models/Employee/employee_login_model.dart';
 import 'package:htask/models/categories/category_request_model.dart';
+import 'package:htask/models/notifications/delete_notification_model.dart';
 import 'package:htask/models/notifications/notification_model.dart';
+import 'package:htask/models/notifications/read_notifications.dart';
 import 'package:htask/models/orders/change_order_status.dart';
 import 'package:htask/models/person_login_model.dart';
 import 'package:htask/models/logout_model.dart';
@@ -84,6 +86,27 @@ class EmployeeServices {
         token: token,
         query: {'page': nextPage});
     NotificationsModel status = NotificationsModel.fromJson(res.data);
+    return status;
+  }
+
+  static Future<DeleteNotifyResponse> deleteNotification(
+      String token, DeleteNotifyRequest notificationRequest) async {
+    final res = await DioHelper.postData(
+        url: EmployeeApis.deleteNotification,
+        token: token,
+        data: notificationRequest.toMap());
+    DeleteNotifyResponse status = DeleteNotifyResponse.fromMap(res.data);
+    return status;
+  }
+
+  static Future<ReadNotificationsModelResponse> readNotifications(
+      String token) async {
+    final res = await DioHelper.getData(
+      url: EmployeeApis.readNotifications,
+      token: token,
+    );
+    ReadNotificationsModelResponse status =
+        ReadNotificationsModelResponse.fromMap(res.data);
     return status;
   }
 }

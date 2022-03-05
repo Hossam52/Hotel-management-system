@@ -22,37 +22,34 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.lightPrimary,
       body: SafeArea(
-        child: SingleChildScrollView(
-          controller: HomeCubit.instance(context).activeScrollController,
-          child: Column(
-            children: [
-              const HomeHeader(),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.all(padding),
-                child: SizedBox(
-                    height: height * 0.13,
-                    child: BlocConsumer<HomeCubit, HomeState>(
-                        listener: (context, state) {
-                      if (state is ErrorAllCategoriesHomeState) {
-                        showErrorToast(state.error);
-                      }
-                    }, builder: (context, state) {
-                      if (state is LoadingAllCategoriesHomeState) {
-                        return const Center(
-                            child: CircularProgressIndicator(
-                          color: AppColors.darkPrimaryColor,
-                        ));
-                      }
-                      return const ServiceToday();
-                    })),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(padding),
-                child: HomeTabsStatuses(),
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            const HomeHeader(),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.all(padding),
+              child: SizedBox(
+                  height: height * 0.13,
+                  child: BlocConsumer<HomeCubit, HomeState>(
+                      listener: (context, state) {
+                    if (state is ErrorAllCategoriesHomeState) {
+                      showErrorToast(state.error);
+                    }
+                  }, builder: (context, state) {
+                    if (state is LoadingAllCategoriesHomeState) {
+                      return const Center(
+                          child: CircularProgressIndicator(
+                        color: AppColors.darkPrimaryColor,
+                      ));
+                    }
+                    return const ServiceToday();
+                  })),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(padding),
+              child: HomeTabsStatuses(),
+            ),
+          ],
         ),
       ),
     );

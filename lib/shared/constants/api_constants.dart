@@ -16,6 +16,7 @@ abstract class SupervisorApis {
   static const String changeEmployeeStatus = '$url/changeEmployeeStatus';
   static const String getNotifications = '$url/getNotifications';
   static const String deleteNotification = '$url/deleteNotify';
+  static const String readNotifications = '$url/readNotification';
 }
 
 /////////////// Employee
@@ -30,4 +31,5 @@ abstract class EmployeeApis {
   static const String getOrders = '$url/getOrders';
   static const String getNotifications = '$url/getNotifications';
   static const String deleteNotification = '$url/deleteNotify';
+  static const String readNotifications = '$url/readNotification';
 }

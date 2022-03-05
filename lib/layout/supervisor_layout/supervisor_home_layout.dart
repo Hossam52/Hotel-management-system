@@ -95,6 +95,7 @@ class SupervisorHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // log(HomeCubit.instance(context).allOrders.newStatus.data.length.toString());
     final height = MediaQuery.of(context).size.height;
     const double padding = 14;
     return Scaffold(
@@ -112,6 +113,7 @@ class SupervisorHome extends StatelessWidget {
           }
           return SafeArea(
             child: SingleChildScrollView(
+              controller: HomeCubit.instance(context).homeScrollController,
               child: Column(
                 children: [
                   const HomeHeader(
