@@ -146,6 +146,7 @@ class HomeTabsStatuses extends StatelessWidget {
                   path: tab.imagePath,
                   width: 23,
                   height: 23,
+                  color: AppColors.darkPrimaryColor,
                 ),
                 const SizedBox(
                   width: 15,

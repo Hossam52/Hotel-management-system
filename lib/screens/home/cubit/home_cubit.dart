@@ -62,11 +62,11 @@ class HomeCubit extends Cubit<HomeState> {
         text: 'Finished',
         imagePath: 'assets/images/icons/finished.svg',
         widget: const FinishedWidget()),
-    // TabBarItem(
-    //     isSelected: false,
-    //     text: 'Late',
-    //     imagePath: 'assets/images/icons/finished.svg',
-    //     widget: const LateWidget()),
+    TabBarItem(
+        isSelected: false,
+        text: 'Late',
+        imagePath: 'assets/images/icons/late.svg',
+        widget: const LateWidget()),
   ];
   DateTime? filterByDate;
   TimeRange? filterByTime;
@@ -292,6 +292,17 @@ class HomeCubit extends Cubit<HomeState> {
       return const ActiveEmployeeTask(12, 30);
     } else if (auth == LoginAuthType.supervisor) {
       return const ActiveSupervisorTask(12, 30);
+    } else {
+      throw Exception('Unknown auth');
+    }
+  }
+
+  ActiveTask getLateTask(context) {
+    final auth = AppCubit.instance(context).currentUserType;
+    if (auth == LoginAuthType.employee) {
+      return const LateEmployeeTask(12, 30);
+    } else if (auth == LoginAuthType.supervisor) {
+      return const LateSupervisorTask(12, 30);
     } else {
       throw Exception('Unknown auth');
     }

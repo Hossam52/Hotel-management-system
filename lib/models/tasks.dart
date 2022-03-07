@@ -45,9 +45,9 @@ class FinishedTask extends Task {
   }
 }
 
-class LateTasks extends Task {
-  const LateTasks();
-
+abstract class LateTask extends ActiveTask {
+  const LateTask(int currentMinutes, int currentSeconds)
+      : super(currentMinutes, currentSeconds);
   @override
   String getText() {
     return '';
@@ -55,7 +55,7 @@ class LateTasks extends Task {
 
   @override
   String getImagePath() {
-    return 'assets/images/icons/completed.svg';
+    return 'assets/images/icons/late.svg';
   }
 }
 
@@ -81,6 +81,16 @@ class PendingSupervisorTask extends PendingTask {
   }
 }
 
+class LateSupervisorTask extends LateTask {
+  const LateSupervisorTask(int currentMinutes, int currentSeconds)
+      : super(currentMinutes, currentSeconds);
+
+  @override
+  String getText() {
+    return 'EndTask'.tr();
+  }
+}
+
 // Employee -------------------------------------
 
 class ActiveEmployeeTask extends ActiveTask {
@@ -95,6 +105,16 @@ class ActiveEmployeeTask extends ActiveTask {
 
 class PendingEmployeeTask extends PendingTask {
   const PendingEmployeeTask(int currentMinutes, int currentSeconds)
+      : super(currentMinutes, currentSeconds);
+
+  @override
+  String getText() {
+    return 'EndTask'.tr();
+  }
+}
+
+class LateEmployeeTask extends LateTask {
+  const LateEmployeeTask(int currentMinutes, int currentSeconds)
       : super(currentMinutes, currentSeconds);
 
   @override

@@ -28,7 +28,7 @@ class AuthLocalNotification extends LocalNotificationProperties {
           sound: RawResourceAndroidNotificationSound(notificationSoundPath),
           playSound: true,
           channelDescription: 'Channel description',
-          importance: Importance.defaultImportance,
+          importance: Importance.max,
         ),
         iOS: const IOSNotificationDetails());
   }
@@ -52,7 +52,7 @@ class OrdersLocalNotification extends LocalNotificationProperties {
           sound: RawResourceAndroidNotificationSound(notificationSoundPath),
           playSound: true,
           channelDescription: 'Channel description',
-          importance: Importance.defaultImportance,
+          importance: Importance.max,
         ),
         iOS: const IOSNotificationDetails());
   }
@@ -76,7 +76,7 @@ class ChangeAvailableLocalNotification extends LocalNotificationProperties {
           sound: RawResourceAndroidNotificationSound(notificationSoundPath),
           playSound: true,
           channelDescription: 'Channel description',
-          importance: Importance.defaultImportance,
+          importance: Importance.max,
         ),
         iOS: const IOSNotificationDetails());
   }
@@ -102,7 +102,7 @@ class DefaultLocalNotification extends LocalNotificationProperties {
           sound: RawResourceAndroidNotificationSound(notificationSoundPath),
           playSound: true,
           channelDescription: 'Channel description',
-          importance: Importance.defaultImportance,
+          importance: Importance.max,
         ),
         iOS: const IOSNotificationDetails());
   }

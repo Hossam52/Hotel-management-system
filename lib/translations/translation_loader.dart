@@ -57,7 +57,9 @@ class CodegenLoader extends AssetLoader{
   "Login": "تسجيل الدخول",
   "Employee": "موظف",
   "Supervisor": "مشرف",
-  "FilteredDateIs": "الفلترة بالتاريخ"
+  "FilteredDateIs": "الفلترة بالتاريخ",
+  "Late": "المتأخرة",
+  "FinishedTime": "وقت الانتهاء"
 };
 static const Map<String,dynamic> en_US = {
   "Available": "Available",
@@ -82,7 +84,7 @@ static const Map<String,dynamic> en_US = {
   "SelectEmployee": "Select employee",
   "OrdersNumberCount": "Orders number count",
   "Select": "Select",
-  "FromRoom": "FromRoom",
+  "FromRoom": "From Room",
   "Loading": "Loading ...",
   "ErrorHappened": "Error happened",
   "Refreshnow": "Refresh now",
@@ -102,7 +104,9 @@ static const Map<String,dynamic> en_US = {
   "Login": "Login",
   "Employee": "Employee",
   "Supervisor": "Supervisor",
-  "FilteredDateIs": "Filtered date is"
+  "FilteredDateIs": "Filtered date is",
+  "Late": "Late",
+  "FinishedTime": "Finished Time"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar_EG": ar_EG, "en_US": en_US};
 }

@@ -43,7 +43,8 @@ class OrderDetails extends StatelessWidget {
           leading: !Navigator.canPop(context) ? null : _backButton(),
           title: Text(
             'OrderDetails'.tr(),
-            style: TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
+            style: const TextStyle(
+                fontSize: 14, color: AppColors.darkPrimaryColor),
           ),
         ),
         body: MultiBlocProvider(
@@ -96,7 +97,7 @@ class OrderDetails extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _Time(taskStatus: taskStatus),
+                        _Time(taskStatus: taskStatus, order: order),
                         _PersonalDataStatistics(
                           floor: order.floor,
                           name: order.employeeName,
@@ -132,11 +133,11 @@ class OrderDetails extends StatelessWidget {
           onTap: () => Navigator.pop(context),
           child: Row(
             children: [
-              Icon(Icons.arrow_back_ios),
+              const Icon(Icons.arrow_back_ios),
               Text(
                 'Back'.tr(),
-                style:
-                    TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
+                style: const TextStyle(
+                    fontSize: 14, color: AppColors.darkPrimaryColor),
               )
             ],
           ),
@@ -156,8 +157,10 @@ class OrderDetails extends StatelessWidget {
 }
 
 class _Time extends StatelessWidget {
-  const _Time({Key? key, required this.taskStatus}) : super(key: key);
+  const _Time({Key? key, required this.taskStatus, required this.order})
+      : super(key: key);
   final Task taskStatus;
+  final OrderModel order;
   @override
   Widget build(BuildContext context) {
     if (taskStatus is FinishedTask) return _done();
@@ -174,7 +177,7 @@ class _Time extends StatelessWidget {
         ),
         Center(
           child: Text(
-            '${timeTask.currentMinutes} min ${timeTask.currentSeconds} sec',
+            _timeString(),
             style:
                 AppTextStyles.textStyle2.copyWith(fontWeight: FontWeight.bold),
           ),
@@ -187,23 +190,42 @@ class _Time extends StatelessWidget {
   }
 
   Widget _done() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Done'.tr(),
+              style: const TextStyle(
+                  color: AppColors.doneColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            const SvgImageWidget(
+              path: 'assets/images/icons/completed.svg',
+              width: 25,
+              height: 25,
+            ),
+          ],
+        ),
         Text(
-          'Done'.tr(),
-          style: TextStyle(
-              color: AppColors.doneColor,
+          _timeTitle(),
+          style: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.bold,
+              color: AppColors.darkPrimaryColor),
         ),
-        SizedBox(
-          width: 20,
-        ),
-        SvgImageWidget(
-          path: 'assets/images/icons/completed.svg',
-          width: 25,
-          height: 25,
+        Center(
+          child: Text(
+            _timeString(),
+            style:
+                AppTextStyles.textStyle2.copyWith(fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );
@@ -214,6 +236,20 @@ class _Time extends StatelessWidget {
       return 'EstimatedTime'.tr();
     } else if (taskStatus is PendingTask) {
       return 'RemainingEstimated'.tr();
+    } else if (taskStatus is FinishedTask) {
+      return 'FinishedTime'.tr();
+    }
+    return '';
+  }
+
+  String _timeString() {
+    log(order.endTime);
+    if (taskStatus is ActiveTask) {
+      return formatDateWithTime(DateTime.parse(order.date));
+    } else if (taskStatus is PendingTask) {
+      return order.endTime;
+    } else if (taskStatus is FinishedTask) {
+      return order.actualEndTime!;
     }
     return '';
   }
@@ -354,11 +390,16 @@ class _OrderDetailItem extends StatelessWidget {
     return Row(
       children: [
         const SizedBox(width: 20),
-        Text('(${details.quantity}) EG', style: textStyle),
+        Text('(${details.quantity}) ', style: textStyle),
         Text(
           details.service,
           style: textStyle,
         ),
+        const Spacer(),
+        Text(
+          details.price.toString(),
+          style: textStyle.copyWith(fontWeight: FontWeight.bold),
+        )
       ],
     );
   }
@@ -379,7 +420,8 @@ class _Price extends StatelessWidget {
           children: [
             Text(
               'Price'.tr(),
-              style: TextStyle(fontSize: 14, color: AppColors.darkPrimaryColor),
+              style: const TextStyle(
+                  fontSize: 14, color: AppColors.darkPrimaryColor),
             ),
             Center(
               child: Text(

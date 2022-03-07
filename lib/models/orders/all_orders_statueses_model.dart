@@ -7,11 +7,13 @@ class AllOrderStatusesModel {
   OrderStatusModel newStatus;
   OrderStatusModel processStatus;
   OrderStatusModel endStatus;
+  OrderStatusModel lateStatus;
   AllOrderStatusesModel({
     required this.status,
     required this.newStatus,
     required this.processStatus,
     required this.endStatus,
+    required this.lateStatus,
   });
 
   AllOrderStatusesModel copyWith({
@@ -19,12 +21,14 @@ class AllOrderStatusesModel {
     OrderStatusModel? newStatus,
     OrderStatusModel? processStatus,
     OrderStatusModel? endStatus,
+    OrderStatusModel? lateStatus,
   }) {
     return AllOrderStatusesModel(
       status: status ?? this.status,
       newStatus: newStatus ?? this.newStatus,
       processStatus: processStatus ?? this.processStatus,
       endStatus: endStatus ?? this.endStatus,
+      lateStatus: lateStatus ?? this.lateStatus,
     );
   }
 
@@ -34,6 +38,7 @@ class AllOrderStatusesModel {
       'new': newStatus.toMap(),
       'process': processStatus.toMap(),
       'end': endStatus.toMap(),
+      'late': lateStatus.toMap(),
     };
   }
 
@@ -43,6 +48,7 @@ class AllOrderStatusesModel {
       newStatus: OrderStatusModel.fromMap(map['new']),
       processStatus: OrderStatusModel.fromMap(map['process']),
       endStatus: OrderStatusModel.fromMap(map['end']),
+      lateStatus: OrderStatusModel.fromMap(map['late']),
     );
   }
 
@@ -53,7 +59,7 @@ class AllOrderStatusesModel {
 
   @override
   String toString() {
-    return 'AllOrderStatusesModel(status: $status, newStatus: $newStatus, processStatus: $processStatus, endStatus: $endStatus)';
+    return 'AllOrderStatusesModel(status: $status, newStatus: $newStatus, processStatus: $processStatus, endStatus: $endStatus, late: $lateStatus)';
   }
 
   @override
@@ -64,7 +70,8 @@ class AllOrderStatusesModel {
         other.status == status &&
         other.newStatus == newStatus &&
         other.processStatus == processStatus &&
-        other.endStatus == endStatus;
+        other.endStatus == endStatus &&
+        other.lateStatus == lateStatus;
   }
 
   @override
@@ -72,6 +79,7 @@ class AllOrderStatusesModel {
     return status.hashCode ^
         newStatus.hashCode ^
         processStatus.hashCode ^
-        endStatus.hashCode;
+        endStatus.hashCode ^
+        lateStatus.hashCode;
   }
 }

@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/layout/cubit/app_states.dart';
 import 'package:htask/layout/supervisor_layout/cubit/supervisor_cubit.dart';
 import 'package:htask/layout/supervisor_layout/cubit/supervisor_states.dart';
 import 'package:htask/layout/widgets/bottom_tab_item.dart';
@@ -49,35 +51,46 @@ class SuperVisorHomeLayout extends StatelessWidget {
           lazy: false,
         ),
       ],
-      child: BlocBuilder<SupervisorCubit, SupervisorStates>(
-        builder: (context, state) {
-          final cubit = SupervisorCubit.instance(context);
-          return Scaffold(
-              bottomNavigationBar: CustomBottomNavBar(
-                curve: Curves.bounceInOut,
-                selectedColorOpacity: 0.2,
-                onTap: (index) {
-                  cubit.changeSelectedTabIndex(index);
-                },
-                currentIndex: cubit.selectedTabIndex,
-                items: [
-                  _buildNavItem(
-                      const BottomTabItem(
-                          iconPath: 'assets/images/icons/home_bottom_tab.svg'),
-                      'Home'),
-                  _buildNavItem(
-                      const BottomTabItem(
-                          iconPath: 'assets/images/icons/staff_bottom_tab.svg'),
-                      'Staff'),
-                  _buildNavItem(const NotificationWidget(), 'Notification'),
-                  _buildNavItem(
-                      const BottomTabItem(
-                          iconPath: 'assets/images/icons/more_bottom_tab.svg'),
-                      'More'),
-                ],
-              ),
-              body: cubit.getScreen());
+      child: BlocListener<AppCubit, AppState>(
+        listenWhen: (previous, current) => current is CloseNotificationScreen,
+        listener: (context, state) {
+          if (state is CloseNotificationScreen) {
+            HomeCubit.instance(context).getAllOrders(context);
+          }
         },
+        child: BlocBuilder<SupervisorCubit, SupervisorStates>(
+          builder: (context, state) {
+            final cubit = SupervisorCubit.instance(context);
+            return Scaffold(
+                bottomNavigationBar: CustomBottomNavBar(
+                  curve: Curves.bounceInOut,
+                  selectedColorOpacity: 0.2,
+                  onTap: (index) {
+                    cubit.changeSelectedTabIndex(index);
+                  },
+                  currentIndex: cubit.selectedTabIndex,
+                  items: [
+                    _buildNavItem(
+                        const BottomTabItem(
+                            iconPath:
+                                'assets/images/icons/home_bottom_tab.svg'),
+                        'Home'),
+                    _buildNavItem(
+                        const BottomTabItem(
+                            iconPath:
+                                'assets/images/icons/staff_bottom_tab.svg'),
+                        'Staff'),
+                    _buildNavItem(const NotificationWidget(), 'Notification'),
+                    _buildNavItem(
+                        const BottomTabItem(
+                            iconPath:
+                                'assets/images/icons/more_bottom_tab.svg'),
+                        'More'),
+                  ],
+                ),
+                body: cubit.getScreen());
+          },
+        ),
       ),
     );
   }
@@ -112,25 +125,30 @@ class SupervisorHome extends StatelessWidget {
             ));
           }
           return SafeArea(
-            child: SingleChildScrollView(
-              controller: HomeCubit.instance(context).homeScrollController,
-              child: Column(
-                children: [
-                  const HomeHeader(
-                    showFilterByDate: true,
-                  ),
-                  const SelectedFilteredDate(),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(padding),
-                    child: SizedBox(
-                        height: height * 0.13, child: const ServiceToday()),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(padding),
-                    child: HomeTabsStatuses(),
-                  ),
-                ],
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await HomeCubit.instance(context).getAllOrders(context);
+              },
+              child: SingleChildScrollView(
+                controller: HomeCubit.instance(context).homeScrollController,
+                child: Column(
+                  children: [
+                    const HomeHeader(
+                      showFilterByDate: true,
+                    ),
+                    const SelectedFilteredDate(),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(padding),
+                      child: SizedBox(
+                          height: height * 0.13, child: const ServiceToday()),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: HomeTabsStatuses(),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

@@ -21,6 +21,8 @@ import 'package:htask/translations/translation_loader.dart';
 
 import 'layout/supervisor_layout/supervisor_home_layout.dart';
 
+final GlobalKey<NavigatorState> navigatorKey =
+    GlobalKey(debugLabel: "Main Navigator");
 Future<void> main() async {
   Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,8 +56,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey(debugLabel: "Main Navigator");
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +64,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initialize() async {
-    await FCM().setNotifications(navigatorKey);
+    await FCM().setNotifications();
     log((await FirebaseMessaging.instance.getToken())!);
   }
 

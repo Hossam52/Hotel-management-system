@@ -40,7 +40,8 @@
   "Password": "كلمة المرور",
   "Login": "تسجيل الدخول",
   "Employee": "موظف",
-  "Supervisor": "مشرف"
-  ,  "FilteredDateIs":"الفلترة بالتاريخ"
-
+  "Supervisor": "مشرف",
+  "FilteredDateIs": "الفلترة بالتاريخ",
+  "Late": "المتأخرة",
+  "FinishedTime": "وقت الانتهاء"
 }

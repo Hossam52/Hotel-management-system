@@ -21,7 +21,7 @@
   "SelectEmployee": "Select employee",
   "OrdersNumberCount":"Orders number count",
   "Select": "Select",
-  "FromRoom": "FromRoom",
+  "FromRoom": "From Room",
   "Loading": "Loading ...",
   "ErrorHappened": "Error happened",
   "Refreshnow": "Refresh now",
@@ -41,8 +41,9 @@
   "Login":"Login",
   "Employee":"Employee",
   "Supervisor":"Supervisor",
-  "FilteredDateIs":"Filtered date is"
-
+  "FilteredDateIs":"Filtered date is",
+  "Late":"Late",
+  "FinishedTime":"Finished Time"
 
 
 

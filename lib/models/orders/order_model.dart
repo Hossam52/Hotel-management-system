@@ -83,7 +83,7 @@ class OrderModel {
       'payment': payment,
       'floor': floor,
       'date': date,
-      'ent_time': endTime,
+      'end_time': endTime,
       'actual_end_time': actualEndTime,
       'orderdetails': orderdetails.map((x) => x.toMap()).toList(),
     };
@@ -101,7 +101,7 @@ class OrderModel {
       payment: map['payment'] ?? '',
       floor: map['floor'],
       date: map['date'] ?? '',
-      endTime: map['ent_time'] ?? '',
+      endTime: map['end_time'] ?? '',
       actualEndTime: map['actual_end_time'],
       orderdetails: List<OrderDetailModel>.from(
           map['orderdetails']?.map((x) => OrderDetailModel.fromMap(x))),

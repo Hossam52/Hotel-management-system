@@ -71,6 +71,17 @@ class AppCubit extends Cubit<AppState> {
     log('Done Storing data');
   }
 
+  bool showingOrderNotificationScreen = false;
+  void currentShowingOrderNotificationScreen() {
+    showingOrderNotificationScreen = true;
+    emit(OpenNotificationScreen());
+  }
+
+  void closeOrderNotificationScreen() {
+    showingOrderNotificationScreen = false;
+    emit(CloseNotificationScreen());
+  }
+
   Future<void> _storeProfileInCache(PersonLoginModel data) async {
     await CacheHelper.saveData(key: 'id', value: data.id);
     await CacheHelper.saveData(key: 'name', value: data.name);

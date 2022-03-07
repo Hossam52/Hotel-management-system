@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/layout/cubit/app_states.dart';
 import 'package:htask/layout/employee_layout/cubit/employee_cubit.dart';
 import 'package:htask/layout/employee_layout/cubit/employee_states.dart';
 import 'package:htask/layout/widgets/bottom_tab_item.dart';
@@ -46,31 +48,41 @@ class EmployeeLayout extends StatelessWidget {
           lazy: false,
         ),
       ],
-      child: BlocBuilder<EmployeeCubit, EmployeeStates>(
-        builder: (context, state) {
-          final cubit = EmployeeCubit.instance(context);
-          return Scaffold(
-              bottomNavigationBar: CustomBottomNavBar(
-                curve: Curves.bounceInOut,
-                selectedColorOpacity: 0.2,
-                onTap: (index) {
-                  cubit.changeSelectedTabIndex(index);
-                },
-                currentIndex: cubit.selectedTabIndex,
-                items: [
-                  _buildNavItem(
-                      const BottomTabItem(
-                          iconPath: 'assets/images/icons/home_bottom_tab.svg'),
-                      'Home'),
-                  _buildNavItem(const NotificationWidget(), 'Notification'),
-                  _buildNavItem(
-                      const BottomTabItem(
-                          iconPath: 'assets/images/icons/more_bottom_tab.svg'),
-                      'More'),
-                ],
-              ),
-              body: cubit.getScreen());
+      child: BlocListener<AppCubit, AppState>(
+        listenWhen: (previous, current) => current is CloseNotificationScreen,
+        listener: (context, state) {
+          if (state is CloseNotificationScreen) {
+            HomeCubit.instance(context).getAllOrders(context);
+          }
         },
+        child: BlocBuilder<EmployeeCubit, EmployeeStates>(
+          builder: (context, state) {
+            final cubit = EmployeeCubit.instance(context);
+            return Scaffold(
+                bottomNavigationBar: CustomBottomNavBar(
+                  curve: Curves.easeInOut,
+                  selectedColorOpacity: 0.2,
+                  onTap: (index) {
+                    cubit.changeSelectedTabIndex(index);
+                  },
+                  currentIndex: cubit.selectedTabIndex,
+                  items: [
+                    _buildNavItem(
+                        const BottomTabItem(
+                            iconPath:
+                                'assets/images/icons/home_bottom_tab.svg'),
+                        'Home'),
+                    _buildNavItem(const NotificationWidget(), 'Notification'),
+                    _buildNavItem(
+                        const BottomTabItem(
+                            iconPath:
+                                'assets/images/icons/more_bottom_tab.svg'),
+                        'More'),
+                  ],
+                ),
+                body: cubit.getScreen());
+          },
+        ),
       ),
     );
   }
@@ -114,18 +126,23 @@ class HomeEmployee extends StatelessWidget {
                     refreshMethod: () =>
                         HomeCubit.instance(context).getAllOrders(context));
               }
-              return SingleChildScrollView(
-                controller: HomeCubit.instance(context).homeScrollController,
-                child: Column(
-                  children: const [
-                    HomeHeader(showFilterByDate: true),
-                    SelectedFilteredDate(),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.all(padding),
-                      child: HomeTabsStatuses(),
-                    ),
-                  ],
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await HomeCubit.instance(context).getAllOrders(context);
+                },
+                child: SingleChildScrollView(
+                  controller: HomeCubit.instance(context).homeScrollController,
+                  child: Column(
+                    children: const [
+                      HomeHeader(showFilterByDate: true),
+                      SelectedFilteredDate(),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: EdgeInsets.all(padding),
+                        child: HomeTabsStatuses(),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
