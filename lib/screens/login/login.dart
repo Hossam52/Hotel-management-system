@@ -17,6 +17,7 @@ import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/default_text_field.dart';
 import 'package:htask/widgets/defulat_button.dart';
 import 'package:easy_localization/easy_localization.dart' as localization;
+import 'package:htask/widgets/svg_image_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -144,13 +145,13 @@ class _AuthTypeImages extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              child: _buildAuthTypeWidget('assets/images/supervisor_image.png',
+              child: _buildAuthTypeWidget('assets/images/icons/supervisor.svg',
                   type: LoginAuthType.supervisor,
                   isSelected: selectedAuthType == LoginAuthType.supervisor,
                   displayTypeString: 'Supervisor'.tr()),
             ),
             Expanded(
-              child: _buildAuthTypeWidget('assets/images/employee_image.png',
+              child: _buildAuthTypeWidget('assets/images/icons/employee.svg',
                   type: LoginAuthType.employee,
                   isSelected: selectedAuthType == LoginAuthType.employee,
                   displayTypeString: 'Employee'.tr()),
@@ -166,35 +167,44 @@ class _AuthTypeImages extends StatelessWidget {
       required bool isSelected,
       required String displayTypeString}) {
     return Builder(builder: (context) {
-      return Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.darkPrimaryColor
-              : Theme.of(context).canvasColor,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: GestureDetector(
-          onTap: () {
-            AuthCubit.instance(context).changeSelectedAccountType(type);
-          },
-          child: Row(
-            children: [
-              Text(
-                displayTypeString,
-                style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black,
-                    fontSize: 16),
-              ),
-              Expanded(
-                child: SizedBox(
-                  height: 56,
-                  width: 56,
-                  child: Image.asset(imagePath),
+      return GestureDetector(
+        onTap: () {
+          AuthCubit.instance(context).changeSelectedAccountType(type);
+        },
+        child: Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? AppColors.darkPrimaryColor
+                : Theme.of(context).canvasColor,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Text(
+                  displayTypeString,
+                  style: TextStyle(
+                      color: isSelected
+                          ? Colors.white
+                          : AppColors.darkPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
                 ),
-              ),
-            ],
+                Spacer(),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  width: MediaQuery.of(context).size.width * 0.07,
+                  child: SvgImageWidget(
+                    path: imagePath,
+                    color:
+                        isSelected ? Colors.white : AppColors.darkPrimaryColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
