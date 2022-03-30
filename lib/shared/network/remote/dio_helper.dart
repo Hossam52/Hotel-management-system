@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/adapter.dart';
@@ -44,13 +45,22 @@ class DioHelper {
       'lang': lang,
     };
 
-    final res = await dio.get(
-      url,
-      queryParameters: query,
-      options: options,
-    );
-    checkResponse(res);
-    return res;
+    try {
+      final res = await dio.get(
+        url,
+        queryParameters: query,
+        options: options,
+      );
+      checkResponse(res);
+      return res;
+    } on DioError catch (e) {
+      switch (e.type) {
+        case DioErrorType.other:
+          throw 'No Internet';
+        default:
+          throw e.message;
+      }
+    }
   }
 
   static Future<Response> postData({
@@ -67,14 +77,23 @@ class DioHelper {
       'lang': lang,
     };
 
-    final res = await dio.post(
-      url,
-      queryParameters: query,
-      data: data,
-      options: options,
-    );
-    checkResponse(res);
-    return res;
+    try {
+      final res = await dio.post(
+        url,
+        queryParameters: query,
+        data: data,
+        options: options,
+      );
+      checkResponse(res);
+      return res;
+    } on DioError catch (e) {
+      switch (e.type) {
+        case DioErrorType.other:
+          throw 'No Internet';
+        default:
+          throw e.message;
+      }
+    }
   }
 
   static Future<Response> postFormData({

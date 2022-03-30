@@ -74,10 +74,12 @@ class PersonLoginModel {
 class EmployeeRequestModel {
   String email;
   String password;
+  String code;
   String mobileToken;
   EmployeeRequestModel({
     required this.email,
     required this.password,
+    required this.code,
     required this.mobileToken,
   });
 
@@ -85,6 +87,7 @@ class EmployeeRequestModel {
     return {
       'email': email,
       'password': password,
+      'code': code,
       'mobile_token': mobileToken,
     };
   }

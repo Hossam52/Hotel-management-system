@@ -105,11 +105,14 @@ class OrderDetails extends StatelessWidget {
                           assignedTo: getAssignedToIfSupervisor(context),
                         ),
                         const SizedBox(height: 30),
+                        _NoteDetails(note: order.note),
+                        const SizedBox(height: 30),
                         _OrderDetailsItems(orderDetails: order.orderdetails),
                         const SizedBox(height: 30),
                         _Price(price: order.totalPrice),
                         const SizedBox(height: 30),
-                        // actionWidget ?? Container()
+                        _PaymentMethod(paymentType: order.payment),
+                        const SizedBox(height: 30),
                         _OrderDetailsActionButton(
                             taskStatus: taskStatus,
                             order: order,
@@ -265,7 +268,7 @@ class _PersonalDataStatistics extends StatelessWidget {
       : super(key: key);
   final String? assignedTo;
   final String name;
-  final String roomNum;
+  final int roomNum;
   final String? floor;
   @override
   Widget build(BuildContext context) {
@@ -314,13 +317,13 @@ class _PersonalDataStatistics extends StatelessWidget {
     ]);
   }
 
-  Widget _roomNumber(String number) {
+  Widget _roomNumber(int number) {
     const TextStyle roomNumberTextStyle =
         TextStyle(color: AppColors.darkPrimaryColor, fontSize: 16);
     return Column(
       children: [
         Text(
-          number,
+          number.toString(),
           style: roomNumberTextStyle.copyWith(
               fontSize: 90, fontWeight: FontWeight.bold),
         ),
@@ -352,6 +355,35 @@ class _PersonalDataStatistics extends StatelessWidget {
       );
     }
     return Container();
+  }
+}
+
+class _NoteDetails extends StatelessWidget {
+  const _NoteDetails({Key? key, required this.note}) : super(key: key);
+  final String note;
+  @override
+  Widget build(BuildContext context) {
+    const textStyle = TextStyle(fontSize: 16);
+    if (note.isEmpty) return Container();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Notes'.tr(),
+            style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: AppColors.darkPrimaryColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(note,
+                style:
+                    textStyle.copyWith(fontSize: 21, color: AppColors.white)),
+          ),
+        )
+      ],
+    );
   }
 }
 
@@ -435,6 +467,24 @@ class _Price extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PaymentMethod extends StatelessWidget {
+  const _PaymentMethod({Key? key, required this.paymentType}) : super(key: key);
+  final String paymentType;
+  @override
+  Widget build(BuildContext context) {
+    const textStyle = TextStyle(fontSize: 16);
+    if (paymentType.isEmpty) return Container();
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Payment_Method'.tr() + ':',
+            style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+        Text(paymentType, style: textStyle.copyWith())
+      ],
     );
   }
 }

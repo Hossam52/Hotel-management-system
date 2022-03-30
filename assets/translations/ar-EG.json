@@ -43,5 +43,11 @@
   "Supervisor": "مشرف",
   "FilteredDateIs": "الفلترة بالتاريخ",
   "Late": "المتأخرة",
-  "FinishedTime": "وقت الانتهاء"
+  "FinishedTime": "وقت الانتهاء",
+  "Hotel_Code": "كود الفندق",
+  "Notes":"الملاحظات",
+  "Payment_Method":"طريقة الدفع"
+
+
+
 }

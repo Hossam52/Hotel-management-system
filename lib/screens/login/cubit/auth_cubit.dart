@@ -24,6 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
   final formKey = GlobalKey<FormState>();
   final loginEmailController = TextEditingController();
   final loginPasswordController = TextEditingController();
+  final loginHotelCodeController = TextEditingController();
 
   bool visiblePassword = false;
   late String token;
@@ -63,6 +64,14 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  String? validateHotelCode(String? input) {
+    if (input!.isEmpty) {
+      return 'Hotel code field cannot be empty';
+    } else {
+      return null;
+    }
+  }
+
   Future<void> login(BuildContext context) async {
     try {
       emit(LoadingLoginState());
@@ -76,6 +85,7 @@ class AuthCubit extends Cubit<AuthState> {
           .setPersonalData(personalProfile, token, selectedAccountType!);
       emit(SuccessLoginState(selectedAccountType!));
     } catch (e) {
+      log(e.toString());
       emit(ErrorLoginState(errorMessage: e.toString()));
     }
   }
@@ -85,6 +95,7 @@ class AuthCubit extends Cubit<AuthState> {
     final loginRequestModel = EmployeeRequestModel(
         email: loginEmailController.text,
         password: loginPasswordController.text,
+        code: loginHotelCodeController.text,
         mobileToken: deviceToken!);
     if (selectedAccountType == LoginAuthType.employee) {
       final model = await EmployeeServices.login(loginRequestModel);

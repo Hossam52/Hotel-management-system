@@ -50,7 +50,7 @@ abstract class LateTask extends ActiveTask {
       : super(currentMinutes, currentSeconds);
   @override
   String getText() {
-    return '';
+    return 'StartTask'.tr();
   }
 
   @override
@@ -84,11 +84,6 @@ class PendingSupervisorTask extends PendingTask {
 class LateSupervisorTask extends LateTask {
   const LateSupervisorTask(int currentMinutes, int currentSeconds)
       : super(currentMinutes, currentSeconds);
-
-  @override
-  String getText() {
-    return 'EndTask'.tr();
-  }
 }
 
 // Employee -------------------------------------
@@ -116,9 +111,4 @@ class PendingEmployeeTask extends PendingTask {
 class LateEmployeeTask extends LateTask {
   const LateEmployeeTask(int currentMinutes, int currentSeconds)
       : super(currentMinutes, currentSeconds);
-
-  @override
-  String getText() {
-    return 'EndTask'.tr();
-  }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,6 +13,7 @@ import 'package:htask/models/tasks.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/order_details/order_details.dart';
 import 'package:htask/shared/constants/constants.dart';
+import 'package:htask/shared/network/local/cache_helper.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:intl/intl.dart';
 
@@ -31,7 +33,7 @@ void checkResponse(Response res) {
     } else if (res.data['errors'] != null) {
       Map map = res.data['errors'];
       List list = map.entries.first.value;
-      throw Exception(list.first);
+      throw list.first;
     } else {
       throw Exception('Unknown error happened');
     }
@@ -51,8 +53,12 @@ String formatTime(TimeOfDay time) {
 }
 
 Future<String?> get getDeviceToken async {
-  log((await FirebaseMessaging.instance.getToken())!);
-  return await FirebaseMessaging.instance.getToken();
+  try {
+    log((await FirebaseMessaging.instance.getToken())!);
+    return await FirebaseMessaging.instance.getToken();
+  } catch (e) {
+    throw 'Exception on getting token try again later or check internet connection';
+  }
 }
 
 void navigateAccordingToPayloadNotification(
@@ -65,11 +71,15 @@ void navigateAccordingToPayloadNotification(
   final jsonDecode = json.decode(payload) as Map<String, dynamic>;
   log('payload Before is $jsonDecode');
 
-  final order = OrderModel.fromMap(json.decode(jsonDecode['order_id']));
-  // final order = OrderModel.fromMap(jsonDecode);
-  log(order.totalPrice.toString());
   log('From local notification');
   if (jsonDecode.containsKey('order_id')) {
+    final token = CacheHelper.getData(key: 'token');
+    if (token == null) {
+      return;
+    }
+    final order = OrderModel.fromMap(json.decode(jsonDecode['order_id']));
+    // final order = OrderModel.fromMap(jsonDecode);
+    log(order.totalPrice.toString());
     final status = order.status;
     Task task;
     switch (status) {

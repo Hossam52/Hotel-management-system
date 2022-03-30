@@ -57,20 +57,21 @@ class FCM {
         properties: ChangeAvailableLocalNotification(),
         title: message.notification!.title, // message.notification!.title,
         body: message.notification!.body, //message.notification!.body,
-        payload: message.data['change_available'],
+        payload: json.encode(data),
       );
     } else if (message.data.containsKey('auth')) {
       LocalNotifications.showLocalNotification(
         properties: AuthLocalNotification(),
         title: message.notification!.title, // message.notification!.title,
         body: message.notification!.body, //message.notification!.body,
-        payload: message.data['auth'],
+        payload: json.encode(data),
       );
     } else {
       LocalNotifications.showLocalNotification(
         properties: DefaultLocalNotification(),
         title: message.notification!.title, // message.notification!.title,
         body: message.notification!.body, //message.notification!.body,
+        payload: json.encode(data),
       );
     }
   }

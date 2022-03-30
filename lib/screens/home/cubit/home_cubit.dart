@@ -268,6 +268,10 @@ class HomeCubit extends Cubit<HomeState> {
         //TO-DO call change assessment for supervisor
         await SupervisorOrderDetailsCubit.instance(context)
             .changeStatusToEnd(token, orderId);
+      } else if (task is LateSupervisorTask) {
+        //TO-DO call change assessment for supervisor
+        await SupervisorOrderDetailsCubit.instance(context)
+            .changeStatusToProcess(token, orderId);
       } else {}
     } else if (authType == LoginAuthType.employee) {
       if (task is ActiveEmployeeTask) {
@@ -282,6 +286,15 @@ class HomeCubit extends Cubit<HomeState> {
             .changeStatusToEnd(token, orderId);
         //TO-DO call start task for employee
 
+      } else if (task is LateEmployeeTask) {
+        log('Late employee task');
+        log(orderId.toString());
+        await EmployeeOrderDetailsCubit.instance(context)
+            .changeStatusToProcess(token, orderId);
+        //TO-DO call start task for employee
+
+      } else {
+        log('Other');
       }
     }
   }

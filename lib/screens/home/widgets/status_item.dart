@@ -67,7 +67,7 @@ class StatusItem extends StatelessWidget {
                 ),
                 _rowRecord(
                   item1: _RowItemModel(
-                      text: orderModel.roomNum,
+                      text: orderModel.roomNum.toString(),
                       imagePath: 'assets/images/icons/door.svg'),
                   item2: _RowItemModel(
                       text: orderModel.employeeName,

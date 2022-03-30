@@ -59,7 +59,10 @@ class CodegenLoader extends AssetLoader{
   "Supervisor": "مشرف",
   "FilteredDateIs": "الفلترة بالتاريخ",
   "Late": "المتأخرة",
-  "FinishedTime": "وقت الانتهاء"
+  "FinishedTime": "وقت الانتهاء",
+  "Hotel_Code": "كود الفندق",
+  "Notes": "الملاحظات",
+  "Payment_Method": "طريقة الدفع"
 };
 static const Map<String,dynamic> en_US = {
   "Available": "Available",
@@ -106,7 +109,10 @@ static const Map<String,dynamic> en_US = {
   "Supervisor": "Supervisor",
   "FilteredDateIs": "Filtered date is",
   "Late": "Late",
-  "FinishedTime": "Finished Time"
+  "FinishedTime": "Finished Time",
+  "Hotel_Code": "Hotel Code",
+  "Notes": "Notes",
+  "Payment_Method": "Payment Method"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar_EG": ar_EG, "en_US": en_US};
 }

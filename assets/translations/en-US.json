@@ -43,7 +43,11 @@
   "Supervisor":"Supervisor",
   "FilteredDateIs":"Filtered date is",
   "Late":"Late",
-  "FinishedTime":"Finished Time"
+  "FinishedTime":"Finished Time",
+  "Hotel_Code": "Hotel Code",
+  "Notes":"Notes",
+  "Payment_Method":"Payment Method"
+
 
 
 

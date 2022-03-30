@@ -11,11 +11,12 @@ class OrderModel {
   final String employeeName;
   final String supervisorName;
   final String status;
-  final String roomNum;
+  final int roomNum;
   final int roomId;
   final String payment;
   final String? floor;
   final String date;
+  final String note;
   final String endTime;
   final String? actualEndTime;
   final List<OrderDetailModel> orderdetails;
@@ -30,6 +31,7 @@ class OrderModel {
       required this.payment,
       required this.floor,
       required this.date,
+      required this.note,
       required this.endTime,
       required this.actualEndTime,
       required this.orderdetails,
@@ -46,11 +48,12 @@ class OrderModel {
     String? employeeName,
     String? supervisorName,
     String? status,
-    String? roomNum,
+    int? roomNum,
     int? roomId,
     String? payment,
     String? floor,
     String? date,
+    String? note,
     String? endTime,
     String? actualEndTime,
     List<OrderDetailModel>? orderdetails,
@@ -64,6 +67,7 @@ class OrderModel {
         roomNum: roomNum ?? this.roomNum,
         payment: payment ?? this.payment,
         date: date ?? this.date,
+        note: note ?? this.note,
         endTime: endTime ?? this.endTime,
         actualEndTime: actualEndTime ?? this.actualEndTime,
         orderdetails: orderdetails ?? this.orderdetails,
@@ -101,6 +105,7 @@ class OrderModel {
       payment: map['payment'] ?? '',
       floor: map['floor'],
       date: map['date'] ?? '',
+      note: map['note'] ?? '',
       endTime: map['end_time'] ?? '',
       actualEndTime: map['actual_end_time'],
       orderdetails: List<OrderDetailModel>.from(

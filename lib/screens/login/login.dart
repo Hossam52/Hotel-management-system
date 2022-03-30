@@ -82,6 +82,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               controller: authCubit.loginPasswordController,
                               validator: authCubit.validatePassword,
                             ),
+                            DefaultTextField(
+                              hintText: 'Hotel_Code'.tr(),
+                              isPassword: false,
+                              controller: authCubit.loginHotelCodeController,
+                              validator: authCubit.validateHotelCode,
+                            ),
                             const SizedBox(height: 20),
                             const _AuthTypeImages(),
                             const SizedBox(height: 40),
