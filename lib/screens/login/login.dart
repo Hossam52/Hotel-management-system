@@ -11,8 +11,10 @@ import 'package:htask/layout/supervisor_layout/supervisor_home_layout.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/login/cubit/auth_states.dart';
 import 'package:htask/screens/login/login_background.dart';
+import 'package:htask/screens/login/login_widgets/auth_fields_responsive.dart';
 import 'package:htask/shared/constants.dart';
 import 'package:htask/shared/constants/methods.dart';
+import 'package:htask/shared/responsive/responsive.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/default_text_field.dart';
 import 'package:htask/widgets/defulat_button.dart';
@@ -35,91 +37,72 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: AppColors.primaryColor,
-      body: BlocProvider<AuthCubit>(
-        create: (context) => AuthCubit(),
-        lazy: false,
-        child: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
-            if (state is SuccessLoginState) {
-              showSuccessToast('Login successifully');
-              navigateToReplacement(context,
-                  AppCubit.instance(context).homeLayout(state.authType));
-            } else if (state is ErrorLoginState) {
-              showErrorToast(state.errorMessage);
-            }
-          },
-          builder: (context, state) {
-            final AuthCubit authCubit = AuthCubit.instance(context);
-            final loading = state is LoadingLoginState;
+      body: AllScreenResponsive(
+        child: BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(),
+          lazy: false,
+          child: BlocConsumer<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state is SuccessLoginState) {
+                showSuccessToast('Login successifully');
+                navigateToReplacement(context,
+                    AppCubit.instance(context).homeLayout(state.authType));
+              } else if (state is ErrorLoginState) {
+                showErrorToast(state.errorMessage);
+              }
+            },
+            builder: (context, state) {
+              final AuthCubit authCubit = AuthCubit.instance(context);
+              final loading = state is LoadingLoginState;
 
-            return Stack(
-              children: [
-                const LoginBackground(),
-                Form(
-                  key: authCubit.formKey,
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _logo(),
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            DefaultTextField(
-                              hintText: 'Email'.tr(),
-                              isPassword: false,
-                              controller: authCubit.loginEmailController,
-                              validator: authCubit.validateEmail,
-                            ),
-                            DefaultTextField(
-                              hintText: 'Password'.tr(),
-                              passwordWidget: _passwordWidget(authCubit),
-                              isPassword: authCubit.visiblePassword,
-                              controller: authCubit.loginPasswordController,
-                              validator: authCubit.validatePassword,
-                            ),
-                            DefaultTextField(
-                              hintText: 'Hotel_Code'.tr(),
-                              isPassword: false,
-                              controller: authCubit.loginHotelCodeController,
-                              validator: authCubit.validateHotelCode,
-                            ),
-                            const SizedBox(height: 20),
-                            const _AuthTypeImages(),
-                            const SizedBox(height: 40),
-                            DefaultButton(
-                                text: 'Login'.tr(),
-                                loading: loading,
-                                onPressed: () async {
-                                  if (authCubit.formKey.currentState!
-                                      .validate()) {
-                                    await AuthCubit.instance(context)
-                                        .login(context);
-                                  }
-                                })
-                          ],
+              return Stack(
+                children: [
+                  const LoginBackground(),
+                  Form(
+                    key: authCubit.formKey,
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _logo(),
+                              const SizedBox(
+                                height: 40,
+                              ),
+                              const AuthFieldsResponsive(),
+                              // DefaultTextField(
+                              //   hintText: 'Hotel_Code'.tr(),
+                              //   isPassword: false,
+                              //   controller: authCubit.loginHotelCodeController,
+                              //   validator: authCubit.validateHotelCode,
+                              // ),
+                              const SizedBox(height: 20),
+                              // const _AuthTypeImages(),
+                              const SizedBox(height: 40),
+                              // DefaultButton(
+                              //     text: 'Login'.tr(),
+                              //     loading: loading,
+                              //     onPressed: () async {
+                              //       if (authCubit.formKey.currentState!
+                              //           .validate()) {
+                              //         await AuthCubit.instance(context)
+                              //             .login(context);
+                              //       }
+                              //     })
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget _passwordWidget(AuthCubit authCubit) {
-    return GestureDetector(
-      onTap: () => authCubit.changeVisiblePassword(),
-      child: Icon(
-        authCubit.getPasswordIcon(),
       ),
     );
   }
