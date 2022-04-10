@@ -57,6 +57,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   PersonLoginModel? _personalData;
+  String get currency => _personalData!.currency;
   late String token;
   PersonLoginModel get getProfile => _personalData!;
   Future<void> setPersonalData(
@@ -87,6 +88,9 @@ class AppCubit extends Cubit<AppState> {
     await CacheHelper.saveData(key: 'name', value: data.name);
     await CacheHelper.saveData(key: 'email', value: data.email);
     await CacheHelper.saveData(key: 'image', value: data.image);
+    await CacheHelper.saveData(key: 'hotel', value: data.hotel);
+    await CacheHelper.saveData(key: 'currency', value: data.currency);
+    await CacheHelper.saveData(key: 'hotel_logo', value: data.hotel_logo);
   }
 
   void changeAuthType(LoginAuthType? authType) {
@@ -130,8 +134,19 @@ class AppCubit extends Cubit<AppState> {
     String name = CacheHelper.getData(key: 'name');
     String email = CacheHelper.getData(key: 'email');
     String image = CacheHelper.getData(key: 'image');
+    String hotel = CacheHelper.getData(key: 'hotel');
+    String currency = CacheHelper.getData(key: 'currency');
+    String hotel_logo = CacheHelper.getData(key: 'hotel_logo');
 
-    return PersonLoginModel(id: id, name: name, email: email, image: image);
+    return PersonLoginModel(
+      id: id,
+      name: name,
+      email: email,
+      image: image,
+      hotel: hotel,
+      currency: currency,
+      hotel_logo: hotel_logo,
+    );
   }
 
   Widget homeLayout(LoginAuthType loginAuthType) {

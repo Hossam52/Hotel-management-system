@@ -5,26 +5,18 @@ class PersonLoginModel {
   String name;
   String email;
   String image;
+  String hotel;
+  String currency;
+  String hotel_logo;
   PersonLoginModel({
     required this.id,
     required this.name,
     required this.email,
     required this.image,
+    required this.hotel,
+    required this.currency,
+    required this.hotel_logo,
   });
-
-  PersonLoginModel copyWith({
-    int? id,
-    String? name,
-    String? email,
-    String? image,
-  }) {
-    return PersonLoginModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      image: image ?? this.image,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -32,6 +24,9 @@ class PersonLoginModel {
       'name': name,
       'email': email,
       'image': image,
+      'hotel': hotel,
+      'currency': currency,
+      'hotel_logo': hotel_logo,
     };
   }
 
@@ -41,6 +36,9 @@ class PersonLoginModel {
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       image: map['image'] ?? '',
+      hotel: map['hotel'] ?? '',
+      currency: map['currency'] ?? '',
+      hotel_logo: map['hotel_logo'] ?? '',
     );
   }
 
@@ -48,27 +46,6 @@ class PersonLoginModel {
 
   factory PersonLoginModel.fromJson(String source) =>
       PersonLoginModel.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'PersonLoginModel(id: $id, name: $name, email: $email, image: $image)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is PersonLoginModel &&
-        other.id == id &&
-        other.name == name &&
-        other.email == email &&
-        other.image == image;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^ name.hashCode ^ email.hashCode ^ image.hashCode;
-  }
 }
 
 class EmployeeRequestModel {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:htask/layout/cubit/app_cubit.dart';
 import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/tasks.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
@@ -62,7 +63,8 @@ class StatusItem extends StatelessWidget {
                   item1: _RowItemModel(
                       text: orderModel.orderdetails.first.service),
                   item2: _RowItemModel(
-                      text: '${orderModel.totalPrice} L.E',
+                      text:
+                          '${orderModel.totalPrice} ${AppCubit.instance(context).currency}',
                       imagePath: 'assets/images/icons/money.svg'),
                 ),
                 _rowRecord(
