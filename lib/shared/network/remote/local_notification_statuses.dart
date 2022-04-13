@@ -36,13 +36,85 @@ class AuthLocalNotification extends LocalNotificationProperties {
 
 class OrdersLocalNotification extends LocalNotificationProperties {
   @override
-  String get methodChannelId => 'Orders_local_notification';
+  String get methodChannelId => 'Orders_local_notificationas';
 
   @override
   String get methodChannelName => 'Orders';
 
   @override
-  String get notificationSoundPath => 'notification2';
+  String get notificationSoundPath => 'new_order';
+  @override
+  Future notificationDetails() async {
+    return NotificationDetails(
+        android: AndroidNotificationDetails(
+          methodChannelId,
+          methodChannelName,
+          sound: RawResourceAndroidNotificationSound(notificationSoundPath),
+          playSound: true,
+          channelDescription: 'Channel description',
+          importance: Importance.max,
+        ),
+        iOS: const IOSNotificationDetails());
+  }
+}
+
+class LateOrdersLocalNotification extends LocalNotificationProperties {
+  @override
+  String get methodChannelId => 'Late_orders_local_notification';
+
+  @override
+  String get methodChannelName => 'LateOrders';
+
+  @override
+  String get notificationSoundPath => 'late_order';
+  @override
+  Future notificationDetails() async {
+    return NotificationDetails(
+        android: AndroidNotificationDetails(
+          methodChannelId,
+          methodChannelName,
+          sound: RawResourceAndroidNotificationSound(notificationSoundPath),
+          playSound: true,
+          channelDescription: 'Channel description',
+          importance: Importance.max,
+        ),
+        iOS: const IOSNotificationDetails());
+  }
+}
+
+class PendingOrdersLocalNotification extends LocalNotificationProperties {
+  @override
+  String get methodChannelId => 'Pending_orders_local_notification';
+
+  @override
+  String get methodChannelName => 'PendingOrders';
+
+  @override
+  String get notificationSoundPath => 'pending_order';
+  @override
+  Future notificationDetails() async {
+    return NotificationDetails(
+        android: AndroidNotificationDetails(
+          methodChannelId,
+          methodChannelName,
+          sound: RawResourceAndroidNotificationSound(notificationSoundPath),
+          playSound: true,
+          channelDescription: 'Channel description',
+          importance: Importance.max,
+        ),
+        iOS: const IOSNotificationDetails());
+  }
+}
+
+class FinishedOrdersLocalNotification extends LocalNotificationProperties {
+  @override
+  String get methodChannelId => 'Finished_orders_local_notification';
+
+  @override
+  String get methodChannelName => 'FinishedOrders';
+
+  @override
+  String get notificationSoundPath => 'finished_order';
   @override
   Future notificationDetails() async {
     return NotificationDetails(

@@ -45,8 +45,21 @@ class FCM {
       if (!showLocalNotification) {
         navigateAccordingToPayloadNotification(json.encode(data));
       } else {
+        final order = OrderModel.fromJson(data['order_id']);
+        final isLate = order.status == 'late';
+        final isPending = order.status == 'process';
+        final isFinished = order.status == 'end';
+        final isNewOrder = order.status == 'new';
         LocalNotifications.showLocalNotification(
-          properties: OrdersLocalNotification(),
+          properties: isLate
+              ? LateOrdersLocalNotification()
+              : isFinished
+                  ? FinishedOrdersLocalNotification()
+                  : isPending
+                      ? PendingOrdersLocalNotification()
+                      : isNewOrder
+                          ? OrdersLocalNotification()
+                          : DefaultLocalNotification(),
           title: message.notification!.title, // message.notification!.title,
           body: message.notification!.body, //message.notification!.body,
           payload: json.encode(data),

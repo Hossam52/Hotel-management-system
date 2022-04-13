@@ -402,6 +402,7 @@ class _OrderDetailsItems extends StatelessWidget {
         Text('OrderDetails'.tr(),
             style: textStyle.copyWith(fontWeight: FontWeight.bold)),
         ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: orderDetails.length,
           itemBuilder: (_, index) =>
@@ -456,12 +457,24 @@ class _Price extends StatelessWidget {
                   fontSize: 14, color: AppColors.darkPrimaryColor),
             ),
             Center(
-              child: Text(
-                '${price.toString()} \$',
-                style: const TextStyle(
-                    color: AppColors.white,
-                    fontSize: 39,
-                    fontWeight: FontWeight.bold),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${price.toString()} ',
+                    style: const TextStyle(
+                        color: AppColors.white,
+                        fontSize: 39,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${AppCubit.instance(context).currency} ',
+                    style: const TextStyle(
+                        color: AppColors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             )
           ],
