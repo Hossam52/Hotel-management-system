@@ -19,14 +19,13 @@ class ServiceToday extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Text('YourServiceTodayAre'.tr()),
+        Text('YourServiceTodayAre'.tr()),
         Expanded(flex: 2, child: Container()),
         Expanded(
           flex: 4,
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
-              if (state is LoadingAllCategoriesHomeState ||
-                  state is LoadingAllOrdersHomeState) {
+              if (state is LoadingAllCategoriesHomeState) {
                 return const Center(child: CircularProgressIndicator());
               }
               final categories =

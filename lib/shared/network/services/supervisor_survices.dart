@@ -37,12 +37,19 @@ class SupervisorSurvices {
   }
 
   static Future<AllOrderStatusesModel> getOrders(String token,
-      {int? page, CategoryRequestModel? requestModel}) async {
+      {required String orderType,
+      int? page,
+      CategoryRequestModel? requestModel}) async {
+    final Map<String, dynamic> requestedMap = {'status': orderType};
+    if (requestModel != null) {
+      requestedMap.addAll(requestModel.toMap());
+    }
     final res = await DioHelper.postData(
-        url: SupervisorApis.getOrders,
-        token: token,
-        query: {'page': page},
-        data: requestModel == null ? {} : requestModel.toMap());
+      url: SupervisorApis.getOrders,
+      token: token,
+      query: {'page': page},
+      data: requestedMap,
+    );
 
     AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
     return allOrders;

@@ -67,7 +67,7 @@ class OrderDetails extends StatelessWidget {
               if (state is SuccessChangeStatusToProcessState) {
                 showSuccessToast(state.message);
                 Navigator.pop(context);
-                await homeCubit.getAllOrders(context);
+                HomeCubit.instance(context).getOrdersPerType(context);
               } else if (state is LoadingChangeStatusToProcessState) {
               } else if (state is ErrorOrderState) {
                 showErrorToast(state.error);
@@ -81,7 +81,7 @@ class OrderDetails extends StatelessWidget {
                   showSuccessToast(state.message);
                   Navigator.pop(context);
 
-                  await homeCubit.getAllOrders(context);
+                  HomeCubit.instance(context).getOrdersPerType(context);
                 } else if (state is LoadingChangeStatusToProcessState) {
                   log('Loading');
                 } else if (state is ErrorOrderState) {

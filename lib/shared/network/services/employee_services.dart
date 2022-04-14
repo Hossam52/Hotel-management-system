@@ -30,13 +30,24 @@ class EmployeeServices {
     return logoutModel;
   }
 
-  static Future<AllOrderStatusesModel> getOrders(String token,
-      {int? page, CategoryRequestModel? requestModel}) async {
+  static Future<AllOrderStatusesModel> getOrders(
+    String token, {
+    required String orderType,
+    int? page,
+    CategoryRequestModel? requestModel,
+  }) async {
+    final Map<String, dynamic> requestedMap = {'status': orderType};
+    if (requestModel != null) {
+      requestedMap.addAll(requestModel.toMap());
+    }
+    log(requestedMap.toString());
     final res = await DioHelper.postData(
-        url: EmployeeApis.getOrders,
-        query: {'page': page},
-        token: token,
-        data: requestModel == null ? {} : requestModel.toMap());
+      url: EmployeeApis.getOrders,
+      query: {'page': page},
+      token: token,
+      data: requestedMap,
+    );
+    log(res.data.toString());
     AllOrderStatusesModel allOrders = AllOrderStatusesModel.fromMap(res.data);
     return allOrders;
   }

@@ -55,7 +55,7 @@ class SuperVisorHomeLayout extends StatelessWidget {
         listenWhen: (previous, current) => current is CloseNotificationScreen,
         listener: (context, state) {
           if (state is CloseNotificationScreen) {
-            HomeCubit.instance(context).getAllOrders(context);
+            HomeCubit.instance(context).getOrdersPerType(context);
           }
         },
         child: BlocBuilder<SupervisorCubit, SupervisorStates>(
@@ -118,16 +118,11 @@ class SupervisorHome extends StatelessWidget {
           if (state is ErrorAllCategoriesHomeState) showErrorToast(state.error);
         },
         builder: (context, state) {
-          if (state is LoadingAllCategoriesHomeState) {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: AppColors.darkPrimaryColor,
-            ));
-          }
           return SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
-                await HomeCubit.instance(context).getAllOrders(context);
+                await HomeCubit.instance(context).getAllCategories(context);
+                await HomeCubit.instance(context).getOrdersPerType(context);
               },
               child: SingleChildScrollView(
                 controller: HomeCubit.instance(context).homeScrollController,
