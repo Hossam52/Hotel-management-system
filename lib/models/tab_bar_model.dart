@@ -7,9 +7,13 @@ class TabBarItem {
   String text;
   String imagePath;
   Widget widget;
+  void Function(BuildContext) getData;
+  void Function(BuildContext) getMoreData;
   TabBarItem(
       {required this.isSelected,
       required this.text,
+      required this.getData,
+      required this.getMoreData,
       required this.imagePath,
       required this.widget});
 }

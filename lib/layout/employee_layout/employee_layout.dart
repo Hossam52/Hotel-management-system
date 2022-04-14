@@ -52,7 +52,7 @@ class EmployeeLayout extends StatelessWidget {
         listenWhen: (previous, current) => current is CloseNotificationScreen,
         listener: (context, state) {
           if (state is CloseNotificationScreen) {
-            HomeCubit.instance(context).getAllOrders(context);
+            HomeCubit.instance(context).getOrdersPerType(context);
           }
         },
         child: BlocBuilder<EmployeeCubit, EmployeeStates>(
@@ -117,18 +117,9 @@ class HomeEmployee extends StatelessWidget {
               }
             },
             builder: (_, state) {
-              if (state is LoadingAllOrdersHomeState) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is ErrorAllOrdersHomeState) {
-                return DefaultErrorWidget(
-                    refreshMethod: () =>
-                        HomeCubit.instance(context).getAllOrders(context));
-              }
               return RefreshIndicator(
                 onRefresh: () async {
-                  await HomeCubit.instance(context).getAllOrders(context);
+                  HomeCubit.instance(context).getOrdersPerType(context);
                 },
                 child: SingleChildScrollView(
                   controller: HomeCubit.instance(context).homeScrollController,

@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:htask/models/orders/order_details_model.dart';
 
+enum OrderStatus { neworder, pendingOrder, lateOrder, finishedOrder }
+
 class OrderModel {
   final int id;
   final String guestName;
@@ -21,6 +23,7 @@ class OrderModel {
   final String? actualEndTime;
   final List<OrderDetailModel> orderdetails;
   double totalPrice;
+  late OrderStatus orderStatus;
   OrderModel(
       {required this.id,
       required this.guestName,
@@ -39,6 +42,22 @@ class OrderModel {
       this.totalPrice = 0}) {
     for (var element in orderdetails) {
       totalPrice += element.price * element.quantity;
+    }
+    switch (status) {
+      case 'new':
+        orderStatus = OrderStatus.neworder;
+        break;
+      case 'process':
+        orderStatus = OrderStatus.pendingOrder;
+        break;
+      case 'end':
+        orderStatus = OrderStatus.finishedOrder;
+        break;
+      case 'late':
+        orderStatus = OrderStatus.lateOrder;
+        break;
+      default:
+        throw 'Not valid type';
     }
   }
 

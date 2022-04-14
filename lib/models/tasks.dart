@@ -81,7 +81,7 @@ class PendingSupervisorTask extends PendingTask {
   }
 }
 
-class LateSupervisorTask extends LateTask {
+class LateSupervisorTask extends LateTask implements ActiveSupervisorTask {
   const LateSupervisorTask(int currentMinutes, int currentSeconds)
       : super(currentMinutes, currentSeconds);
 }
@@ -108,7 +108,7 @@ class PendingEmployeeTask extends PendingTask {
   }
 }
 
-class LateEmployeeTask extends LateTask {
+class LateEmployeeTask extends LateTask implements ActiveEmployeeTask {
   const LateEmployeeTask(int currentMinutes, int currentSeconds)
       : super(currentMinutes, currentSeconds);
 }

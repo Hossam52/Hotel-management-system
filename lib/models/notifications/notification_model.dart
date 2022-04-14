@@ -1,3 +1,4 @@
+import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/pagination/pagination.dart';
 import 'package:htask/models/pagination/pagination_links.dart';
 import 'package:htask/models/supervisor/supervisor_employees/supervisor_employee_model.dart';
@@ -94,15 +95,18 @@ class NotificationData {
   ReciverId? reciverId;
   int? orderId;
   String? readAt;
+  OrderModel? order;
 
-  NotificationData(
-      {this.id,
-      this.title,
-      this.body,
-      this.type,
-      this.reciverId,
-      this.orderId,
-      this.readAt});
+  NotificationData({
+    this.id,
+    this.title,
+    this.body,
+    this.type,
+    this.reciverId,
+    this.orderId,
+    this.readAt,
+    this.order,
+  });
 
   NotificationData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -114,6 +118,7 @@ class NotificationData {
         : null;
     orderId = json['order_id'];
     readAt = json['read_at'];
+    order = OrderModel.fromMap(json['order']);
   }
 
   Map<String, dynamic> toJson() {
@@ -127,6 +132,7 @@ class NotificationData {
     }
     data['order_id'] = orderId;
     data['read_at'] = readAt;
+    data['order'] = order;
     return data;
   }
 }

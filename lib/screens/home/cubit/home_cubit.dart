@@ -26,6 +26,7 @@ import 'package:time_range_picker/time_range_picker.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit(BuildContext context) : super(InitialHomeState()) {
+    _initTabBars();
     _addScrollControllerListeners(context);
   }
   static HomeCubit instance(BuildContext context) =>
@@ -41,60 +42,107 @@ class HomeCubit extends Cubit<HomeState> {
       final currentScrollPosition = homeScrollController.position.pixels;
       const delta = 200;
       if (maxScrollExtent - currentScrollPosition <= delta) {
-        await getNextOrdersPage(context);
+        // await getNextOrdersPage(context);
+        tabBars[selectedTabIndex].getMoreData(context);
       }
     });
   }
 
-  final List<TabBarItem> tabBars = [
-    TabBarItem(
-        isSelected: true,
-        text: 'Active',
-        imagePath: 'assets/images/icons/active.svg',
-        widget: const ActiveWidget()),
-    TabBarItem(
-        isSelected: false,
-        text: 'Pending',
-        imagePath: 'assets/images/icons/pending.svg',
-        widget: const PendingWidget()),
-    TabBarItem(
-        isSelected: false,
-        text: 'Finished',
-        imagePath: 'assets/images/icons/finished.svg',
-        widget: const FinishedWidget()),
-    TabBarItem(
-        isSelected: false,
-        text: 'Late',
-        imagePath: 'assets/images/icons/late.svg',
-        widget: const LateWidget()),
-  ];
+  void _initTabBars() {
+    tabBars = [
+      TabBarItem(
+          isSelected: true,
+          getData: (BuildContext context) async {
+            await getAllOrders(context, orderType: 'new');
+          },
+          getMoreData: (BuildContext context) async {
+            await getNextOrdersPage(context, orderType: 'new');
+          },
+          text: 'Active',
+          imagePath: 'assets/images/icons/active.svg',
+          widget: const ActiveWidget()),
+      TabBarItem(
+          isSelected: false,
+          getData: (BuildContext context) async {
+            await getAllOrders(context, orderType: 'process');
+          },
+          getMoreData: (BuildContext context) async {
+            await getNextOrdersPage(context, orderType: 'process');
+          },
+          text: 'Pending',
+          imagePath: 'assets/images/icons/pending.svg',
+          widget: const PendingWidget()),
+      TabBarItem(
+          isSelected: false,
+          getData: (BuildContext context) async {
+            await getAllOrders(context, orderType: 'end');
+          },
+          getMoreData: (BuildContext context) async {
+            await getNextOrdersPage(context, orderType: 'end');
+          },
+          text: 'Finished',
+          imagePath: 'assets/images/icons/finished.svg',
+          widget: const FinishedWidget()),
+      TabBarItem(
+          isSelected: false,
+          getData: (BuildContext context) async {
+            await getAllOrders(context, orderType: 'late');
+          },
+          getMoreData: (BuildContext context) async {
+            await getNextOrdersPage(context, orderType: 'late');
+          },
+          text: 'Late',
+          imagePath: 'assets/images/icons/late.svg',
+          widget: const LateWidget()),
+    ];
+  }
+
+  List<TabBarItem> tabBars = [];
   DateTime? filterByDate;
   TimeRange? filterByTime;
-  late AllOrderStatusesModel allOrders;
+  AllOrderStatusesModel? newOrders;
+  AllOrderStatusesModel? processOrders;
+  AllOrderStatusesModel? finishedOrders;
+  AllOrderStatusesModel? lateOrders;
   late AllCategoriesModel allCategories;
   bool firstGetData = true;
 
   int selectedTabIndex = 0;
   int? selectedCategoryIndex;
-  void changeTabIndex(int index) {
+  void changeTabIndex(BuildContext context, int index) {
     selectedTabIndex = index;
-
     for (int i = 0; i < tabBars.length; i++) {
       tabBars[i].isSelected = false;
     }
     tabBars[index].isSelected = true;
 
     emit(ChangeTabIndexState());
+    tabBars[selectedTabIndex].getData(context);
   }
 
   List<OrderModel> getActiveOrders() {
-    return allOrders.newStatus.data;
+    return newOrders!.orders.data;
   }
 
+  List<OrderModel> getPendingOrders() {
+    return processOrders!.orders.data;
+  }
+
+  List<OrderModel> getFinishedrders() {
+    return finishedOrders!.orders.data;
+  }
+
+  List<OrderModel> getLateOrders() {
+    return lateOrders!.orders.data;
+  }
+
+  Future<void> getOrdersPerType(BuildContext context) async {
+    tabBars[selectedTabIndex].getData(context);
+  }
 //////APIS
-  Future<void> getAllOrders(
-    BuildContext context,
-  ) async {
+
+  Future<void> getAllOrders(BuildContext context,
+      {String orderType = 'new'}) async {
     final loginAuthType = AppCubit.instance(context).currentUserType;
     final token = AppCubit.instance(context).token;
     DateTime? searchedFilterDate = filterByDate;
@@ -110,9 +158,10 @@ class HomeCubit extends Cubit<HomeState> {
         : null;
     try {
       emit(LoadingAllOrdersHomeState());
-      allOrders = await _callApiToGetOrders(
+      final data = await _callApiToGetOrders(
         loginAuthType!,
         token,
+        orderType: orderType,
         requestModel: CategoryRequestModel(
           date: date,
           categoryId: categoryId,
@@ -121,6 +170,17 @@ class HomeCubit extends Cubit<HomeState> {
           to: filterByTime == null ? null : formatTime(filterByTime!.endTime),
         ),
       );
+      if (orderType == 'new') {
+        newOrders = data;
+      } else if (orderType == 'process') {
+        processOrders = data;
+      } else if (orderType == 'end') {
+        finishedOrders = data;
+      } else if (orderType == 'late') {
+        lateOrders = data;
+      } else {
+        throw '';
+      }
       firstGetData = false;
       emit(SuccessAllOrdersHomeState());
     } catch (e) {
@@ -128,12 +188,18 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future<void> getNextOrdersPage(context) async {
+  Future<void> getNextOrdersPage(context, {String orderType = 'new'}) async {
     final loginAuthType = AppCubit.instance(context).currentUserType;
     final token = AppCubit.instance(context).token;
     DateTime? searchedFilterDate = filterByDate;
-
-    final currentOrders = allOrders.newStatus;
+    final selectedOrderTypeModel = orderType == 'new'
+        ? newOrders
+        : orderType == 'process'
+            ? processOrders
+            : orderType == 'end'
+                ? finishedOrders
+                : lateOrders;
+    final currentOrders = selectedOrderTypeModel!.orders;
     final currentPage = currentOrders.meta.currentPage;
     final lastPage = currentOrders.meta.lastPage;
     log('current page $currentPage last page$lastPage');
@@ -155,6 +221,7 @@ class HomeCubit extends Cubit<HomeState> {
       final newOrder = await _callApiToGetOrders(
         loginAuthType!,
         token,
+        orderType: orderType,
         page: nextPage,
         requestModel: CategoryRequestModel(
           date: date,
@@ -164,75 +231,78 @@ class HomeCubit extends Cubit<HomeState> {
           to: filterByTime == null ? null : formatTime(filterByTime!.endTime),
         ),
       );
-      _copyOrderData(newOrder);
+      _copyOrderData(newOrder, orderType);
       emit(SuccessNextAllOrdersHomeState());
     } catch (e) {
       emit(ErrorNextAllOrdersHomeState(e.toString()));
     }
   }
 
-  void _copyOrderData(AllOrderStatusesModel newOrder) {
-    allOrders.newStatus = allOrders.newStatus.copyWith(
-      meta: newOrder.newStatus.meta,
-      links: newOrder.newStatus.links,
-    );
-    allOrders.processStatus = allOrders.processStatus.copyWith(
-      meta: newOrder.processStatus.meta,
-      links: newOrder.processStatus.links,
-    );
-    allOrders.endStatus = allOrders.endStatus.copyWith(
-      meta: newOrder.endStatus.meta,
-      links: newOrder.endStatus.links,
-    );
-    allOrders.newStatus.data.addAll(
-      newOrder.newStatus.data,
-    );
-    allOrders.processStatus.data.addAll(
-      newOrder.processStatus.data,
-    );
-    allOrders.endStatus.data.addAll(
-      newOrder.endStatus.data,
-    );
+  void _copyOrderData(AllOrderStatusesModel commingOrder, String orderType) {
+    if (orderType == 'new') {
+      newOrders!.orders.data.addAll(
+        commingOrder.orders.data,
+      );
+      newOrders!.orders = newOrders!.orders.copyWith(
+        meta: commingOrder.orders.meta,
+        links: commingOrder.orders.links,
+      );
+    }
+    if (orderType == 'process') {
+      processOrders!.orders.data.addAll(
+        commingOrder.orders.data,
+      );
+      processOrders!.orders = processOrders!.orders.copyWith(
+        meta: commingOrder.orders.meta,
+        links: commingOrder.orders.links,
+      );
+    }
+    if (orderType == 'end') {
+      finishedOrders!.orders.data.addAll(
+        commingOrder.orders.data,
+      );
+      finishedOrders!.orders = finishedOrders!.orders.copyWith(
+        meta: commingOrder.orders.meta,
+        links: commingOrder.orders.links,
+      );
+    }
+    if (orderType == 'late') {
+      lateOrders!.orders.data.addAll(
+        commingOrder.orders.data,
+      );
+      lateOrders!.orders = lateOrders!.orders.copyWith(
+        meta: commingOrder.orders.meta,
+        links: commingOrder.orders.links,
+      );
+    }
   }
 
   Future<AllOrderStatusesModel> _callApiToGetOrders(
       LoginAuthType authType, String token,
-      {CategoryRequestModel? requestModel, int? page}) async {
+      {required String orderType,
+      CategoryRequestModel? requestModel,
+      int? page}) async {
     log(requestModel.toString());
     if (authType == LoginAuthType.employee) {
-      return await EmployeeServices.getOrders(token,
-          page: page, requestModel: requestModel);
+      return await EmployeeServices.getOrders(
+        token,
+        page: page,
+        requestModel: requestModel,
+        orderType: orderType,
+      );
     }
     if (authType == LoginAuthType.supervisor) {
       return await SupervisorSurvices.getOrders(token,
-          page: page, requestModel: requestModel);
+          orderType: orderType, page: page, requestModel: requestModel);
     } else {
       throw Exception('Unknown type');
-    }
-  }
-
-  Future<AllOrderStatusesModel> _getNextAllOrdersPageAccordingToType(context,
-      {CategoryRequestModel? requestModel}) async {
-    final nextPage = allOrders.newStatus.meta.currentPage + 1;
-    final user = AppCubit.instance(context).currentUserType;
-    final token = AppCubit.instance(context).token;
-    switch (user) {
-      case LoginAuthType.employee:
-        return EmployeeServices.getNextOrderPage(token, nextPage,
-            requestModel: requestModel);
-
-      case LoginAuthType.supervisor:
-        return SupervisorSurvices.getNextOrderPage(token, nextPage,
-            requestModel: requestModel);
-      default:
-        throw Exception('Un defined type');
     }
   }
 
   Future<void> getAllCategories(BuildContext context) async {
     final token = AppCubit.instance(context).token;
     final authType = AppCubit.instance(context).currentUserType!;
-    await getAllOrders(context);
+    // await getAllOrders(context);
     try {
       emit(LoadingAllCategoriesHomeState());
       allCategories = await _callApiToGetCategories(authType, token);
@@ -335,7 +405,8 @@ class HomeCubit extends Cubit<HomeState> {
   void changeSelectedCategory(BuildContext context, {int? index}) {
     selectedCategoryIndex = index;
     emit(ChangeCategoryIndexState());
-    getAllOrders(context);
+    getOrdersPerType(context);
+    // getAllOrders(context);
     return;
     // if (index == null) {
     //   getAllOrders(context);

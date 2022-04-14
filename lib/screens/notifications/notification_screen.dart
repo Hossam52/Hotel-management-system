@@ -1,9 +1,18 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/layout/cubit/app_cubit.dart';
 import 'package:htask/models/notifications/notification_model.dart';
+import 'package:htask/models/orders/order_model.dart';
+import 'package:htask/models/tasks.dart';
+import 'package:htask/screens/home/cubit/home_cubit.dart';
+import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/notifications/cubit/notification_cubit.dart';
 import 'package:htask/screens/notifications/cubit/notification_states.dart';
+import 'package:htask/screens/order_details/order_details.dart';
+import 'package:htask/shared/constants.dart';
 import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/error_widget.dart';
@@ -20,6 +29,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     super.initState();
     NotificationCubit.instance(context).readNotifications(context);
+    NotificationCubit.instance(context).getAllNotifications(context);
   }
 
   @override
@@ -65,7 +75,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextButton.icon(
-                      label: Text(
+                      label: const Text(
                         'Delete',
                         style: TextStyle(color: Colors.red),
                       ),
@@ -153,6 +163,16 @@ class _NotificationItem extends StatelessWidget {
   const _NotificationItem({Key? key, required this.notification})
       : super(key: key);
   final NotificationData notification;
+  bool isEmployee(BuildContext context) {
+    final currentUser = AppCubit.instance(context).currentUserType;
+    if (currentUser == LoginAuthType.employee) {
+      return true;
+    } else if (currentUser == LoginAuthType.supervisor) {
+      return false;
+    }
+    throw 'Unkown type';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -172,6 +192,42 @@ class _NotificationItem extends StatelessWidget {
               onTap: () {
                 if (cubit.hasSelectedItems) {
                   cubit.changeSelectedNotification(notification.id!);
+                } else {
+                  final order = notification.order;
+                  Task task = const ActiveEmployeeTask(12, 12);
+                  if (order != null) {
+                    final orderStatus = order.orderStatus;
+                    switch (orderStatus) {
+                      case OrderStatus.neworder:
+                        isEmployee(context)
+                            ? task = const ActiveEmployeeTask(12, 12)
+                            : const ActiveSupervisorTask(12, 12);
+                        break;
+                      case OrderStatus.pendingOrder:
+                        isEmployee(context)
+                            ? task = const PendingEmployeeTask(12, 12)
+                            : const PendingSupervisorTask(12, 12);
+                        break;
+                      case OrderStatus.finishedOrder:
+                        isEmployee(context)
+                            ? task = const FinishedTask()
+                            : const FinishedTask();
+                        break;
+                      case OrderStatus.lateOrder:
+                        isEmployee(context)
+                            ? task = const LateEmployeeTask(12, 12)
+                            : const LateSupervisorTask(12, 12);
+                        break;
+                      default:
+                    }
+                  }
+                  navigateTo(
+                      context,
+                      OrderDetails(
+                          taskStatus: task,
+                          order: order!,
+                          homeCubit: HomeCubit.instance(context)));
+                  log('Hello');
                 }
               },
               minLeadingWidth: 0,
@@ -186,13 +242,13 @@ class _NotificationItem extends StatelessWidget {
                       }),
               title: Text(
                 notification.title!,
-                style: TextStyle(fontSize: 14),
+                style: const TextStyle(fontSize: 14),
               ),
               subtitle: Text(
                 notification.body!,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
               isThreeLine: true,
             ),
@@ -206,14 +262,14 @@ class _NotificationItem extends StatelessWidget {
                 children: [
                   Text(
                     notification.title!,
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     notification.body!,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ],
               ),

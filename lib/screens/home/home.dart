@@ -70,8 +70,7 @@ class HomeTabsStatuses extends StatelessWidget {
             HomeCubit.instance(context).getAllOrders(context);
           });
         }
-        if (state is LoadingAllOrdersHomeState ||
-            state is LoadingAllCategoriesHomeState) {
+        if (state is LoadingAllCategoriesHomeState) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -93,7 +92,7 @@ class HomeTabsStatuses extends StatelessWidget {
                     for (int i = 0; i < tabBars.length; i++)
                       FittedBox(
                         child: GestureDetector(
-                          onTap: () => cubit.changeTabIndex(i),
+                          onTap: () => cubit.changeTabIndex(context, i),
                           child: _buildTapContent(tabBars[i]),
                         ),
                       ),

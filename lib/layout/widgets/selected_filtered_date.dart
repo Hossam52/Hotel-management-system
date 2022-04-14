@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +50,8 @@ class SelectedFilteredDate extends StatelessWidget {
   Widget _searchButton(BuildContext context, TextStyle textStyle) {
     return TextButton(
       onPressed: () async {
-        await HomeCubit.instance(context).getAllOrders(context);
+        log('HELLO');
+        await HomeCubit.instance(context).getOrdersPerType(context);
       },
       child: Text(
         'Search'.tr(),
@@ -146,7 +149,7 @@ class _FilteredDate extends StatelessWidget {
               InkWell(
                 onTap: () {
                   HomeCubit.instance(context).changeFilterDate(null);
-                  HomeCubit.instance(context).getAllOrders(context);
+                  HomeCubit.instance(context).getOrdersPerType(context);
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -178,7 +181,7 @@ class _FilteredTime extends StatelessWidget {
           InkWell(
             onTap: () {
               HomeCubit.instance(context).changeFilterTimeRange(null);
-              HomeCubit.instance(context).getAllOrders(context);
+              HomeCubit.instance(context).getOrdersPerType(context);
             },
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
