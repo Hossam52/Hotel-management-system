@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/employee_layout/cubit/employee_states.dart';
 import 'package:htask/layout/employee_layout/employee_layout.dart';
+import 'package:htask/layout/widgets/custom_view_widget.dart';
 import 'package:htask/screens/more/more_screen.dart';
 import 'package:htask/screens/notifications/notification_screen.dart';
 
@@ -12,6 +13,7 @@ class EmployeeCubit extends Cubit<EmployeeStates> {
   int selectedTabIndex = 0;
   final _employeeScreens = [
     const HomeEmployee(),
+    const CustomWebview(),
     NotificationScreen(),
     const MoreScreen(),
   ];

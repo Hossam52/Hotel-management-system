@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/pagination/pagination.dart';
 import 'package:htask/models/pagination/pagination_links.dart';
@@ -118,7 +120,7 @@ class NotificationData {
         : null;
     orderId = json['order_id'];
     readAt = json['read_at'];
-    order = OrderModel.fromMap(json['order']);
+    order = json['order'] == null ? null : OrderModel.fromMap(json['order']);
   }
 
   Map<String, dynamic> toJson() {

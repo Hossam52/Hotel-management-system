@@ -72,6 +72,10 @@ class EmployeeLayout extends StatelessWidget {
                             iconPath:
                                 'assets/images/icons/home_bottom_tab.svg'),
                         'Home'),
+                    _buildNavItem(
+                        const BottomTabItem(
+                            iconPath: 'assets/images/icons/dashboard.svg'),
+                        'Dashboard'),
                     _buildNavItem(const NotificationWidget(), 'Notification'),
                     _buildNavItem(
                         const BottomTabItem(
