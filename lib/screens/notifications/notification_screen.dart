@@ -220,13 +220,13 @@ class _NotificationItem extends StatelessWidget {
                         break;
                       default:
                     }
+                    navigateTo(
+                        context,
+                        OrderDetails(
+                            taskStatus: task,
+                            order: order,
+                            homeCubit: HomeCubit.instance(context)));
                   }
-                  navigateTo(
-                      context,
-                      OrderDetails(
-                          taskStatus: task,
-                          order: order!,
-                          homeCubit: HomeCubit.instance(context)));
                   log('Hello');
                 }
               },

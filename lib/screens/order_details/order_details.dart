@@ -67,7 +67,7 @@ class OrderDetails extends StatelessWidget {
               if (state is SuccessChangeStatusToProcessState) {
                 showSuccessToast(state.message);
                 Navigator.pop(context);
-                HomeCubit.instance(context).getOrdersPerType(context);
+                homeCubit.getOrdersPerType(context);
               } else if (state is LoadingChangeStatusToProcessState) {
               } else if (state is ErrorOrderState) {
                 showErrorToast(state.error);
@@ -81,7 +81,7 @@ class OrderDetails extends StatelessWidget {
                   showSuccessToast(state.message);
                   Navigator.pop(context);
 
-                  HomeCubit.instance(context).getOrdersPerType(context);
+                  homeCubit.getOrdersPerType(context);
                 } else if (state is LoadingChangeStatusToProcessState) {
                   log('Loading');
                 } else if (state is ErrorOrderState) {
@@ -546,7 +546,8 @@ class _OrderDetailsActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log(taskStatus.toString());
-    if (taskStatus is FinishedTask) return Container();
+    if (taskStatus is FinishedTask || taskStatus is PendingSupervisorTask)
+      return Container();
     if (taskStatus is ActiveSupervisorTask) {
       return Row(
         children: [

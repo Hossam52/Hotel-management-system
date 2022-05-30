@@ -46,7 +46,16 @@
   "FinishedTime": "وقت الانتهاء",
   "Hotel_Code": "كود الفندق",
   "Notes":"الملاحظات",
-  "Payment_Method":"طريقة الدفع"
+  "Payment_Method":"طريقة الدفع",
+  "Dashboard":"لوحة التحكم",
+  "available_payments":"وسائل الدفع المتاحة",
+  "confirm":"تأكيد",
+  "total_cach_money_you_have":"المبلغ الكلي للمال المأخوذ",
+
+
+  "select_payment_fail":"من فضلك اختر وسيلة الدفع اولا"
+
+
 
 
 

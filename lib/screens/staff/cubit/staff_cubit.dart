@@ -44,6 +44,7 @@ class StaffCubit extends Cubit<StaffStates> {
       emit(SuccessAllEmployeesToAssignStaffState());
     } catch (e) {
       emit(ErrorllEmployeesToAssignStaffState(e.toString()));
+      rethrow;
     }
   }
 

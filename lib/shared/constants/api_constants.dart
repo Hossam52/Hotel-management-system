@@ -32,4 +32,5 @@ abstract class EmployeeApis {
   static const String getNotifications = '$url/getNotifications';
   static const String deleteNotification = '$url/deleteNotify';
   static const String readNotifications = '$url/readNotification';
+  static const String availablePaymentMethods = '$url/getPaymentMethods';
 }

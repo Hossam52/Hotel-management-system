@@ -74,11 +74,11 @@ class EmployeeServices {
   }
 
   static Future<ChangeOrderStatusModel> changeStatusToEnd(
-      String token, int orderId) async {
+      String token, int orderId, String paymentId) async {
     final res = await DioHelper.postData(
         url: EmployeeApis.changeStatusToEnd,
         token: token,
-        data: {'order_id': orderId});
+        data: {'order_id': orderId, 'payment_id': paymentId});
     ChangeOrderStatusModel status = ChangeOrderStatusModel.fromMap(res.data);
     return status;
   }
@@ -119,5 +119,12 @@ class EmployeeServices {
     ReadNotificationsModelResponse status =
         ReadNotificationsModelResponse.fromMap(res.data);
     return status;
+  }
+
+  static Future<Map<String, dynamic>> availablePaymentMethods(
+      String token) async {
+    final response = await DioHelper.getData(
+        url: EmployeeApis.availablePaymentMethods, token: token);
+    return response.data;
   }
 }

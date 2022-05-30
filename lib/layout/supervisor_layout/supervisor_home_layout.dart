@@ -13,7 +13,6 @@ import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/home.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
-import 'package:htask/screens/more/more_screen.dart';
 import 'package:htask/screens/notifications/cubit/notification_cubit.dart';
 import 'package:htask/screens/staff/cubit/staff_cubit.dart';
 import 'package:htask/screens/staff/staff.dart';
@@ -80,6 +79,10 @@ class SuperVisorHomeLayout extends StatelessWidget {
                             iconPath:
                                 'assets/images/icons/staff_bottom_tab.svg'),
                         'Staff'),
+                    _buildNavItem(
+                        const BottomTabItem(
+                            iconPath: 'assets/images/icons/dashboard.svg'),
+                        'Dashboard'),
                     _buildNavItem(const NotificationWidget(), 'Notification'),
                     _buildNavItem(
                         const BottomTabItem(

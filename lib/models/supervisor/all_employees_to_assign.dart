@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
@@ -28,6 +29,7 @@ class AllEmployeesToAssign {
   }
 
   factory AllEmployeesToAssign.fromMap(Map<String, dynamic> map) {
+    log(map.toString());
     return AllEmployeesToAssign(
       status: map['status'] ?? false,
       employees: List<AvailableEmployeeToAssign>.from(

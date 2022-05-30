@@ -62,7 +62,12 @@ class CodegenLoader extends AssetLoader{
   "FinishedTime": "وقت الانتهاء",
   "Hotel_Code": "كود الفندق",
   "Notes": "الملاحظات",
-  "Payment_Method": "طريقة الدفع"
+  "Payment_Method": "طريقة الدفع",
+  "Dashboard": "لوحة التحكم",
+  "available_payments": "وسائل الدفع المتاحة",
+  "confirm": "تأكيد",
+  "total_cach_money_you_have": "المبلغ الكلي للمال المأخوذ",
+  "select_payment_fail": "من فضلك اختر وسيلة الدفع اولا"
 };
 static const Map<String,dynamic> en_US = {
   "Available": "Available",
@@ -112,7 +117,12 @@ static const Map<String,dynamic> en_US = {
   "FinishedTime": "Finished Time",
   "Hotel_Code": "Hotel Code",
   "Notes": "Notes",
-  "Payment_Method": "Payment Method"
+  "Payment_Method": "Payment Method",
+  "Dashboard": "Dashboard",
+  "available_payments": "Available payment methods",
+  "confirm": "Confirm",
+  "total_cach_money_you_have": "Total cach money you have.",
+  "select_payment_fail": "Please select payment method first"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar_EG": ar_EG, "en_US": en_US};
 }

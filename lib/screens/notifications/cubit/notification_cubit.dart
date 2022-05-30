@@ -76,6 +76,7 @@ class NotificationCubit extends Cubit<NotificationStates> {
       emit(SuccessNotificationState());
     } catch (e) {
       emit(ErrorNotificationState(error: e.toString()));
+      rethrow;
     }
   }
 
@@ -195,8 +196,8 @@ class NotificationCubit extends Cubit<NotificationStates> {
   }
 
   Future<bool> readNotifications(BuildContext context) async {
-    if (notifications!.countUnreadNotify == null ||
-        notifications!.countUnreadNotify == 0) {
+    if (notifications?.countUnreadNotify == null ||
+        notifications?.countUnreadNotify == 0) {
       return true;
     } //No need to call api
     try {
