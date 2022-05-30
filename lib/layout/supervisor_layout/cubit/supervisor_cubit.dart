@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:htask/layout/settings_layout/settings_layout.dart';
 import 'package:htask/layout/supervisor_layout/cubit/supervisor_states.dart';
 import 'package:htask/layout/supervisor_layout/supervisor_home_layout.dart';
 import 'package:htask/layout/widgets/custom_view_widget.dart';
-import 'package:htask/screens/more/more_screen.dart';
 import 'package:htask/screens/notifications/notification_screen.dart';
 import 'package:htask/screens/staff/staff.dart';
 
@@ -17,7 +17,7 @@ class SupervisorCubit extends Cubit<SupervisorStates> {
     const StaffScreen(),
     const CustomWebview(),
     NotificationScreen(),
-    const MoreScreen(),
+    const SupervisorSettingsScreen(),
   ];
 
   void changeSelectedTabIndex(int index) {

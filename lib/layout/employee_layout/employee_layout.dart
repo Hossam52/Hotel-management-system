@@ -13,16 +13,11 @@ import 'package:htask/screens/home/cubit/home_cubit.dart';
 import 'package:htask/screens/home/cubit/home_states.dart';
 import 'package:htask/screens/home/home.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
-import 'package:htask/screens/more/more_screen.dart';
 import 'package:htask/screens/notifications/cubit/notification_cubit.dart';
-import 'package:htask/screens/staff/staff.dart';
 import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/styles/colors.dart';
 import 'package:htask/widgets/bottom_navigation.dart';
-import 'package:htask/widgets/error_widget.dart';
 import 'package:htask/widgets/home_header.dart';
-import 'package:htask/widgets/svg_image_widget.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class EmployeeLayout extends StatelessWidget {
   const EmployeeLayout({Key? key}) : super(key: key);
