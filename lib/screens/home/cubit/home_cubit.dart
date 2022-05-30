@@ -353,7 +353,7 @@ class HomeCubit extends Cubit<HomeState> {
         log('Pending employee task');
         log(orderId.toString());
         await EmployeeOrderDetailsCubit.instance(context)
-            .changeStatusToEnd(token, orderId);
+            .changeStatusToEnd(token, orderId, context);
         //TO-DO call start task for employee
 
       } else if (task is LateEmployeeTask) {

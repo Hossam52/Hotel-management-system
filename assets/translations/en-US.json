@@ -47,7 +47,11 @@
   "Hotel_Code": "Hotel Code",
   "Notes":"Notes",
   "Payment_Method":"Payment Method",
-  "Dashboard":"Dashboard"
+  "Dashboard":"Dashboard",
+  "available_payments":"Available payment methods",
+  "confirm":"Confirm",
+  "total_cach_money_you_have":"Total cach money you have.",
+  "select_payment_fail":"Please select payment method first"
 
 
 

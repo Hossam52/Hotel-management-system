@@ -10,8 +10,9 @@ class NoData extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children:  [
+        children: [
           Icon(Icons.error, color: AppColors.blue1),
           Center(child: Text('NoData'.tr(), style: TextStyle(fontSize: 20))),
         ],

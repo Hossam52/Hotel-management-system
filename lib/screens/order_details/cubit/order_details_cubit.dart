@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
@@ -13,6 +14,7 @@ import 'package:htask/shared/constants/api_constants.dart';
 import 'package:htask/shared/constants/methods.dart';
 import 'package:htask/shared/network/services/employee_services.dart';
 import 'package:htask/shared/network/services/supervisor_survices.dart';
+import 'package:htask/widgets/dialogs/payment_methods_dialog.dart';
 
 abstract class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   OrderDetailsCubit() : super(IntitalOrderDetailsState());
@@ -109,10 +111,15 @@ class EmployeeOrderDetailsCubit extends OrderDetailsCubit {
     }
   }
 
-  Future<void> changeStatusToEnd(String token, int orderId) async {
+  Future<void> changeStatusToEnd(
+      String token, int orderId, BuildContext context) async {
     try {
+      final paymentId = await showModalBottomSheet(
+          context: context, builder: (_) => const PaymentMethodsDialog());
+      if (paymentId == null) throw 'select_payment_fail'.tr();
       emit(LoadingChangeStatusToProcessState());
-      final res = await EmployeeServices.changeStatusToEnd(token, orderId);
+      final res =
+          await EmployeeServices.changeStatusToEnd(token, orderId, paymentId);
       if (!res.status) {
         emit(ErrorOrderState(res.message));
         return;
@@ -120,6 +127,7 @@ class EmployeeOrderDetailsCubit extends OrderDetailsCubit {
       emit(SuccessChangeStatusToProcessState(message: res.message));
     } catch (e) {
       emit(ErrorOrderState(e.toString()));
+      rethrow;
     }
   }
 }

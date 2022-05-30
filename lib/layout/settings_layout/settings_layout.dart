@@ -25,27 +25,30 @@ class EmployeeSettingsScreen extends StatelessWidget {
 
   Widget totalCach(BuildContext context) {
     final profile = AppCubit.instance(context).getProfile;
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(34)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            heading(),
-            moneyAmount(1200, currency: profile.currency),
-          ],
-        ),
-      ),
-    );
+    return BlocBuilder<AppCubit, AppState>(
+        buildWhen: (previous, current) => current is ChangeAppLanguage,
+        builder: (context, state) => Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(34)),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    heading(),
+                    moneyAmount(1200, currency: profile.currency),
+                  ],
+                ),
+              ),
+            ));
   }
 
   Widget heading() {
-    return Row(children: const [
-      SizedBox(width: 10),
+    return Row(children: [
+      const SizedBox(width: 10),
       Text(
-        'Total cach money you have',
-        style: TextStyle(fontSize: 19),
+        'total_cach_money_you_have'.tr(),
+        style: const TextStyle(fontSize: 19),
       ),
     ]);
   }
