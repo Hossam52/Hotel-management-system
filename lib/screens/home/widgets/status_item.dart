@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/layout/employee_layout/cubit/employee_cubit.dart';
+import 'package:htask/layout/supervisor_layout/cubit/supervisor_cubit.dart';
 import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/tasks.dart';
 import 'package:htask/screens/home/cubit/home_cubit.dart';
@@ -37,10 +40,22 @@ class StatusItem extends StatelessWidget {
       textDirection: TextDirection.ltr,
       child: GestureDetector(
         onTap: () => pushNewScreen(context,
-            screen: OrderDetails(
-              homeCubit: homeCubit,
-              order: orderModel,
-              taskStatus: taskStatus,
+            screen: MultiBlocProvider(
+              providers: [
+                if (AppCubit.instance(context).isEmployeeType)
+                  BlocProvider.value(
+                    value: EmployeeCubit.instance(context),
+                  ),
+                if (AppCubit.instance(context).isSupervisorType)
+                  BlocProvider.value(
+                    value: SupervisorCubit.instance(context),
+                  ),
+              ],
+              child: OrderDetails(
+                homeCubit: homeCubit,
+                order: orderModel,
+                taskStatus: taskStatus,
+              ),
             ),
             withNavBar: false),
         child: Container(

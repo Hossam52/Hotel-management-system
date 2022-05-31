@@ -36,6 +36,10 @@ class AppCubit extends Cubit<AppState> {
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
   LoginAuthType? currentUserType;
+  bool get isEmployeeType =>
+      currentUserType == LoginAuthType.employee ? true : false;
+  bool get isSupervisorType =>
+      currentUserType == LoginAuthType.supervisor ? true : false;
   void _changeLocale(Locale locale) {
     if (locale.languageCode == const Locale('ar', 'EG').languageCode) {
       lang = 'ar';
@@ -87,6 +91,8 @@ class AppCubit extends Cubit<AppState> {
     await CacheHelper.saveData(key: 'id', value: data.id);
     await CacheHelper.saveData(key: 'name', value: data.name);
     await CacheHelper.saveData(key: 'email', value: data.email);
+    await CacheHelper.saveData(
+        key: 'orderCashPrice', value: data.orderCashPrice);
     await CacheHelper.saveData(key: 'image', value: data.image);
     await CacheHelper.saveData(key: 'hotel', value: data.hotel);
     await CacheHelper.saveData(key: 'currency', value: data.currency);
@@ -133,6 +139,7 @@ class AppCubit extends Cubit<AppState> {
     int id = CacheHelper.getData(key: 'id');
     String name = CacheHelper.getData(key: 'name');
     String email = CacheHelper.getData(key: 'email');
+    int orderCashPrice = CacheHelper.getData(key: 'orderCashPrice');
     String image = CacheHelper.getData(key: 'image');
     String hotel = CacheHelper.getData(key: 'hotel');
     String currency = CacheHelper.getData(key: 'currency');
@@ -142,6 +149,7 @@ class AppCubit extends Cubit<AppState> {
       id: id,
       name: name,
       email: email,
+      orderCashPrice: orderCashPrice,
       image: image,
       hotel: hotel,
       currency: currency,

@@ -31,7 +31,7 @@ class EmployeeLayout extends StatelessWidget {
           lazy: false,
         ),
         BlocProvider(
-          create: (context) => EmployeeCubit(),
+          create: (context) => EmployeeCubit()..getCashCounter(context),
           lazy: false,
         ),
         BlocProvider(

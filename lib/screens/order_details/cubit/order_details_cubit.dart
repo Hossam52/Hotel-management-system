@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
+import 'package:htask/layout/employee_layout/cubit/employee_cubit.dart';
 import 'package:htask/models/orders/order_model.dart';
 import 'package:htask/models/supervisor/all_employees_to_assign.dart';
 import 'package:htask/models/supervisor/assign_order_to_employee.dart';
@@ -129,5 +130,6 @@ class EmployeeOrderDetailsCubit extends OrderDetailsCubit {
       emit(ErrorOrderState(e.toString()));
       rethrow;
     }
+    await EmployeeCubit.instance(context).getCashCounter(context);
   }
 }

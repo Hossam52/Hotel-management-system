@@ -125,6 +125,13 @@ class EmployeeServices {
       String token) async {
     final response = await DioHelper.getData(
         url: EmployeeApis.availablePaymentMethods, token: token);
+    log(response.data.toString());
+    return response.data;
+  }
+
+  static Future<Map<String, dynamic>> cashCounter(String token) async {
+    final response =
+        await DioHelper.getData(url: EmployeeApis.cashCounter, token: token);
     return response.data;
   }
 }
