@@ -139,6 +139,6 @@ class _GatewayPaymets extends PaymentItemModel {
 
   @override
   String getName() {
-    return '$Name ($ShortCode)';
+    return Name;
   }
 }

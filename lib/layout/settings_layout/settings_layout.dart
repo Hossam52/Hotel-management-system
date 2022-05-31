@@ -6,7 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htask/layout/cubit/app_cubit.dart';
 import 'package:htask/layout/cubit/app_states.dart';
 import 'package:htask/layout/settings_layout/settings_widgets/hotel_info.dart';
-import 'package:htask/layout/more/settings_widgets/setting_item.dart';
+import 'package:htask/layout/settings_layout/settings_widgets/setting_item.dart';
+import 'package:htask/models/person_login_model.dart';
 import 'package:htask/screens/login/cubit/auth_cubit.dart';
 import 'package:htask/screens/login/cubit/auth_states.dart';
 import 'package:htask/shared/constants/methods.dart';
@@ -25,6 +26,7 @@ class EmployeeSettingsScreen extends StatelessWidget {
 
   Widget totalCach(BuildContext context) {
     final profile = AppCubit.instance(context).getProfile;
+    final cach = profile.orderCashPrice;
     return BlocBuilder<AppCubit, AppState>(
         buildWhen: (previous, current) => current is ChangeAppLanguage,
         builder: (context, state) => Card(
@@ -36,7 +38,7 @@ class EmployeeSettingsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     heading(),
-                    moneyAmount(1200, currency: profile.currency),
+                    moneyAmount(cach, currency: profile.currency),
                   ],
                 ),
               ),
