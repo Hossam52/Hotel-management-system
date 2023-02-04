@@ -23,6 +23,7 @@ The main purpose of the make the interaction is easy for the supervisor and empl
 - BLOC and cubit state management.
 - Push notifications (Firebase).
 - Diffrent notification sounds.
+- Shared prefrences and caching.
 - Localization and translation (Arabic - English).
 - MVVM architecture pattern.
 - Dealing with REST APIs and postman.
